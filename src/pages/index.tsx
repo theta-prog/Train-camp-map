@@ -3,13 +3,26 @@ import { GetStaticProps } from 'next'
 import { useTranslation } from 'next-i18next'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import { APIProvider } from '@vis.gl/react-google-maps'
-import MapComponent from '@/components/MapComponent'
 import SearchFilters from '@/components/SearchFilters'
 import CampsiteList from '@/components/CampsiteList'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { Campsite } from '@/types/campsite'
 import { useRouter } from 'next/router'
+
+// MapComponentを動的インポートしてSSRを無効化
+const MapComponent = dynamic(() => import('@/components/MapComponent'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center" style={{ width: '100%', height: '600px' }}>
+      <div className="text-center">
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+        <p className="mt-2 text-gray-600">地図を読み込み中...</p>
+      </div>
+    </div>
+  )
+})
 
 // 多言語対応のサンプルキャンプ場データ
 const sampleCampsites: Campsite[] = [

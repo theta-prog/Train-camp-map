@@ -1,8 +1,6 @@
-'use client'
-
 import { Campsite } from '@/types/campsite'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
+import { useTranslations } from 'next-intl'
+import { useParams } from 'next/navigation'
 
 interface CampsiteListProps {
   campsites: Campsite[]
@@ -15,9 +13,9 @@ export default function CampsiteList({
   onCampsiteSelect, 
   selectedCampsite 
 }: CampsiteListProps) {
-  const { t } = useTranslation('common')
-  const router = useRouter()
-  const locale = (router.locale as 'ja' | 'en') || 'ja'
+  const t = useTranslations()
+  const params = useParams()
+  const locale = (params.locale as 'ja' | 'en') || 'ja'
   
   const handleCampsiteClick = (campsite: Campsite) => {
     onCampsiteSelect(campsite)

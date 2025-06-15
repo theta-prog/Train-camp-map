@@ -1,0 +1,49 @@
+{
+  "title": "Train-Accessible Campsite Search",
+  "subtitle": "Find campsites accessible by public transportation",
+  "searchFilters": {
+    "title": "Search Filters",
+    "clear": "Clear",
+    "keyword": "Keyword",
+    "keywordPlaceholder": "Campsite name, location, etc.",
+    "maxPrice": "Max Price",
+    "facilities": "Facilities",
+    "activities": "Activities",
+    "allCampsites": "All campsites will be displayed",
+    "matchingCampsites": "Campsites matching the criteria will be displayed"
+  },
+  "campsiteList": {
+    "title": "Campsite List",
+    "count": "{count} sites",
+    "noResults": "No campsites found matching the criteria.",
+    "changeFilters": "Please try changing your search criteria.",
+    "clickForDetails": "Click to view details",
+    "nearestStation": "Nearest Station",
+    "access": "Access",
+    "price": "Price"
+  },
+  "map": {
+    "apiKeyMissing": "Google Maps API key is not configured",
+    "apiKeyInstruction": "Please set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY in .env.local file",
+    "viewDetails": "View Details",
+    "customIconError": "Failed to set custom marker icon"
+  },
+  "facilities": {
+    "toilet": "Toilet",
+    "shower": "Shower",
+    "kitchen": "Kitchen",
+    "rental": "Rental",
+    "shop": "Shop",
+    "parking": "Parking",
+    "wifi": "Wi-Fi"
+  },
+  "activities": {
+    "hiking": "Hiking",
+    "bbq": "BBQ",
+    "fishing": "Fishing",
+    "canoe": "Canoe",
+    "boat": "Boat",
+    "river": "River Play",
+    "stargazing": "Stargazing"
+  }
+}

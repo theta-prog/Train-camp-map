@@ -1,7 +1,5 @@
-'use client'
-
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'next-i18next'
+import { useTranslations } from 'next-intl'
 
 interface SearchFiltersProps {
   onFilterChange: (filters: {
@@ -39,7 +37,7 @@ const availableActivities = [
 ]
 
 export default function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersProps) {
-  const { t } = useTranslation('common')
+  const t = useTranslations()
   const [keyword, setKeyword] = useState(initialFilters.keyword)
   const [maxPrice, setMaxPrice] = useState(initialFilters.maxPrice)
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>(initialFilters.facilities)
@@ -52,7 +50,7 @@ export default function SearchFilters({ onFilterChange, initialFilters }: Search
       facilities: selectedFacilities,
       activities: selectedActivities
     })
-  }, [keyword, maxPrice, selectedFacilities, selectedActivities])
+  }, [keyword, maxPrice, selectedFacilities, selectedActivities, onFilterChange])
 
   const handleFacilityChange = (facility: string) => {
     setSelectedFacilities(prev => 

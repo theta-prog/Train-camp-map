@@ -1,9 +1,7 @@
-'use client'
-
 import { useCallback, useState } from 'react'
 import { Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
+import { useTranslations } from 'next-intl'
+import { useParams } from 'next/navigation'
 import { Campsite } from '@/types/campsite'
 
 interface MapComponentProps {
@@ -22,9 +20,9 @@ export default function MapComponent({
   onCampsiteSelect, 
   selectedCampsite 
 }: MapComponentProps) {
-  const { t } = useTranslation('common')
-  const router = useRouter()
-  const locale = (router.locale as 'ja' | 'en') || 'ja'
+  const t = useTranslations()
+  const params = useParams()
+  const locale = (params.locale as 'ja' | 'en') || 'ja'
   const [activeMarker, setActiveMarker] = useState<string | null>(null)
 
   const handleMarkerClick = useCallback((campsite: Campsite) => {

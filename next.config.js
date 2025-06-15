@@ -1,8 +1,10 @@
-const { i18n } = require('./next-i18next.config')
+const withNextIntl = require('next-intl/plugin')('./src/i18n/request.ts')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  i18n,
+  experimental: {
+    typedRoutes: true
+  }
 }
 
-module.exports = nextConfig
+module.exports = withNextIntl(nextConfig)

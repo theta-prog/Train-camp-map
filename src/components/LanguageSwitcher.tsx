@@ -1,22 +1,22 @@
-'use client'
-
-import { useRouter } from 'next/router'
-import { useTranslation } from 'next-i18next'
 import { useState } from 'react'
+import { useLocale } from 'next-intl'
+import { useRouter, usePathname } from '@/i18n/navigation'
 
 export default function LanguageSwitcher() {
   const router = useRouter()
-  const { t } = useTranslation('common')
+  const pathname = usePathname()
+  const locale = useLocale()
   const [isOpen, setIsOpen] = useState(false)
 
-  const handleLanguageChange = (locale: string) => {
-    const { pathname, asPath, query } = router
-    router.push({ pathname, query }, asPath, { locale })
+  const currentLocale = locale || 'ja'
+  
+  const handleLanguageChange = (newLocale: string) => {
     setIsOpen(false)
+    router.push(pathname, { locale: newLocale as 'ja' | 'en' })
   }
 
-  const currentLanguage = router.locale === 'en' ? 'English' : '日本語'
-  const currentFlag = router.locale === 'en' ? '🇺🇸' : '🇯🇵'
+  const currentLanguage = currentLocale === 'en' ? 'English' : '日本語'
+  const currentFlag = currentLocale === 'en' ? '🇺🇸' : '🇯🇵'
 
   return (
     <div className="relative">
@@ -42,12 +42,12 @@ export default function LanguageSwitcher() {
             <button
               onClick={() => handleLanguageChange('ja')}
               className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3 ${
-                router.locale === 'ja' ? 'bg-green-50 text-green-700' : 'text-gray-700'
+                currentLocale === 'ja' ? 'bg-green-50 text-green-700' : 'text-gray-700'
               }`}
             >
               <span className="text-lg">🇯🇵</span>
               <span className="font-medium">日本語</span>
-              {router.locale === 'ja' && (
+              {currentLocale === 'ja' && (
                 <svg className="w-4 h-4 ml-auto text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
@@ -56,12 +56,12 @@ export default function LanguageSwitcher() {
             <button
               onClick={() => handleLanguageChange('en')}
               className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3 ${
-                router.locale === 'en' ? 'bg-green-50 text-green-700' : 'text-gray-700'
+                currentLocale === 'en' ? 'bg-green-50 text-green-700' : 'text-gray-700'
               }`}
             >
               <span className="text-lg">🇺🇸</span>
               <span className="font-medium">English</span>
-              {router.locale === 'en' && (
+              {currentLocale === 'en' && (
                 <svg className="w-4 h-4 ml-auto text-green-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
