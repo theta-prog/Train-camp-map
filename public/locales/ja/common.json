@@ -1,0 +1,53 @@
+{
+  "title": "電車で行けるキャンプ場検索",
+  "subtitle": "公共交通機関でアクセス可能なキャンプ場を見つけよう",
+  "searchFilters": {
+    "title": "検索フィルター",
+    "clear": "クリア",
+    "keyword": "キーワード",
+    "keywordPlaceholder": "キャンプ場名、地名など",
+    "maxPrice": "最大料金",
+    "facilities": "設備",
+    "activities": "アクティビティ",
+    "allCampsites": "すべてのキャンプ場が表示されます",
+    "matchingCampsites": "条件に一致するキャンプ場が表示されます"
+  },
+  "campsiteList": {
+    "title": "キャンプ場一覧",
+    "count": "{{count}}件",
+    "noResults": "条件に一致するキャンプ場が見つかりませんでした。",
+    "changeFilters": "検索条件を変更してお試しください。",
+    "clickForDetails": "クリックして詳細を表示",
+    "nearestStation": "最寄り駅",
+    "access": "アクセス",
+    "price": "料金"
+  },
+  "map": {
+    "apiKeyMissing": "Google Maps APIキーが設定されていません",
+    "apiKeyInstruction": ".env.localファイルにNEXT_PUBLIC_GOOGLE_MAPS_API_KEYを設定してください",
+    "viewDetails": "詳細を見る",
+    "customIconError": "カスタムマーカーアイコンの設定に失敗しました"
+  },
+  "facilities": {
+    "toilet": "トイレ",
+    "shower": "シャワー",
+    "kitchen": "炊事場",
+    "rental": "レンタル",
+    "shop": "売店",
+    "parking": "駐車場",
+    "wifi": "Wi-Fi"
+  },
+  "activities": {
+    "hiking": "ハイキング",
+    "bbq": "バーベキュー",
+    "fishing": "釣り",
+    "canoe": "カヌー",
+    "boat": "ボート",
+    "river": "川遊び",
+    "stargazing": "星空観察"
+  },
+  "language": {
+    "japanese": "日本語",
+    "english": "English"
+  }
+}
