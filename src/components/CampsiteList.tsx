@@ -15,7 +15,7 @@ export default function CampsiteList({
 }: CampsiteListProps) {
   const t = useTranslations()
   const params = useParams()
-  const locale = (params.locale as 'ja' | 'en') || 'ja'
+  const locale = (params?.locale as 'ja' | 'en') || 'ja'
   
   const handleCampsiteClick = (campsite: Campsite) => {
     onCampsiteSelect(campsite)

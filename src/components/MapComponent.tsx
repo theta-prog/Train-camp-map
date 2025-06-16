@@ -22,7 +22,7 @@ export default function MapComponent({
 }: MapComponentProps) {
   const t = useTranslations()
   const params = useParams()
-  const locale = (params.locale as 'ja' | 'en') || 'ja'
+  const locale = (params?.locale as 'ja' | 'en') || 'ja'
   const [activeMarker, setActiveMarker] = useState<string | null>(null)
 
   const handleMarkerClick = useCallback((campsite: Campsite) => {

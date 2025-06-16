@@ -6,7 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "typecheck": "tsc --noEmit",
+    "typecheck:strict": "tsc --noEmit --project tsconfig.strict.json",
+    "type-check": "tsc --noEmit",
+    "check-types": "tsc --noEmit --pretty",
+    "test:types": "tsc --noEmit --skipLibCheck false",
+    "validate": "npm run typecheck && npm run lint",
+    "validate:strict": "npm run typecheck:strict && npm run lint",
+    "full-check": "./scripts/typecheck.sh",
+    "ci": "npm run typecheck && npm run lint && npm run build"
   },
   "dependencies": {
     "@types/node": "^20",
