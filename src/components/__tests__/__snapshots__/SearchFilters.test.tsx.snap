@@ -1,0 +1,568 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SearchFilters スナップショットテスト フィルター選択済み 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md p-6"
+>
+  <div
+    class="flex justify-between items-center mb-4"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Search Filters
+    </h2>
+    <button
+      class="text-sm text-gray-500 hover:text-gray-700"
+    >
+      Reset
+    </button>
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Keyword
+    </label>
+    <input
+      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+      placeholder="Search by name or location..."
+      type="text"
+      value="キャンプ"
+    />
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Max Price
+      : ¥
+      5,000
+    </label>
+    <input
+      class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+      max="10000"
+      min="1000"
+      step="500"
+      type="range"
+      value="5000"
+    />
+    <div
+      class="flex justify-between text-xs text-gray-500 mt-1"
+    >
+      <span>
+        ¥1,000
+      </span>
+      <span>
+        ¥10,000
+      </span>
+    </div>
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Facilities
+    </label>
+    <div
+      class="space-y-2"
+    >
+      <label
+        class="flex items-center"
+      >
+        <input
+          checked=""
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Toilet
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          checked=""
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Shower
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Kitchen
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Rental
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Shop
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Parking
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          WiFi
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Activities
+    </label>
+    <div
+      class="space-y-2"
+    >
+      <label
+        class="flex items-center"
+      >
+        <input
+          checked=""
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Hiking
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          BBQ
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Fishing
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Canoe
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Boat
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          River
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Stargazing
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="border-t pt-4"
+  >
+    <p
+      class="text-sm text-gray-600"
+    >
+      Matching campsites
+    </p>
+  </div>
+</div>
+`;
+
+exports[`SearchFilters スナップショットテスト 初期状態 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md p-6"
+>
+  <div
+    class="flex justify-between items-center mb-4"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Search Filters
+    </h2>
+    <button
+      class="text-sm text-gray-500 hover:text-gray-700"
+    >
+      Reset
+    </button>
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Keyword
+    </label>
+    <input
+      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+      placeholder="Search by name or location..."
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Max Price
+      : ¥
+      10,000
+    </label>
+    <input
+      class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+      max="10000"
+      min="1000"
+      step="500"
+      type="range"
+      value="10000"
+    />
+    <div
+      class="flex justify-between text-xs text-gray-500 mt-1"
+    >
+      <span>
+        ¥1,000
+      </span>
+      <span>
+        ¥10,000
+      </span>
+    </div>
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Facilities
+    </label>
+    <div
+      class="space-y-2"
+    >
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Toilet
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Shower
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Kitchen
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Rental
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Shop
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Parking
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          WiFi
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="mb-6"
+  >
+    <label
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Activities
+    </label>
+    <div
+      class="space-y-2"
+    >
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Hiking
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          BBQ
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Fishing
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Canoe
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Boat
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          River
+        </span>
+      </label>
+      <label
+        class="flex items-center"
+      >
+        <input
+          class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+          type="checkbox"
+        />
+        <span
+          class="ml-2 text-sm text-gray-700"
+        >
+          Stargazing
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="border-t pt-4"
+  >
+    <p
+      class="text-sm text-gray-600"
+    >
+      All campsites
+    </p>
+  </div>
+</div>
+`;

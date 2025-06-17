@@ -1,0 +1,262 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CampsiteSearchApp スナップショットテスト APIキーなしエラー状態 1`] = `
+<div
+  class="min-h-screen bg-gray-50 flex items-center justify-center"
+>
+  <div
+    class="text-center"
+  >
+    <p
+      class="text-gray-600 mb-2"
+    >
+      Google Maps API key is missing
+    </p>
+    <p
+      class="text-sm text-gray-500"
+    >
+      Please set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteSearchApp スナップショットテスト 基本表示（APIキーあり） 1`] = `
+<div
+  data-testid="api-provider"
+>
+  <div
+    class="min-h-screen bg-gray-50"
+  >
+    <header
+      class="bg-green-600 text-white py-4"
+    >
+      <div
+        class="container mx-auto px-4"
+      >
+        <div
+          class="flex justify-between items-center"
+        >
+          <div>
+            <h1
+              class="text-2xl font-bold"
+            >
+              Campsite Search
+            </h1>
+            <p
+              class="text-green-100"
+            >
+              Find campsites accessible by train
+            </p>
+          </div>
+          <div
+            data-testid="mock-language-switcher"
+          >
+            Language Switcher
+          </div>
+        </div>
+      </div>
+    </header>
+    <div
+      class="container mx-auto px-4 py-6"
+    >
+      <div
+        class="grid grid-cols-1 lg:grid-cols-4 gap-6"
+      >
+        <div
+          class="lg:col-span-1"
+        >
+          <div
+            data-testid="mock-search-filters"
+          >
+            <button>
+              Change Filter
+            </button>
+            <button>
+              Filter with keyword
+            </button>
+            <button>
+              Complex Filter
+            </button>
+          </div>
+        </div>
+        <div
+          class="lg:col-span-2"
+        >
+          <div
+            class="bg-white rounded-lg shadow-md overflow-hidden"
+          >
+            <div
+              data-testid="mock-map-component"
+            >
+              <div
+                class="flex items-center justify-center"
+                style="width: 100%; height: 600px;"
+              >
+                <div
+                  class="text-center"
+                >
+                  <div
+                    class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"
+                  />
+                  <p
+                    class="mt-2 text-gray-600"
+                  >
+                    Loading map...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="lg:col-span-1"
+        >
+          <div
+            data-testid="mock-campsite-list"
+          >
+            <div>
+              高尾山キャンプ場
+            </div>
+            <div>
+              奥多摩湖キャンプ場
+            </div>
+            <div>
+              河口湖オートキャンプ場
+            </div>
+            <div>
+              丹沢湖キャンプリゾート
+            </div>
+            <div>
+              箱根芦ノ湖キャンプ村
+            </div>
+            <div>
+              フリーキャンプ場
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CampsiteSearchApp スナップショットテスト 英語ロケール 1`] = `
+<div
+  data-testid="api-provider"
+>
+  <div
+    class="min-h-screen bg-gray-50"
+  >
+    <header
+      class="bg-green-600 text-white py-4"
+    >
+      <div
+        class="container mx-auto px-4"
+      >
+        <div
+          class="flex justify-between items-center"
+        >
+          <div>
+            <h1
+              class="text-2xl font-bold"
+            >
+              Campsite Search
+            </h1>
+            <p
+              class="text-green-100"
+            >
+              Find campsites accessible by train
+            </p>
+          </div>
+          <div
+            data-testid="mock-language-switcher"
+          >
+            Language Switcher
+          </div>
+        </div>
+      </div>
+    </header>
+    <div
+      class="container mx-auto px-4 py-6"
+    >
+      <div
+        class="grid grid-cols-1 lg:grid-cols-4 gap-6"
+      >
+        <div
+          class="lg:col-span-1"
+        >
+          <div
+            data-testid="mock-search-filters"
+          >
+            <button>
+              Change Filter
+            </button>
+            <button>
+              Filter with keyword
+            </button>
+            <button>
+              Complex Filter
+            </button>
+          </div>
+        </div>
+        <div
+          class="lg:col-span-2"
+        >
+          <div
+            class="bg-white rounded-lg shadow-md overflow-hidden"
+          >
+            <div
+              data-testid="mock-map-component"
+            >
+              <div
+                class="flex items-center justify-center"
+                style="width: 100%; height: 600px;"
+              >
+                <div
+                  class="text-center"
+                >
+                  <div
+                    class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"
+                  />
+                  <p
+                    class="mt-2 text-gray-600"
+                  >
+                    Loading map...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="lg:col-span-1"
+        >
+          <div
+            data-testid="mock-campsite-list"
+          >
+            <div>
+              高尾山キャンプ場
+            </div>
+            <div>
+              奥多摩湖キャンプ場
+            </div>
+            <div>
+              河口湖オートキャンプ場
+            </div>
+            <div>
+              丹沢湖キャンプリゾート
+            </div>
+            <div>
+              箱根芦ノ湖キャンプ村
+            </div>
+            <div>
+              フリーキャンプ場
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MapComponent スナップショットテスト 基本の地図表示 1`] = `
+<div
+  style="width: 100%; height: 600px;"
+>
+  <div
+    data-testid="mock-map"
+    style="width: 100%; height: 100%;"
+  >
+    <div
+      data-testid="mock-marker"
+      title="テストキャンプ場1"
+    >
+      <div
+        style="width: 30px; height: 30px; background-color: rgb(220, 38, 38); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+      >
+        🏕
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`MapComponent スナップショットテスト 選択されたキャンプ場でInfoWindow表示 1`] = `
+<div
+  style="width: 100%; height: 600px;"
+>
+  <div
+    data-testid="mock-map"
+    style="width: 100%; height: 100%;"
+  >
+    <div
+      data-testid="mock-marker"
+      title="テストキャンプ場1"
+    >
+      <div
+        style="width: 30px; height: 30px; background-color: rgb(220, 38, 38); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"
+      >
+        🏕
+      </div>
+    </div>
+  </div>
+</div>
+`;

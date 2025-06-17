@@ -21,6 +21,14 @@ const customJestConfig = {
     '!src/app/**/loading.tsx',
     '!src/app/**/not-found.tsx',
     '!src/app/**/error.tsx',
+    '!src/middleware.ts',
+    '!src/i18n/routing.ts',
+    '!src/i18n/navigation.ts',
+    '!src/i18n/request.ts',
+  ],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '/.next/',
   ],
   testMatch: [
     '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',

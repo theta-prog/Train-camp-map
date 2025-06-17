@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`LanguageSwitcher スナップショットテスト ドロップダウン開いている状態 1`] = `
+<div
+  class="relative"
+>
+  <button
+    class="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+  >
+    <span
+      class="text-lg"
+    >
+      🇯🇵
+    </span>
+    <span
+      class="font-medium"
+    >
+      日本語
+    </span>
+    <svg
+      class="w-4 h-4 transition-transform duration-200 rotate-180"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M19 9l-7 7-7-7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      />
+    </svg>
+  </button>
+  <div
+    class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+  >
+    <div
+      class="py-1"
+    >
+      <button
+        class="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3 bg-green-50 text-green-700"
+      >
+        <span
+          class="text-lg"
+        >
+          🇯🇵
+        </span>
+        <span
+          class="font-medium"
+        >
+          日本語
+        </span>
+        <svg
+          class="w-4 h-4 ml-auto text-green-600"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path
+            clip-rule="evenodd"
+            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </button>
+      <button
+        class="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors flex items-center space-x-3 text-gray-700"
+      >
+        <span
+          class="text-lg"
+        >
+          🇺🇸
+        </span>
+        <span
+          class="font-medium"
+        >
+          English
+        </span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="fixed inset-0 z-40"
+  />
+</div>
+`;
+
+exports[`LanguageSwitcher スナップショットテスト 日本語ロケール（閉じている状態） 1`] = `
+<div
+  class="relative"
+>
+  <button
+    class="flex items-center space-x-2 bg-white text-gray-700 px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+  >
+    <span
+      class="text-lg"
+    >
+      🇯🇵
+    </span>
+    <span
+      class="font-medium"
+    >
+      日本語
+    </span>
+    <svg
+      class="w-4 h-4 transition-transform duration-200 "
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M19 9l-7 7-7-7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+      />
+    </svg>
+  </button>
+</div>
+`;

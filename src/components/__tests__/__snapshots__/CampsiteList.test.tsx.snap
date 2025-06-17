@@ -1,0 +1,1231 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CampsiteList スナップショットテスト nullパラメータ（フォールバック） 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          テストキャンプ場1
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥2,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        東京都渋谷区
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            渋谷駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            徒歩15分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          美しい自然に囲まれたキャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 基本のキャンプ場リスト 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          テストキャンプ場1
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥2,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        東京都渋谷区
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            渋谷駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            徒歩15分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          美しい自然に囲まれたキャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 多機能キャンプ場（"+N"表示） 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          フル装備キャンプ場
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥5,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        神奈川県横浜市
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            横浜駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            バス30分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          すべての設備が揃った豪華キャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          +
+          3
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          +
+          3
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 未定義ロケール（フォールバック） 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          テストキャンプ場1
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥2,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        東京都渋谷区
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            渋谷駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            徒歩15分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          美しい自然に囲まれたキャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 空のリスト 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md p-6"
+>
+  <h2
+    class="text-lg font-bold text-gray-800 mb-4"
+  >
+    Campsites
+  </h2>
+  <div
+    class="text-center py-8"
+  >
+    <p
+      class="text-gray-500"
+    >
+      No campsites found
+    </p>
+    <p
+      class="text-sm text-gray-400 mt-2"
+    >
+      Try changing your search filters
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 英語ロケール 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          Test Campsite 1
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥2,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        Shibuya, Tokyo
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            Shibuya Station
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            15 min walk
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          Beautiful campsite surrounded by nature
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 複数キャンプ場 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          テストキャンプ場1
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥2,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        東京都渋谷区
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            渋谷駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            徒歩15分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          美しい自然に囲まれたキャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+      </div>
+    </div>
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          フル装備キャンプ場
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥5,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        神奈川県横浜市
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            横浜駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            バス30分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          すべての設備が揃った豪華キャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          +
+          3
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          +
+          3
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 設備なし・アクティビティ少数 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 "
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          簡素キャンプ場
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥1,500/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        千葉県市川市
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            市川駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            徒歩10分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          シンプルなキャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      />
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
+
+exports[`CampsiteList スナップショットテスト 選択されたキャンプ場 1`] = `
+<div
+  class="bg-white rounded-lg shadow-md overflow-hidden"
+>
+  <div
+    class="p-4 border-b bg-gray-50"
+  >
+    <h2
+      class="text-lg font-bold text-gray-800"
+    >
+      Campsites
+       (
+      {{count}} found
+      )
+    </h2>
+  </div>
+  <div
+    class="max-h-96 overflow-y-auto"
+  >
+    <div
+      class="p-4 border-b cursor-pointer transition-colors hover:bg-gray-50 bg-green-50 border-green-200"
+    >
+      <div
+        class="flex justify-between items-start mb-2"
+      >
+        <h3
+          class="font-semibold text-gray-800 text-sm"
+        >
+          テストキャンプ場1
+        </h3>
+        <span
+          class="text-sm font-medium text-green-600"
+        >
+          ¥2,000/泊
+        </span>
+      </div>
+      <p
+        class="text-xs text-gray-600 mb-2"
+      >
+        東京都渋谷区
+      </p>
+      <div
+        class="space-y-1 mb-3"
+      >
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Nearest Station
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            渋谷駅
+          </span>
+        </div>
+        <div
+          class="flex items-center text-xs text-gray-600"
+        >
+          <span
+            class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"
+          />
+          <span
+            class="font-medium"
+          >
+            Access
+            :
+          </span>
+          <span
+            class="ml-1"
+          >
+            徒歩15分
+          </span>
+        </div>
+      </div>
+      <div
+        class="mb-2"
+      >
+        <p
+          class="text-xs text-gray-700 line-clamp-2"
+        >
+          美しい自然に囲まれたキャンプ場
+        </p>
+      </div>
+      <div
+        class="flex flex-wrap gap-1 mb-2"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Restroom
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Shower
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
+        >
+          Parking
+        </span>
+      </div>
+      <div
+        class="flex flex-wrap gap-1"
+      >
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Hiking
+        </span>
+        <span
+          class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
+        >
+          Fishing
+        </span>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-4 border-t bg-gray-50 text-center"
+  >
+    <p
+      class="text-xs text-gray-500"
+    >
+      Click on a campsite for details
+    </p>
+  </div>
+</div>
+`;
