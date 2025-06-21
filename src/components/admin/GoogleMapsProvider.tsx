@@ -1,7 +1,7 @@
 'use client'
 
-import { ReactNode } from 'react'
 import { APIProvider } from '@vis.gl/react-google-maps'
+import { ReactNode } from 'react'
 
 interface GoogleMapsProviderProps {
   children: ReactNode

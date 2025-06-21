@@ -1,7 +1,7 @@
 import { Campsite } from '@/types/campsite'
+import { mapActivityToTranslationKey, mapFacilityToTranslationKey } from '@/utils/facilityMapper'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
-import { mapFacilityToTranslationKey, mapActivityToTranslationKey } from '@/utils/facilityMapper'
 
 interface CampsiteListProps {
   campsites: Campsite[]

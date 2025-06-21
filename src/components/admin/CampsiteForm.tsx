@@ -1,10 +1,10 @@
 'use client'
 
 import {
-    AVAILABLE_ACTIVITIES,
-    AVAILABLE_FACILITIES,
-    CampsiteFormData,
-    campsiteSchema
+  AVAILABLE_ACTIVITIES,
+  AVAILABLE_FACILITIES,
+  CampsiteFormData,
+  campsiteSchema
 } from '@/lib/validations/campsite'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
