@@ -35,7 +35,8 @@
     "rental": "Rental",
     "shop": "Shop",
     "parking": "Parking",
-    "wifi": "Wi-Fi"
+    "wifi": "Wi-Fi",
+    "bbq": "BBQ Facilities"
   },
   "activities": {
     "hiking": "Hiking",

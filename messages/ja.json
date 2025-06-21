@@ -29,13 +29,17 @@
     "customIconError": "カスタムマーカーアイコンの設定に失敗しました"
   },
   "facilities": {
+    "restroom": "トイレ",
     "toilet": "トイレ",
     "shower": "シャワー",
     "kitchen": "炊事場",
+    "bbq": "BBQ場",
     "rental": "レンタル",
     "shop": "売店",
+    "store": "売店",
     "parking": "駐車場",
-    "wifi": "Wi-Fi"
+    "wifi": "Wi-Fi",
+    "laundry": "ランドリー"
   },
   "activities": {
     "hiking": "ハイキング",
@@ -43,7 +47,12 @@
     "fishing": "釣り",
     "canoe": "カヌー",
     "boat": "ボート",
+    "boating": "ボート",
     "river": "川遊び",
-    "stargazing": "星空観察"
+    "stargazing": "星空観察",
+    "photography": "写真撮影",
+    "swimming": "水泳",
+    "cycling": "サイクリング",
+    "birdwatching": "バードウォッチング"
   }
 }

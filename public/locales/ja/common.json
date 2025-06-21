@@ -35,7 +35,8 @@
     "rental": "レンタル",
     "shop": "売店",
     "parking": "駐車場",
-    "wifi": "Wi-Fi"
+    "wifi": "Wi-Fi",
+    "bbq": "バーベキュー設備"
   },
   "activities": {
     "hiking": "ハイキング",

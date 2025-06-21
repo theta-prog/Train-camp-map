@@ -1,6 +1,7 @@
 import { Campsite } from '@/types/campsite'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
+import { mapFacilityToTranslationKey, mapActivityToTranslationKey } from '@/utils/facilityMapper'
 
 interface CampsiteListProps {
   campsites: Campsite[]
@@ -81,7 +82,7 @@ export default function CampsiteList({
                   key={facility}
                   className="inline-block px-2 py-1 bg-gray-100 text-xs text-gray-600 rounded"
                 >
-                  {t(`facilities.${facility}`)}
+                  {t(`facilities.${mapFacilityToTranslationKey(facility)}`)}
                 </span>
               ))}
               {campsite.facilities.length > 3 && (
@@ -98,7 +99,7 @@ export default function CampsiteList({
                   key={activity}
                   className="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
                 >
-                  {t(`activities.${activity}`)}
+                  {t(`activities.${mapActivityToTranslationKey(activity)}`)}
                 </span>
               ))}
               {campsite.activities.length > 2 && (

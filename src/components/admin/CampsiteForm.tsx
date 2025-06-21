@@ -9,6 +9,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import MapPicker from './MapPicker'
 
 interface CampsiteFormProps {
   onSubmit: (data: CampsiteFormData) => Promise<void>
@@ -27,6 +28,10 @@ export default function CampsiteForm({
   const [selectedActivities, setSelectedActivities] = useState<string[]>(
     initialData?.activities || []
   )
+  const [selectedLocation, setSelectedLocation] = useState({
+    lat: initialData?.lat || 35.6762,
+    lng: initialData?.lng || 139.6503
+  })
 
   const {
     register,
@@ -39,8 +44,8 @@ export default function CampsiteForm({
     defaultValues: {
       name_ja: '',
       name_en: '',
-      lat: 0,
-      lng: 0,
+      lat: initialData?.lat,
+      lng: initialData?.lng,
       address_ja: '',
       address_en: '',
       phone: '',
@@ -65,6 +70,12 @@ export default function CampsiteForm({
     
     setSelectedFacilities(updated)
     setValue('facilities', updated)
+  }
+
+  const handleLocationSelect = (lat: number, lng: number) => {
+    setSelectedLocation({ lat, lng })
+    setValue('lat', lat)
+    setValue('lng', lng)
   }
 
   const handleActivityChange = (activityId: string, checked: boolean) => {
@@ -129,10 +140,23 @@ export default function CampsiteForm({
       <div className="bg-white shadow-sm rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">位置情報</h3>
         
+        {/* Google Map による位置選択 */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            地図から位置を選択
+          </label>
+          <MapPicker
+            lat={selectedLocation.lat}
+            lng={selectedLocation.lng}
+            onLocationSelect={handleLocationSelect}
+            className="w-full"
+          />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="lat" className="block text-sm font-medium text-gray-700 mb-1">
-              緯度*
+              緯度（手動入力・オプション）
             </label>
             <input
               id="lat"
@@ -149,7 +173,7 @@ export default function CampsiteForm({
 
           <div>
             <label htmlFor="lng" className="block text-sm font-medium text-gray-700 mb-1">
-              経度*
+              経度（手動入力・オプション）
             </label>
             <input
               id="lng"

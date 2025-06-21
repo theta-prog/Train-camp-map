@@ -29,13 +29,17 @@
     "customIconError": "Failed to set custom marker icon"
   },
   "facilities": {
+    "restroom": "Restroom",
     "toilet": "Toilet",
     "shower": "Shower",
     "kitchen": "Kitchen",
+    "bbq": "BBQ Area",
     "rental": "Rental",
     "shop": "Shop",
+    "store": "Store",
     "parking": "Parking",
-    "wifi": "Wi-Fi"
+    "wifi": "Wi-Fi",
+    "laundry": "Laundry"
   },
   "activities": {
     "hiking": "Hiking",
@@ -43,7 +47,12 @@
     "fishing": "Fishing",
     "canoe": "Canoe",
     "boat": "Boat",
+    "boating": "Boating",
     "river": "River Play",
-    "stargazing": "Stargazing"
+    "stargazing": "Stargazing",
+    "photography": "Photography",
+    "swimming": "Swimming",
+    "cycling": "Cycling",
+    "birdwatching": "Bird Watching"
   }
 }

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import GoogleMapsProvider from './GoogleMapsProvider'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -49,7 +50,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
       {/* メインコンテンツ */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
+        <GoogleMapsProvider>
+          {children}
+        </GoogleMapsProvider>
       </main>
     </div>
   )
