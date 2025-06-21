@@ -30,6 +30,27 @@ jest.mock('next-intl', () => ({
   }
 }))
 
+// Mock next-intl/routing
+jest.mock('next-intl/routing', () => ({
+  defineRouting: (config) => config,
+  createSharedPathnamesNavigation: () => ({
+    Link: ({ children, href, ...props }) => ({
+      $$typeof: Symbol.for('react.element'),
+      type: 'a',
+      props: { href, ...props, children },
+      key: null,
+      ref: null,
+    }),
+    redirect: jest.fn(),
+    usePathname: () => '/ja',
+    useRouter: () => ({
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+    }),
+  }),
+}))
+
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
   useParams: () => ({ locale: 'ja' }),

@@ -22,8 +22,8 @@ jest.mock('@vis.gl/react-google-maps', () => ({
 
 // モック dynamic import
 jest.mock('next/dynamic', () => {
-  return function mockDynamic(importFunc: any, options?: any) {
-    const MockedComponent = (props: any) => (
+  return function mockDynamic(_importFunc: any, options?: any) {
+    const MockedComponent = (_props: any) => (
       <div data-testid="mock-map-component">
         {options?.loading && options.loading()}
       </div>
@@ -34,7 +34,7 @@ jest.mock('next/dynamic', () => {
 
 // 子コンポーネントのモック
 jest.mock('../SearchFilters', () => {
-  return function MockSearchFilters({ onFilterChange, initialFilters }: any) {
+  return function MockSearchFilters({ onFilterChange, initialFilters: _initialFilters }: any) {
     return (
       <div data-testid="mock-search-filters">
         <button 
