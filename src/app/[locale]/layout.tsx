@@ -1,7 +1,6 @@
-import { NextIntlClientProvider } from 'next-intl'
-import { notFound } from 'next/navigation'
-import { hasLocale } from 'next-intl'
 import { routing } from '@/i18n/routing'
+import { hasLocale, NextIntlClientProvider } from 'next-intl'
+import { notFound } from 'next/navigation'
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))

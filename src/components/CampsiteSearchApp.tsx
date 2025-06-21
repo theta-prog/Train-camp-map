@@ -4,10 +4,11 @@ import CampsiteList from '@/components/CampsiteList'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import SearchFilters from '@/components/SearchFilters'
 import { Campsite } from '@/types/campsite'
+import { extractPriceFromString, fetchCampsites } from '@/utils/campsiteApi'
 import { APIProvider } from '@vis.gl/react-google-maps'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // MapComponentを動的インポートしてSSRを無効化
 const MapComponent = dynamic(
@@ -25,191 +26,6 @@ const MapComponent = dynamic(
   }
 )
 
-// 多言語対応のサンプルキャンプ場データ
-const sampleCampsites: Campsite[] = [
-  {
-    id: '1',
-    name: {
-      ja: '高尾山キャンプ場',
-      en: 'Mount Takao Campsite'
-    },
-    lat: 35.625,
-    lng: 139.244,
-    address: {
-      ja: '東京都八王子市高尾町',
-      en: 'Takao-machi, Hachioji, Tokyo'
-    },
-    phone: '042-661-0037',
-    website: 'https://example.com',
-    price: '3000円〜 / ¥3,000~',
-    facilities: ['toilet', 'shower', 'kitchen'],
-    activities: ['hiking', 'bbq'],
-    nearestStation: {
-      ja: 'JR高尾駅',
-      en: 'JR Takao Station'
-    },
-    accessTime: {
-      ja: '徒歩15分',
-      en: '15 min walk'
-    },
-    description: {
-      ja: '高尾山の麓にある自然豊かなキャンプ場です。',
-      en: 'A nature-rich campsite at the foot of Mount Takao.'
-    }
-  },
-  {
-    id: '2',
-    name: {
-      ja: '奥多摩湖キャンプ場',
-      en: 'Lake Okutama Campsite'
-    },
-    lat: 35.781,
-    lng: 139.017,
-    address: {
-      ja: '東京都西多摩郡奥多摩町',
-      en: 'Okutama-machi, Nishitama District, Tokyo'
-    },
-    phone: '0428-83-2152',
-    website: 'https://example.com',
-    price: '2500円〜 / ¥2,500~',
-    facilities: ['toilet', 'kitchen', 'shop'],
-    activities: ['fishing', 'canoe', 'hiking'],
-    nearestStation: {
-      ja: 'JR奥多摩駅',
-      en: 'JR Okutama Station'
-    },
-    accessTime: {
-      ja: 'バス20分',
-      en: '20 min by bus'
-    },
-    description: {
-      ja: '奥多摩湖のほとりにある湖畔キャンプ場です。',
-      en: 'A lakeside campsite by Lake Okutama.'
-    }
-  },
-  {
-    id: '3',
-    name: {
-      ja: '河口湖オートキャンプ場',
-      en: 'Lake Kawaguchi Auto Campsite'
-    },
-    lat: 35.509,
-    lng: 138.764,
-    address: {
-      ja: '山梨県南都留郡富士河口湖町',
-      en: 'Fujikawaguchiko-machi, Minamitsuru District, Yamanashi'
-    },
-    phone: '0555-72-4145',
-    website: 'https://example.com',
-    price: '4000円〜 / ¥4,000~',
-    facilities: ['toilet', 'shower', 'kitchen', 'rental', 'parking'],
-    activities: ['fishing', 'bbq', 'stargazing'],
-    nearestStation: {
-      ja: 'JR河口湖駅',
-      en: 'JR Kawaguchi-ko Station'
-    },
-    accessTime: {
-      ja: 'バス15分',
-      en: '15 min by bus'
-    },
-    description: {
-      ja: '富士山を望む絶景のキャンプ場。河口湖でのアクティビティも楽しめます。',
-      en: 'A scenic campsite with views of Mount Fuji. Enjoy activities at Lake Kawaguchi.'
-    }
-  },
-  {
-    id: '4',
-    name: {
-      ja: '丹沢湖キャンプリゾート',
-      en: 'Lake Tanzawa Camp Resort'
-    },
-    lat: 35.454,
-    lng: 138.952,
-    address: {
-      ja: '神奈川県足柄上郡山北町',
-      en: 'Yamakita-machi, Ashigarakami District, Kanagawa'
-    },
-    phone: '0465-78-3181',
-    website: 'https://example.com',
-    price: '3500円〜 / ¥3,500~',
-    facilities: ['toilet', 'shower', 'kitchen', 'shop', 'wifi'],
-    activities: ['hiking', 'fishing', 'canoe', 'river'],
-    nearestStation: {
-      ja: 'JR谷峨駅',
-      en: 'JR Yaga Station'
-    },
-    accessTime: {
-      ja: 'バス25分',
-      en: '25 min by bus'
-    },
-    description: {
-      ja: '丹沢湖畔の美しい自然に囲まれたキャンプ場。カヌーや釣りが人気です。',
-      en: 'A beautiful campsite surrounded by nature at Lake Tanzawa. Canoeing and fishing are popular.'
-    }
-  },
-  {
-    id: '5',
-    name: {
-      ja: '箱根芦ノ湖キャンプ村',
-      en: 'Hakone Lake Ashi Camp Village'
-    },
-    lat: 35.205,
-    lng: 139.026,
-    address: {
-      ja: '神奈川県足柄下郡箱根町',
-      en: 'Hakone-machi, Ashigarashimo District, Kanagawa'
-    },
-    phone: '0460-84-8279',
-    website: 'https://example.com',
-    price: '5000円〜 / ¥5,000~',
-    facilities: ['toilet', 'shower', 'kitchen', 'rental', 'shop', 'parking'],
-    activities: ['hiking', 'bbq', 'boat'],
-    nearestStation: {
-      ja: 'JR小田原駅',
-      en: 'JR Odawara Station'
-    },
-    accessTime: {
-      ja: 'バス45分',
-      en: '45 min by bus'
-    },
-    description: {
-      ja: '芦ノ湖の雄大な景色を楽しめる高級キャンプ場。温泉も近くにあります。',
-      en: 'A premium campsite with magnificent views of Lake Ashi. Hot springs are nearby.'
-    }
-  },
-  // 価格情報に数値を含まないデータ（テスト用）
-  {
-    id: '6',
-    name: {
-      ja: 'フリーキャンプ場',
-      en: 'Free Campsite'
-    },
-    lat: 35.7,
-    lng: 139.5,
-    address: {
-      ja: '東京都奥多摩町',
-      en: 'Okutama, Tokyo'
-    },
-    phone: '042-123-4567',
-    website: 'https://example.com',
-    price: '無料 / Free',  // 数値を含まない価格
-    facilities: ['toilet'],
-    activities: ['hiking'],
-    nearestStation: {
-      ja: 'JR奥多摩駅',
-      en: 'JR Okutama Station'
-    },
-    accessTime: {
-      ja: '徒歩20分',
-      en: '20 min walk'
-    },
-    description: {
-      ja: '自然豊かな無料キャンプ場です。',
-      en: 'A free campsite rich in nature.'
-    }
-  }
-]
-
 interface CampsiteSearchAppProps {
   locale: string
 }
@@ -217,7 +33,10 @@ interface CampsiteSearchAppProps {
 export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
   const t = useTranslations()
   const [selectedCampsite, setSelectedCampsite] = useState<Campsite | null>(null)
-  const [filteredCampsites, setFilteredCampsites] = useState<Campsite[]>(sampleCampsites)
+  const [allCampsites, setAllCampsites] = useState<Campsite[]>([])
+  const [filteredCampsites, setFilteredCampsites] = useState<Campsite[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchFilters, setSearchFilters] = useState({
     keyword: '',
     maxPrice: 10000,
@@ -228,16 +47,35 @@ export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
+  // キャンプサイトデータを取得
+  useEffect(() => {
+    async function loadCampsites() {
+      try {
+        setIsLoading(true)
+        setError(null)
+        const campsites = await fetchCampsites()
+        setAllCampsites(campsites)
+        setFilteredCampsites(campsites)
+      } catch (err) {
+        console.error('Failed to load campsites:', err)
+        setError('キャンプサイトの読み込みに失敗しました')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadCampsites()
+  }, [])
+
   const handleFilterChange = useCallback((filters: typeof searchFilters) => {
     setSearchFilters(filters)
     
     if (!isFiltersInitialized) {
       setIsFiltersInitialized(true)
-      setFilteredCampsites(sampleCampsites)
-      return
+      return // 初回は何もしない
     }
     
-    let filtered = sampleCampsites.filter(campsite => {
+    let filtered = allCampsites.filter((campsite: Campsite) => {
       const validLocale = locale === 'ja' || locale === 'en' ? locale : null
       const currentLocale = validLocale || 'ja'
       
@@ -247,8 +85,7 @@ export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
         campsite.address[currentLocale].toLowerCase().includes(keywordLower) ||
         campsite.nearestStation[currentLocale].toLowerCase().includes(keywordLower)
       
-      const priceMatch = campsite.price.match(/\d+/)
-      const priceValue = priceMatch ? parseInt(priceMatch[0]) : 0
+      const priceValue = extractPriceFromString(campsite.price)
       const priceWithinLimit = priceValue <= filters.maxPrice
       
       const facilitiesMatch = filters.facilities.length === 0 || 
@@ -261,7 +98,7 @@ export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
     })
     
     setFilteredCampsites(filtered)
-  }, [locale, isFiltersInitialized])
+  }, [locale, isFiltersInitialized, allCampsites])
 
   if (!apiKey) {
     return (
@@ -273,6 +110,37 @@ export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
           </p>
         </div>
       </div>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <APIProvider apiKey={apiKey}>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+            <p className="mt-4 text-gray-600">キャンプサイトを読み込み中...</p>
+          </div>
+        </div>
+      </APIProvider>
+    )
+  }
+
+  if (error) {
+    return (
+      <APIProvider apiKey={apiKey}>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-red-600 mb-2">{error}</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              再読み込み
+            </button>
+          </div>
+        </div>
+      </APIProvider>
     )
   }
 
