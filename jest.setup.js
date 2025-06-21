@@ -80,6 +80,47 @@ jest.mock('next/image', () => ({
 // Setup fetch mock
 global.fetch = jest.fn()
 
+// Mock NextRequest and NextResponse for API route testing
+jest.mock('next/server', () => ({
+  NextRequest: class NextRequest {
+    constructor(url, options = {}) {
+      this._url = url
+      this.method = options.method || 'GET'
+      this.headers = new Map()
+      this._body = options.body
+      
+      // Set headers
+      if (options.headers) {
+        Object.entries(options.headers).forEach(([key, value]) => {
+          this.headers.set(key.toLowerCase(), value)
+        })
+      }
+    }
+    
+    get url() {
+      return this._url
+    }
+    
+    async json() {
+      return JSON.parse(this._body || '{}')
+    }
+    
+    async text() {
+      return this._body || ''
+    }
+  },
+  NextResponse: {
+    json: (body, options = {}) => ({
+      json: async () => body,
+      status: options.status || 200,
+      headers: new Map()
+    })
+  }
+}))
+
+// Remove the conflicting Request/Response mocks
+// global.Request and global.Response are not needed when mocking Next.js components
+
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
   constructor() {}

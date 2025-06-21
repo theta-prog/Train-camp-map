@@ -19,18 +19,24 @@
     "validate": "npm run typecheck && npm run lint",
     "validate:strict": "npm run typecheck:strict && npm run lint",
     "full-check": "./scripts/typecheck.sh",
-    "ci": "npm run typecheck && npm run lint && npm run test && npm run build"
+    "ci": "npm run typecheck && npm run lint && npm run test:coverage && npm run build"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.1.1",
+    "@supabase/supabase-js": "^2.50.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vis.gl/react-google-maps": "^1.5.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.519.0",
     "next": "^14.2.30",
     "next-intl": "^4.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "typescript": "^5"
+    "react-hook-form": "^7.58.1",
+    "typescript": "^5",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
