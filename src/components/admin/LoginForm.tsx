@@ -1,8 +1,8 @@
 'use client'
 
 import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, useEffect } from 'react'
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
@@ -12,6 +12,35 @@ export default function LoginForm() {
   const [success, setSuccess] = useState<string | null>(null)
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // URLパラメータからエラーを取得
+  useEffect(() => {
+    if (!searchParams) return
+    
+    const urlError = searchParams.get('error')
+    const errorDescription = searchParams.get('error_description')
+    
+    if (urlError) {
+      switch(urlError) {
+        case 'access_denied':
+          setError('アクセスが拒否されました。メール確認リンクの期限が切れている可能性があります。')
+          break
+        case 'session_error':
+          setError('セッションエラーが発生しました。再度ログインしてください。')
+          break
+        case 'auth_error':
+          setError('認証エラーが発生しました。')
+          break
+        default:
+          if (errorDescription) {
+            setError(decodeURIComponent(errorDescription))
+          } else {
+            setError('エラーが発生しました。')
+          }
+      }
+    }
+  }, [searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -76,7 +105,10 @@ export default function LoginForm() {
       if (error) {
         setError(error.message)
       } else {
-        setSuccess('確認メールを送信しました。メールをご確認ください。')
+        setSuccess(
+          '確認メールを送信しました。メール内のリンクをクリックしてアカウントを有効化してください。' +
+          'リンクは5分間有効です。期限切れの場合は再度登録してください。'
+        )
         setMode('login')
       }
     } catch (err) {

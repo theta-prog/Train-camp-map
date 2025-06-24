@@ -16,7 +16,13 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error) {
+          console.error('認証セッション取得エラー:', error)
+          router.push('/admin/login?error=session_error')
+          return
+        }
         
         if (session) {
           setAuthenticated(true)
@@ -25,7 +31,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         }
       } catch (error) {
         console.error('認証チェックエラー:', error)
-        router.push('/admin/login')
+        router.push('/admin/login?error=auth_error')
       } finally {
         setLoading(false)
       }
@@ -36,7 +42,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     // 認証状態の変更を監視
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('認証状態変更:', event, session?.user?.email)
+        
         if (event === 'SIGNED_OUT' || !session) {
+          setAuthenticated(false)
           router.push('/admin/login')
         } else if (session) {
           setAuthenticated(true)
