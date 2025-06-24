@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react'
-import { Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps'
+import { Campsite } from '@/types/campsite'
+import { AdvancedMarker, InfoWindow, Map } from '@vis.gl/react-google-maps'
 import { useTranslations } from 'next-intl'
 import { useParams, useRouter } from 'next/navigation'
-import { Campsite } from '@/types/campsite'
+import { useCallback, useState } from 'react'
 
 interface MapComponentProps {
   campsites: Campsite[]

@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation'
 import CampsiteDetail from '@/components/CampsiteDetail'
 import { supabase } from '@/lib/supabase'
+import { notFound } from 'next/navigation'
 
 interface CampsiteDetailPageProps {
   params: {

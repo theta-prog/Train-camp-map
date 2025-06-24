@@ -1,8 +1,7 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
-import { useParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 
 export default function LanguageSelector() {
   const router = useRouter()

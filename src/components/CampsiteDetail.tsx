@@ -1,11 +1,11 @@
 'use client'
 
 import { Campsite } from '@/types/campsite'
+import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps'
 import { useTranslations } from 'next-intl'
-import { useParams } from 'next/navigation'
-import Link from 'next/link'
 import Image from 'next/image'
-import { APIProvider, Map, AdvancedMarker } from '@vis.gl/react-google-maps'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import LanguageSwitcher from './LanguageSwitcher'
 
 interface CampsiteDetailProps {

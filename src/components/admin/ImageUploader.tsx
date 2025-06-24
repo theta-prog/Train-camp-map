@@ -1,7 +1,7 @@
 'use client'
 
 import { uploadMultipleImages } from '@/lib/imageUpload'
-import { useState, useRef } from 'react'
+import { useRef, useState } from 'react'
 
 interface ImageUploaderProps {
   campsiteId: string
