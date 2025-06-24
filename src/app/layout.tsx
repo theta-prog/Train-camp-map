@@ -3,6 +3,11 @@ import '@/styles/globals.css'
 export const metadata = {
   title: 'Train Camp App',
   description: 'キャンプ場検索・管理アプリケーション',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
