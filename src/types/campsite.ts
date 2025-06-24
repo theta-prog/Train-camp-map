@@ -12,7 +12,14 @@ export interface Campsite {
   }
   phone: string
   website: string
-  price: string
+  reservationUrl?: string // 予約サイトURL
+  price: string // 表示用の価格文字列（例: "¥2,000-¥5,000/泊" or "¥3,000/泊"）
+  priceMin?: number // 最小料金（数値）
+  priceMax?: number // 最大料金（数値）
+  checkInTime?: string // チェックイン時間
+  checkOutTime?: string // チェックアウト時間
+  cancellationPolicy?: string // キャンセルポリシー
+  images?: string[] // 画像URL配列
   facilities: string[]
   activities: string[]
   nearestStation: {
@@ -32,6 +39,7 @@ export interface Campsite {
 export interface SearchFilters {
   keyword: string
   maxPrice: number
+  minPrice?: number // 最小料金フィルター
   facilities: string[]
   activities: string[]
 }

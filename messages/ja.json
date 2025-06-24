@@ -1,6 +1,9 @@
 {
   "title": "電車で行けるキャンプ場検索",
   "subtitle": "公共交通機関でアクセス可能なキャンプ場を見つけよう",
+  "navigation": {
+    "language": "言語"
+  },
   "searchFilters": {
     "title": "検索フィルター",
     "clear": "クリア",
@@ -21,6 +24,23 @@
     "nearestStation": "最寄り駅",
     "access": "アクセス",
     "price": "料金"
+  },
+  "campsiteDetail": {
+    "backToList": "キャンプ場一覧に戻る",
+    "description": "詳細",
+    "basicInfo": "基本情報",
+    "checkInOut": "チェックイン・チェックアウト",
+    "checkIn": "イン:",
+    "checkOut": "アウト:",
+    "phone": "電話番号",
+    "bookingLinks": "予約・詳細情報",
+    "makeReservation": "🏕 予約サイトで予約する",
+    "officialWebsite": "🌐 公式サイトを見る",
+    "openInMaps": "🗺 Google Maps で開く",
+    "cancellationPolicy": "キャンセルポリシー",
+    "location": "位置情報",
+    "address": "住所",
+    "coordinates": "座標"
   },
   "map": {
     "apiKeyMissing": "Google Maps APIキーが設定されていません",

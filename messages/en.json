@@ -1,6 +1,9 @@
 {
   "title": "Train-Accessible Campsite Search",
   "subtitle": "Find campsites accessible by public transportation",
+  "navigation": {
+    "language": "Language"
+  },
   "searchFilters": {
     "title": "Search Filters",
     "clear": "Clear",
@@ -21,6 +24,23 @@
     "nearestStation": "Nearest Station",
     "access": "Access",
     "price": "Price"
+  },
+  "campsiteDetail": {
+    "backToList": "Back to Campsite List",
+    "description": "Description",
+    "basicInfo": "Basic Information",
+    "checkInOut": "Check-in / Check-out",
+    "checkIn": "In:",
+    "checkOut": "Out:",
+    "phone": "Phone",
+    "bookingLinks": "Booking & Links",
+    "makeReservation": "🏕 Make a Reservation",
+    "officialWebsite": "🌐 Visit Official Website",
+    "openInMaps": "🗺 Open in Google Maps",
+    "cancellationPolicy": "Cancellation Policy",
+    "location": "Location",
+    "address": "Address",
+    "coordinates": "Coordinates"
   },
   "map": {
     "apiKeyMissing": "Google Maps API key is not configured",

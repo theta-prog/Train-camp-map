@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import MapPicker from './MapPicker'
+import ImageUploader from './ImageUploader'
 
 interface CampsiteFormProps {
   onSubmit: (data: CampsiteFormData) => Promise<void>
@@ -27,6 +28,9 @@ export default function CampsiteForm({
   )
   const [selectedActivities, setSelectedActivities] = useState<string[]>(
     initialData?.activities || []
+  )
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    initialData?.images || []
   )
   const [selectedLocation, setSelectedLocation] = useState({
     lat: initialData?.lat || 35.6762,
@@ -92,7 +96,20 @@ export default function CampsiteForm({
       ...data,
       facilities: selectedFacilities,
       activities: selectedActivities,
+      images: imageUrls,
     })
+  }
+
+  const handleAddImage = (newUrls: string[]) => {
+    const updatedImages = [...imageUrls, ...newUrls]
+    setImageUrls(updatedImages)
+    setValue('images', updatedImages)
+  }
+
+  const handleRemoveImage = (index: number) => {
+    const newImages = imageUrls.filter((_, i) => i !== index)
+    setImageUrls(newImages)
+    setValue('images', newImages)
   }
 
   return (
@@ -247,7 +264,7 @@ export default function CampsiteForm({
 
           <div>
             <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
-              ウェブサイト
+              公式ウェブサイト
             </label>
             <input
               id="website"
@@ -263,19 +280,125 @@ export default function CampsiteForm({
         </div>
 
         <div className="mt-6">
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-            料金*
+          <label htmlFor="reservationUrl" className="block text-sm font-medium text-gray-700 mb-1">
+            予約サイトURL
           </label>
           <input
-            id="price"
-            type="text"
-            {...register('price')}
+            id="reservationUrl"
+            type="url"
+            {...register('reservationUrl')}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="例: ¥2,000/泊"
+            placeholder="例: https://reservation.example.com"
           />
-          {errors.price && (
-            <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+          {errors.reservationUrl && (
+            <p className="mt-1 text-sm text-red-600">{errors.reservationUrl.message}</p>
           )}
+        </div>
+
+        <div className="mt-6">
+          <h4 className="text-md font-medium text-gray-900 mb-4">料金情報</h4>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+                表示用料金*
+              </label>
+              <input
+                id="price"
+                type="text"
+                {...register('price')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="例: ¥2,000-¥5,000/泊 or ¥3,000/泊"
+              />
+              {errors.price && (
+                <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="priceMin" className="block text-sm font-medium text-gray-700 mb-1">
+                最小料金（円）
+              </label>
+              <input
+                id="priceMin"
+                type="number"
+                {...register('priceMin', { valueAsNumber: true })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="例: 2000"
+              />
+              {errors.priceMin && (
+                <p className="mt-1 text-sm text-red-600">{errors.priceMin.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="priceMax" className="block text-sm font-medium text-gray-700 mb-1">
+                最大料金（円）
+              </label>
+              <input
+                id="priceMax"
+                type="number"
+                {...register('priceMax', { valueAsNumber: true })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="例: 5000"
+              />
+              {errors.priceMax && (
+                <p className="mt-1 text-sm text-red-600">{errors.priceMax.message}</p>
+              )}
+            </div>
+          </div>
+          
+          {/* チェックイン・チェックアウト情報 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div>
+              <label htmlFor="checkInTime" className="block text-sm font-medium text-gray-700 mb-1">
+                チェックイン時間
+              </label>
+              <input
+                id="checkInTime"
+                type="text"
+                {...register('checkInTime')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="例: 14:00"
+              />
+              {errors.checkInTime && (
+                <p className="mt-1 text-sm text-red-600">{errors.checkInTime.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="checkOutTime" className="block text-sm font-medium text-gray-700 mb-1">
+                チェックアウト時間
+              </label>
+              <input
+                id="checkOutTime"
+                type="text"
+                {...register('checkOutTime')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="例: 11:00"
+              />
+              {errors.checkOutTime && (
+                <p className="mt-1 text-sm text-red-600">{errors.checkOutTime.message}</p>
+              )}
+            </div>
+          </div>
+
+          {/* キャンセルポリシー */}
+          <div className="mt-6">
+            <label htmlFor="cancellationPolicy" className="block text-sm font-medium text-gray-700 mb-1">
+              キャンセルポリシー
+            </label>
+            <textarea
+              id="cancellationPolicy"
+              {...register('cancellationPolicy')}
+              rows={3}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="キャンセル料金や注意事項を記載してください"
+            />
+            {errors.cancellationPolicy && (
+              <p className="mt-1 text-sm text-red-600">{errors.cancellationPolicy.message}</p>
+            )}
+          </div>
         </div>
       </div>
 
@@ -427,6 +550,50 @@ export default function CampsiteForm({
             </label>
           ))}
         </div>
+      </div>
+
+      {/* 画像管理 */}
+      <div className="bg-white p-6 rounded-lg border border-gray-200">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">画像</h3>
+        
+        {/* 現在の画像一覧 */}
+        {imageUrls.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            {imageUrls.map((url, index) => (
+              <div key={index} className="relative group">
+                <div className="aspect-w-16 aspect-h-12 bg-gray-100 rounded-lg overflow-hidden">
+                  <div className="relative w-full h-32">
+                    <img
+                      src={url}
+                      alt={`画像 ${index + 1}`}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNDBDMTA2LjYyNyA0MCAxMTIgNDUuMzczIDExMiA1MkMxMTIgNTguNjI3IDEwNi42MjcgNjQgMTAwIDY0QzkzLjM3MyA2NCA4OCA1OC42MjcgODggNTJDODggNDUuMzczIDkzLjM3MyA0MCAxMDAgNDBaIiBmaWxsPSIjOUI5QkE0Ii8+CjxwYXRoIGQ9Ik04MCA3NkwxMDAgNTZMMTIwIDc2SDE2MEwxNDAgNTZMMTcwIDg2SDE3NlY5MkgxNzZIMjRWOTJIMjRMNTQgNjJMODAgNzZaIiBmaWxsPSIjOUI5QkE0Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTA0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+dum7vOOBn+OBruiqreOBv+i+vOOBv+OBq+WksOaVlzwvdGV4dD4KPC9zdmc+';
+                      }}
+                    />
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  ×
+                </button>
+                <p className="mt-2 text-xs text-gray-500 truncate">{url}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ファイルアップローダー */}
+        <ImageUploader
+          campsiteId={initialData?.id || 'new-campsite'}
+          onImagesUploaded={handleAddImage}
+          existingImages={imageUrls}
+          maxImages={10}
+        />
       </div>
 
       {/* 送信ボタン */}

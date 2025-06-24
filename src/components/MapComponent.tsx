@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps'
 import { useTranslations } from 'next-intl'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Campsite } from '@/types/campsite'
 
 interface MapComponentProps {
@@ -22,6 +22,7 @@ export default function MapComponent({
 }: MapComponentProps) {
   const t = useTranslations()
   const params = useParams()
+  const router = useRouter()
   const locale = (params?.locale as 'ja' | 'en') || 'ja'
   const [activeMarker, setActiveMarker] = useState<string | null>(null)
 
@@ -39,10 +40,11 @@ export default function MapComponent({
       <Map
         defaultCenter={center}
         defaultZoom={8}
-        mapId="DEMO_MAP_ID"
+        mapId={process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || null}
         style={{ width: '100%', height: '100%' }}
         disableDefaultUI={false}
         zoomControl={true}
+        gestureHandling={'greedy'}
       >
         {campsites.map((campsite) => (
           <AdvancedMarker
@@ -89,7 +91,7 @@ export default function MapComponent({
               <button
                 className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
                 onClick={() => {
-                  // 詳細ページへの遷移などの処理
+                  router.push(`/${locale}/campsites/${selectedCampsite.id}`)
                 }}
               >
                 {t('map.viewDetails')}

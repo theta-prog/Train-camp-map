@@ -23,9 +23,17 @@ export const campsiteSchema = z.object({
   // 連絡先
   phone: z.string().regex(/^[\d\-\+\(\)\s]*$/, '有効な電話番号を入力してください').optional().or(z.literal('')),
   website: z.string().url('有効なURLを入力してください').optional().or(z.literal('')),
+  reservationUrl: z.string().url('有効なURLを入力してください').optional().or(z.literal('')),
   
   // 料金
-  price: z.string().min(1, '料金は必須です').max(50, '50文字以内で入力してください'),
+  price: z.string().min(1, '料金は必須です').max(100, '100文字以内で入力してください'),
+  priceMin: z.number().min(0, '最小料金は0以上である必要があります').optional(),
+  priceMax: z.number().min(0, '最大料金は0以上である必要があります').optional(),
+  
+  // チェックイン・チェックアウト
+  checkInTime: z.string().max(50, '50文字以内で入力してください').optional().or(z.literal('')),
+  checkOutTime: z.string().max(50, '50文字以内で入力してください').optional().or(z.literal('')),
+  cancellationPolicy: z.string().max(500, '500文字以内で入力してください').optional().or(z.literal('')),
   
   // アクセス情報
   nearest_station_ja: z.string().min(1, '最寄り駅（日本語）は必須です').max(100, '100文字以内で入力してください'),
@@ -40,6 +48,9 @@ export const campsiteSchema = z.object({
   // 設備・アクティビティ
   facilities: z.array(z.string()),
   activities: z.array(z.string()),
+  
+  // 画像
+  images: z.array(z.string().url('有効なURLを入力してください')).optional(),
 })
 
 export type CampsiteFormData = z.infer<typeof campsiteSchema>

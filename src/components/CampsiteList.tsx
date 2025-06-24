@@ -2,6 +2,7 @@ import { Campsite } from '@/types/campsite'
 import { mapActivityToTranslationKey, mapFacilityToTranslationKey } from '@/utils/facilityMapper'
 import { useTranslations } from 'next-intl'
 import { useParams } from 'next/navigation'
+import Link from 'next/link'
 
 interface CampsiteListProps {
   campsites: Campsite[]
@@ -93,7 +94,7 @@ export default function CampsiteList({
             </div>
             
             {/* アクティビティ */}
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-1 mb-3">
               {campsite.activities.slice(0, 2).map((activity) => (
                 <span
                   key={activity}
@@ -107,6 +108,20 @@ export default function CampsiteList({
                   +{campsite.activities.length - 2}
                 </span>
               )}
+            </div>
+            
+            {/* 詳細ページリンク */}
+            <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+              <span className="text-xs text-gray-500">
+                {locale === 'ja' ? 'クリックして地図表示' : 'Click to show on map'}
+              </span>
+              <Link
+                href={`/${locale}/campsites/${campsite.id}`}
+                className="text-xs text-green-600 hover:text-green-700 font-medium"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {locale === 'ja' ? '詳細を見る' : 'View Details'} →
+              </Link>
             </div>
           </div>
         ))}

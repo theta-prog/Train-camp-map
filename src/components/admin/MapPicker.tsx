@@ -83,11 +83,12 @@ export default function MapPicker({
         <Map
           defaultCenter={selectedPosition}
           defaultZoom={12}
-          mapId="ADMIN_MAP_PICKER"
+          mapId={process.env.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID || null}
           style={{ width: '100%', height: '100%' }}
           disableDefaultUI={false}
           zoomControl={true}
           mapTypeControl={true}
+          gestureHandling={'greedy'}
         >
           <MapClickHandler onLocationSelect={handleLocationUpdate} />
           <AdvancedMarker
