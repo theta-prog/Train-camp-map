@@ -3,6 +3,20 @@ import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import MapComponent from '../MapComponent'
 
+// 環境変数のモック
+const originalEnv = process.env
+beforeAll(() => {
+  process.env = {
+    ...originalEnv,
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: 'test-api-key',
+    NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID: 'test-map-id',
+  }
+})
+
+afterAll(() => {
+  process.env = originalEnv
+})
+
 // モック設定
 jest.mock('next-intl', () => ({
   useTranslations: () => (key: string) => {

@@ -1,7 +1,7 @@
 'use client'
 
 import { supabase } from '@/lib/supabase'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 export default function LoginForm() {
@@ -12,14 +12,14 @@ export default function LoginForm() {
   const [success, setSuccess] = useState<string | null>(null)
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const router = useRouter()
-  const searchParams = useSearchParams()
 
-  // URLパラメータからエラーを取得
+  // URLパラメータからエラーを取得（クライアントサイドのみ）
   useEffect(() => {
-    if (!searchParams) return
-    
-    const urlError = searchParams.get('error')
-    const errorDescription = searchParams.get('error_description')
+    if (typeof window === 'undefined') return
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const urlError = urlParams.get('error')
+    const errorDescription = urlParams.get('error_description')
     
     if (urlError) {
       switch(urlError) {
@@ -40,7 +40,7 @@ export default function LoginForm() {
           }
       }
     }
-  }, [searchParams])
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
