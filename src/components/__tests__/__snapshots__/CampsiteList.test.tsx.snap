@@ -110,7 +110,7 @@ exports[`CampsiteList スナップショットテスト nullパラメータ（�
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -122,6 +122,22 @@ exports[`CampsiteList スナップショットテスト nullパラメータ（�
         >
           Fishing
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/1"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -247,7 +263,7 @@ exports[`CampsiteList スナップショットテスト 基本のキャンプ場
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -259,6 +275,22 @@ exports[`CampsiteList スナップショットテスト 基本のキャンプ場
         >
           Fishing
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/1"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -390,7 +422,7 @@ exports[`CampsiteList スナップショットテスト 多機能キャンプ場
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -408,6 +440,22 @@ exports[`CampsiteList スナップショットテスト 多機能キャンプ場
           +
           3
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/2"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -533,7 +581,7 @@ exports[`CampsiteList スナップショットテスト 未定義ロケール（
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -545,6 +593,22 @@ exports[`CampsiteList スナップショットテスト 未定義ロケール（
         >
           Fishing
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/1"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -696,7 +760,7 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -708,6 +772,22 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
         >
           Fishing
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          Click to show on map
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/en/campsites/1"
+        >
+          View Details
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -833,7 +913,7 @@ exports[`CampsiteList スナップショットテスト 複数キャンプ場 1`
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -845,6 +925,22 @@ exports[`CampsiteList スナップショットテスト 複数キャンプ場 1`
         >
           Fishing
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/1"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
     <div
@@ -944,7 +1040,7 @@ exports[`CampsiteList スナップショットテスト 複数キャンプ場 1`
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -962,6 +1058,22 @@ exports[`CampsiteList スナップショットテスト 複数キャンプ場 1`
           +
           3
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/2"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -1071,13 +1183,29 @@ exports[`CampsiteList スナップショットテスト 設備なし・アクテ
         class="flex flex-wrap gap-1 mb-2"
       />
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
         >
           Hiking
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/3"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>
@@ -1203,7 +1331,7 @@ exports[`CampsiteList スナップショットテスト 選択されたキャン
         </span>
       </div>
       <div
-        class="flex flex-wrap gap-1"
+        class="flex flex-wrap gap-1 mb-3"
       >
         <span
           class="inline-block px-2 py-1 bg-green-100 text-xs text-green-700 rounded"
@@ -1215,6 +1343,22 @@ exports[`CampsiteList スナップショットテスト 選択されたキャン
         >
           Fishing
         </span>
+      </div>
+      <div
+        class="flex items-center justify-between pt-2 border-t border-gray-100"
+      >
+        <span
+          class="text-xs text-gray-500"
+        >
+          クリックして地図表示
+        </span>
+        <a
+          class="text-xs text-green-600 hover:text-green-700 font-medium"
+          href="/ja/campsites/1"
+        >
+          詳細を見る
+           →
+        </a>
       </div>
     </div>
   </div>

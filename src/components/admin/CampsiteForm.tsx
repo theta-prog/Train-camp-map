@@ -7,6 +7,7 @@ import {
     campsiteSchema
 } from '@/lib/validations/campsite'
 import { zodResolver } from '@hookform/resolvers/zod'
+import Image from 'next/image'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import ImageUploader from './ImageUploader'
@@ -14,7 +15,7 @@ import MapPicker from './MapPicker'
 
 interface CampsiteFormProps {
   onSubmit: (data: CampsiteFormData) => Promise<void>
-  initialData?: Partial<CampsiteFormData>
+  initialData?: Partial<CampsiteFormData & { id?: string }>
   isLoading?: boolean
 }
 
@@ -563,10 +564,12 @@ export default function CampsiteForm({
               <div key={index} className="relative group">
                 <div className="aspect-w-16 aspect-h-12 bg-gray-100 rounded-lg overflow-hidden">
                   <div className="relative w-full h-32">
-                    <img
+                    <Image
                       src={url}
                       alt={`画像 ${index + 1}`}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                      className="object-cover"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNDBDMTA2LjYyNyA0MCAxMTIgNDUuMzczIDExMiA1MkMxMTIgNTguNjI3IDEwNi42MjcgNjQgMTAwIDY0QzkzLjM3MyA2NCA4OCA1OC42MjcgODggNTJDODggNDUuMzczIDkzLjM3MyA0MCAxMDAgNDBaIiBmaWxsPSIjOUI5QkE0Ii8+CjxwYXRoIGQ9Ik04MCA3NkwxMDAgNTZMMTIwIDc2SDE2MEwxNDAgNTZMMTcwIDg2SDE3NlY5MkgxNzZIMjRWOTJIMjRMNTQgNjJMODAgNzZaIiBmaWxsPSIjOUI5QkE0Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTA0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+dum7vOOBn+OBruiqreOBv+i+vOOBv+OBq+WksOaVlzwvdGV4dD4KPC9zdmc+';

@@ -230,14 +230,16 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
                 </a>
               )}
               
-              <a
-                href={`https://www.google.com/maps/search/?api=1&query=${campsite.lat},${campsite.lng}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-blue-100 hover:bg-blue-200 text-blue-800 text-center py-3 px-4 rounded-md font-medium transition-colors"
-              >
-                {t('campsiteDetail.openInMaps')} ↗
-              </a>
+              {campsite.lat != null && campsite.lng != null && (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${campsite.lat},${campsite.lng}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full bg-blue-100 hover:bg-blue-200 text-blue-800 text-center py-3 px-4 rounded-md font-medium transition-colors"
+                >
+                  {t('campsiteDetail.openInMaps')} ↗
+                </a>
+              )}
             </div>
           </div>
 
@@ -268,17 +270,19 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
                 </p>
               </div>
               
-              <div className="bg-gray-50 p-4 rounded-md">
-                <p className="text-sm text-gray-600 mb-2">
-                  {t('campsiteDetail.coordinates')}
-                </p>
-                <p className="text-gray-900 font-mono text-sm">
-                  {campsite.lat.toFixed(6)}, {campsite.lng.toFixed(6)}
-                </p>
-              </div>
+              {campsite.lat != null && campsite.lng != null && (
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <p className="text-sm text-gray-600 mb-2">
+                    {t('campsiteDetail.coordinates')}
+                  </p>
+                  <p className="text-gray-900 font-mono text-sm">
+                    {campsite.lat.toFixed(6)}, {campsite.lng.toFixed(6)}
+                  </p>
+                </div>
+              )}
 
               {/* Google Maps 埋め込み */}
-              {apiKey && (
+              {apiKey && campsite.lat != null && campsite.lng != null && (
                 <div className="mt-4">
                   <div className="h-64 rounded-lg overflow-hidden border border-gray-200">
                     <APIProvider apiKey={apiKey}>

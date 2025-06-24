@@ -17,8 +17,13 @@ jest.mock('next-intl', () => ({
 }))
 
 const mockUseParams = jest.fn()
+const mockPush = jest.fn()
+
 jest.mock('next/navigation', () => ({
-  useParams: () => mockUseParams()
+  useParams: () => mockUseParams(),
+  useRouter: () => ({
+    push: mockPush
+  })
 }))
 
 jest.mock('@vis.gl/react-google-maps', () => ({

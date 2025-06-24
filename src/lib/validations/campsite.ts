@@ -2,6 +2,8 @@ import { z } from 'zod'
 
 // キャンプ場登録フォームのバリデーションスキーマ
 export const campsiteSchema = z.object({
+  // ID（編集時のみ）
+  id: z.string().optional(),
   // 基本情報
   name_ja: z.string().min(1, '日本語名は必須です').max(100, '100文字以内で入力してください'),
   name_en: z.string().max(100, '100文字以内で入力してください').optional(),

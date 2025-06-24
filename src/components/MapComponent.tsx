@@ -46,10 +46,12 @@ export default function MapComponent({
         zoomControl={true}
         gestureHandling={'greedy'}
       >
-        {campsites.map((campsite) => (
+        {campsites
+          .filter(campsite => campsite.lat != null && campsite.lng != null)
+          .map((campsite) => (
           <AdvancedMarker
             key={campsite.id}
-            position={{ lat: campsite.lat, lng: campsite.lng }}
+            position={{ lat: campsite.lat!, lng: campsite.lng! }}
             onClick={() => handleMarkerClick(campsite)}
             title={campsite.name[locale]}
           >
@@ -71,7 +73,7 @@ export default function MapComponent({
           </AdvancedMarker>
         ))}
 
-        {activeMarker && selectedCampsite && (
+        {activeMarker && selectedCampsite && selectedCampsite.lat != null && selectedCampsite.lng != null && (
           <InfoWindow
             position={{ lat: selectedCampsite.lat, lng: selectedCampsite.lng }}
             onCloseClick={handleInfoWindowClose}

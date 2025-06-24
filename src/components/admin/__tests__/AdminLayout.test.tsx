@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
 
 // next/linkをモック
 jest.mock('next/link', () => {
@@ -10,6 +10,20 @@ jest.mock('next/link', () => {
         {children}
       </a>
     )
+  }
+})
+
+// AuthGuardをモック
+jest.mock('@/components/admin/AuthGuard', () => {
+  return function MockAuthGuard({ children }: { children: React.ReactNode }) {
+    return <>{children}</>
+  }
+})
+
+// GoogleMapsProviderをモック
+jest.mock('@/components/admin/GoogleMapsProvider', () => {
+  return function MockGoogleMapsProvider({ children }: { children: React.ReactNode }) {
+    return <>{children}</>
   }
 })
 

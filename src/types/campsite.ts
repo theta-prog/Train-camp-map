@@ -4,8 +4,8 @@ export interface Campsite {
     ja: string
     en: string
   }
-  lat: number
-  lng: number
+  lat: number | null
+  lng: number | null
   address: {
     ja: string
     en: string

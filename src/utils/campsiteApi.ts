@@ -11,8 +11,8 @@ export function transformApiCampsiteToFrontend(apiCampsite: CampsiteFormData & {
       ja: apiCampsite.name_ja,
       en: apiCampsite.name_en || apiCampsite.name_ja, // 英語名がない場合は日本語名を使用
     },
-    lat: apiCampsite.lat,
-    lng: apiCampsite.lng,
+    lat: apiCampsite.lat || null,
+    lng: apiCampsite.lng || null,
     address: {
       ja: apiCampsite.address_ja,
       en: apiCampsite.address_en || apiCampsite.address_ja,
