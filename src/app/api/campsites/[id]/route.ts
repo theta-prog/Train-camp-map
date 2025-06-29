@@ -6,6 +6,40 @@ interface Params {
   id: string
 }
 
+// データベースのスネークケースからキャメルケースに変換
+function transformFromDatabase(dbData: any) {
+  return {
+    id: dbData.id,
+    name: {
+      ja: dbData.name_ja,
+      en: dbData.name_en
+    },
+    lat: dbData.lat,
+    lng: dbData.lng,
+    address: {
+      ja: dbData.address_ja,
+      en: dbData.address_en
+    },
+    phone: dbData.phone || '',
+    website: dbData.website || '',
+    price: dbData.price,
+    nearestStation: {
+      ja: dbData.nearest_station_ja,
+      en: dbData.nearest_station_en
+    },
+    accessTime: {
+      ja: dbData.access_time_ja,
+      en: dbData.access_time_en
+    },
+    description: {
+      ja: dbData.description_ja,
+      en: dbData.description_en
+    },
+    facilities: dbData.facilities || [],
+    activities: dbData.activities || []
+  }
+}
+
 // GET /api/campsites/[id] - 個別キャンプ場取得
 export async function GET(
   _request: NextRequest,
@@ -32,7 +66,10 @@ export async function GET(
       )
     }
 
-    return NextResponse.json({ data })
+    // データを変換
+    const transformedData = transformFromDatabase(data)
+
+    return NextResponse.json({ data: transformedData })
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(

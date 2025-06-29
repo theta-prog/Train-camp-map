@@ -40,6 +40,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   新規登録
                 </Link>
                 <Link
+                  href="/admin/campsites/import"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                >
+                  CSV一括登録
+                </Link>
+                <Link
                   href="/"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >

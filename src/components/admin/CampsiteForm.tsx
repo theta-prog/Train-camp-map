@@ -15,14 +15,18 @@ import MapPicker from './MapPicker'
 
 interface CampsiteFormProps {
   onSubmit: (data: CampsiteFormData) => Promise<void>
-  initialData?: Partial<CampsiteFormData & { id?: string }>
+  initialData?: Partial<Omit<CampsiteFormData, 'id'>>
   isLoading?: boolean
+  isEditMode?: boolean
+  campsiteId?: string  // 編集時のキャンプ場ID
 }
 
 export default function CampsiteForm({ 
   onSubmit, 
   initialData, 
-  isLoading = false 
+  isLoading = false,
+  isEditMode = false,
+  campsiteId
 }: CampsiteFormProps) {
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>(
     initialData?.facilities || []
@@ -592,7 +596,7 @@ export default function CampsiteForm({
 
         {/* ファイルアップローダー */}
         <ImageUploader
-          campsiteId={initialData?.id || 'new-campsite'}
+          campsiteId={campsiteId || 'new-campsite'}
           onImagesUploaded={handleAddImage}
           existingImages={imageUrls}
           maxImages={10}
@@ -613,7 +617,7 @@ export default function CampsiteForm({
           disabled={isLoading}
           className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? '保存中...' : '保存'}
+          {isLoading ? (isEditMode ? '更新中...' : '保存中...') : (isEditMode ? '更新' : '保存')}
         </button>
       </div>
     </form>

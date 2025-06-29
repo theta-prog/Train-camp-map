@@ -1,4 +1,4 @@
-import { GET, PUT, DELETE } from '@/app/api/campsites/[id]/route'
+import { DELETE, GET, PUT } from '@/app/api/campsites/[id]/route'
 import { NextRequest } from 'next/server'
 
 // jest.mockをインポートよりも先に定義
@@ -96,7 +96,8 @@ describe('/api/campsites/[id]', () => {
       expect(response.status).toBe(200)
       expect(json).toHaveProperty('data')
       expect(json.data).toHaveProperty('id', '1')
-      expect(json.data).toHaveProperty('name_ja', 'テストキャンプ場')
+      expect(json.data).toHaveProperty('name')
+      expect(json.data.name).toHaveProperty('ja', 'テストキャンプ場')
     })
 
     it('存在しないキャンプ場で404エラー', async () => {

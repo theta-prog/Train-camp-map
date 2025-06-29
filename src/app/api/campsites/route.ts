@@ -2,6 +2,40 @@ import { supabase } from '@/lib/supabase'
 import { campsiteSchema } from '@/lib/validations/campsite'
 import { NextRequest, NextResponse } from 'next/server'
 
+// データベースのスネークケースからキャメルケースに変換
+function transformFromDatabase(dbData: any) {
+  return {
+    id: dbData.id,
+    name: {
+      ja: dbData.name_ja,
+      en: dbData.name_en
+    },
+    lat: dbData.lat,
+    lng: dbData.lng,
+    address: {
+      ja: dbData.address_ja,
+      en: dbData.address_en
+    },
+    phone: dbData.phone || '',
+    website: dbData.website || '',
+    price: dbData.price,
+    nearestStation: {
+      ja: dbData.nearest_station_ja,
+      en: dbData.nearest_station_en
+    },
+    accessTime: {
+      ja: dbData.access_time_ja,
+      en: dbData.access_time_en
+    },
+    description: {
+      ja: dbData.description_ja,
+      en: dbData.description_en
+    },
+    facilities: dbData.facilities || [],
+    activities: dbData.activities || []
+  }
+}
+
 // GET /api/campsites - キャンプ場一覧取得
 export async function GET() {
   try {
@@ -18,7 +52,10 @@ export async function GET() {
       )
     }
 
-    return NextResponse.json({ data })
+    // データを変換
+    const transformedData = data?.map(transformFromDatabase) || []
+
+    return NextResponse.json({ data: transformedData })
   } catch (error) {
     console.error('Unexpected error:', error)
     return NextResponse.json(
@@ -31,7 +68,15 @@ export async function GET() {
 // POST /api/campsites - キャンプ場新規作成
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    let body
+    try {
+      body = await request.json()
+    } catch (error) {
+      return NextResponse.json(
+        { error: '無効なJSONデータです' },
+        { status: 400 }
+      )
+    }
     
     // バリデーション
     const validatedData = campsiteSchema.parse(body)

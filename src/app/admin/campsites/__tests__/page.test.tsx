@@ -1,5 +1,5 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import CampsitesListPage from '@/app/admin/campsites/page'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 
 // Next.jsのコンポーネントをモック
 jest.mock('next/link', () => {
@@ -30,24 +30,63 @@ global.confirm = jest.fn()
 const mockCampsites = [
   {
     id: '1',
-    name_ja: 'テストキャンプ場1',
+    name: {
+      ja: 'テストキャンプ場1',
+      en: 'Test Campsite 1'
+    },
     lat: 35.6762,
     lng: 139.6503,
-    address_ja: '東京都渋谷区',
+    address: {
+      ja: '東京都渋谷区',
+      en: 'Shibuya, Tokyo'
+    },
+    phone: '',
+    website: '',
     price: '¥2,000/泊',
-    nearest_station_ja: 'JR渋谷駅',
-    access_time_ja: '徒歩15分',
-    description_ja: 'テスト用のキャンプ場です',
+    nearestStation: {
+      ja: 'JR渋谷駅',
+      en: 'JR Shibuya Station'
+    },
+    accessTime: {
+      ja: '徒歩15分',
+      en: '15 min walk'
+    },
+    description: {
+      ja: 'テスト用のキャンプ場です',
+      en: 'Test campsite'
+    },
     facilities: ['restroom', 'shower'],
     activities: ['hiking'],
   },
   {
     id: '2',
-    name_ja: 'テストキャンプ場2',
+    name: {
+      ja: 'テストキャンプ場2',
+      en: 'Test Campsite 2'
+    },
     lat: 35.6762,
     lng: 139.6503,
-    address_ja: '東京都新宿区',
+    address: {
+      ja: '東京都新宿区',
+      en: 'Shinjuku, Tokyo'
+    },
+    phone: '',
+    website: '',
     price: '¥3,000/泊',
+    nearestStation: {
+      ja: 'JR新宿駅',
+      en: 'JR Shinjuku Station'
+    },
+    accessTime: {
+      ja: 'バス10分',
+      en: '10 min by bus'
+    },
+    description: {
+      ja: 'テスト用のキャンプ場です',
+      en: 'Test campsite'
+    },
+    facilities: ['restroom', 'parking'],
+    activities: ['fishing'],
   },
 ]
 

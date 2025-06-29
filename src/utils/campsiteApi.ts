@@ -1,39 +1,25 @@
-import { CampsiteFormData } from '@/lib/validations/campsite'
 import { Campsite } from '@/types/campsite'
 
 /**
  * API レスポンスをフロントエンド用のCampsite型に変換する
+ * 新しいキャメルケース形式のAPIレスポンスに対応
  */
-export function transformApiCampsiteToFrontend(apiCampsite: CampsiteFormData & { id: string }): Campsite {
+export function transformApiCampsiteToFrontend(apiCampsite: any): Campsite {
+  // APIが既にキャメルケース形式で返すため、直接使用
   return {
     id: apiCampsite.id,
-    name: {
-      ja: apiCampsite.name_ja,
-      en: apiCampsite.name_en || apiCampsite.name_ja, // 英語名がない場合は日本語名を使用
-    },
-    lat: apiCampsite.lat || null,
-    lng: apiCampsite.lng || null,
-    address: {
-      ja: apiCampsite.address_ja,
-      en: apiCampsite.address_en || apiCampsite.address_ja,
-    },
+    name: apiCampsite.name,
+    lat: apiCampsite.lat,
+    lng: apiCampsite.lng,
+    address: apiCampsite.address,
     phone: apiCampsite.phone || '',
     website: apiCampsite.website || '',
     price: apiCampsite.price,
     facilities: apiCampsite.facilities || [],
     activities: apiCampsite.activities || [],
-    nearestStation: {
-      ja: apiCampsite.nearest_station_ja,
-      en: apiCampsite.nearest_station_en || apiCampsite.nearest_station_ja,
-    },
-    accessTime: {
-      ja: apiCampsite.access_time_ja,
-      en: apiCampsite.access_time_en || apiCampsite.access_time_ja,
-    },
-    description: {
-      ja: apiCampsite.description_ja,
-      en: apiCampsite.description_en || apiCampsite.description_ja,
-    },
+    nearestStation: apiCampsite.nearestStation,
+    accessTime: apiCampsite.accessTime,
+    description: apiCampsite.description,
   }
 }
 

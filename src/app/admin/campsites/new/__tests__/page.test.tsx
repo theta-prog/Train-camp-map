@@ -1,9 +1,9 @@
 'use client'
 
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import NewCampsitePage from '@/app/admin/campsites/new/page'
 import '@testing-library/jest-dom'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 
 // next/navigationをモック
 const mockPush = jest.fn()
@@ -13,10 +13,53 @@ jest.mock('next/navigation', () => ({
   }),
 }))
 
+// Google Maps関連をモック
+jest.mock('@vis.gl/react-google-maps', () => ({
+  APIProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Map: () => <div data-testid="google-map">Google Map Mock</div>,
+  useMap: () => null,
+  useMapsLibrary: () => null,
+}))
+
 // AdminLayoutをモック
 jest.mock('@/components/admin/AdminLayout', () => {
   return function MockAdminLayout({ children }: { children: React.ReactNode }) {
     return <div data-testid="admin-layout">{children}</div>
+  }
+})
+
+// MapPickerをモック
+jest.mock('@/components/admin/MapPicker', () => {
+  return function MockMapPicker() {
+    return <div data-testid="map-picker">Map Picker Mock</div>
+  }
+})
+
+// AddressGeocoderをモック
+jest.mock('@/components/admin/AddressGeocoder', () => {
+  return function MockAddressGeocoder() {
+    return <div data-testid="address-geocoder">Address Geocoder Mock</div>
+  }
+})
+
+// MapAddComponentをモック
+jest.mock('@/components/admin/MapAddComponent', () => {
+  return function MockMapAddComponent() {
+    return <div data-testid="map-add-component">Map Add Component Mock</div>
+  }
+})
+
+// CampsiteTemplateをモック
+jest.mock('@/components/admin/CampsiteTemplate', () => {
+  return function MockCampsiteTemplate() {
+    return <div data-testid="campsite-template">Campsite Template Mock</div>
+  }
+})
+
+// DuplicateCheckerをモック
+jest.mock('@/components/admin/DuplicateChecker', () => {
+  return function MockDuplicateChecker() {
+    return <div data-testid="duplicate-checker">Duplicate Checker Mock</div>
   }
 })
 

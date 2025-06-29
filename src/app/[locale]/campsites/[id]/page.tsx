@@ -10,53 +10,52 @@ interface CampsiteDetailPageProps {
 }
 
 async function getCampsite(id: string) {
-  const { data, error } = await supabase
-    .from('campsites')
-    .select('*')
-    .eq('id', id)
-    .single()
+  try {
+    // 直接Supabaseからデータを取得（APIと同じ変換ロジックを使用）
+    const { data, error } = await supabase
+      .from('campsites')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-  if (error || !data) {
-    return null
-  }
-
-  // データベースの形式から UI の形式に変換
-  return {
-    id: data.id,
-    name: {
-      ja: data.name_ja,
-      en: data.name_en || data.name_ja
-    },
-    lat: data.lat,
-    lng: data.lng,
-    address: {
-      ja: data.address_ja,
-      en: data.address_en || data.address_ja
-    },
-    phone: data.phone || '',
-    website: data.website || '',
-    reservationUrl: data.reservation_url || undefined,
-    price: data.price,
-    priceMin: data.price_min || undefined,
-    priceMax: data.price_max || undefined,
-    checkInTime: data.check_in_time || undefined,
-    checkOutTime: data.check_out_time || undefined,
-    cancellationPolicy: data.cancellation_policy || undefined,
-    images: data.images || [],
-    facilities: data.facilities || [],
-    activities: data.activities || [],
-    nearestStation: {
-      ja: data.nearest_station_ja,
-      en: data.nearest_station_en || data.nearest_station_ja
-    },
-    accessTime: {
-      ja: data.access_time_ja,
-      en: data.access_time_en || data.access_time_ja
-    },
-    description: {
-      ja: data.description_ja,
-      en: data.description_en || data.description_ja
+    if (error || !data) {
+      return null
     }
+
+    // APIと同じ変換ロジックを適用
+    return {
+      id: data.id,
+      name: {
+        ja: data.name_ja,
+        en: data.name_en
+      },
+      lat: data.lat,
+      lng: data.lng,
+      address: {
+        ja: data.address_ja,
+        en: data.address_en
+      },
+      phone: data.phone || '',
+      website: data.website || '',
+      price: data.price,
+      nearestStation: {
+        ja: data.nearest_station_ja,
+        en: data.nearest_station_en
+      },
+      accessTime: {
+        ja: data.access_time_ja,
+        en: data.access_time_en
+      },
+      description: {
+        ja: data.description_ja,
+        en: data.description_en
+      },
+      facilities: data.facilities || [],
+      activities: data.activities || []
+    }
+  } catch (error) {
+    console.error('Failed to fetch campsite:', error)
+    return null
   }
 }
 

@@ -1,24 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import AdminLayout from '@/components/admin/AdminLayout'
-
-interface Campsite {
-  id: string
-  name_ja: string
-  lat: number
-  lng: number
-  address_ja?: string
-  price?: string
-  nearest_station_ja?: string
-  access_time_ja?: string
-  description_ja?: string
-  facilities?: string[]
-  activities?: string[]
-  created_at?: string
-  updated_at?: string
-}
+import { Campsite } from '@/types/campsite'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function CampsitesListPage() {
   const [campsites, setCampsites] = useState<Campsite[]>([])
@@ -121,11 +106,11 @@ export default function CampsitesListPage() {
                         <div className="flex items-center space-x-3">
                           <div className="flex-1">
                             <h3 className="text-lg font-medium text-gray-900 truncate">
-                              {campsite.name_ja}
+                              {campsite.name.ja}
                             </h3>
-                            {campsite.address_ja && (
+                            {campsite.address.ja && (
                               <p className="text-sm text-gray-500">
-                                {campsite.address_ja}
+                                {campsite.address.ja}
                               </p>
                             )}
                             <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
@@ -133,6 +118,21 @@ export default function CampsitesListPage() {
                               <span>経度: {campsite.lng}</span>
                               {campsite.price && <span>{campsite.price}</span>}
                             </div>
+                            {/* 設備とアクティビティのタグ表示 */}
+                            {(campsite.facilities.length > 0 || campsite.activities.length > 0) && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {campsite.facilities.map((facility, index) => (
+                                  <span key={`facility-${index}`} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    {facility}
+                                  </span>
+                                ))}
+                                {campsite.activities.map((activity, index) => (
+                                  <span key={`activity-${index}`} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    {activity}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>

@@ -50,7 +50,8 @@ describe('/api/campsites', () => {
       expect(json).toHaveProperty('data')
       expect(Array.isArray(json.data)).toBe(true)
       expect(json.data).toHaveLength(1)
-      expect(json.data[0]).toHaveProperty('name_ja', 'テストキャンプ場')
+      expect(json.data[0]).toHaveProperty('name')
+      expect(json.data[0].name).toHaveProperty('ja', 'テストキャンプ場')
     })
   })
 
@@ -120,8 +121,8 @@ describe('/api/campsites', () => {
       const response = await POST(request)
       const json = await response.json()
 
-      expect(response.status).toBe(500)
-      expect(json).toHaveProperty('error')
+      expect(response.status).toBe(400)
+      expect(json).toHaveProperty('error', '無効なJSONデータです')
     })
   })
 })
