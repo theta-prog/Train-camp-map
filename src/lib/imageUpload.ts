@@ -53,7 +53,7 @@ export async function uploadImage(file: File, campsiteId: string): Promise<strin
 /**
  * Supabase Storageから画像を削除する
  */
-export async function deleteImage(imageUrl: string): Promise<void> {
+export async function deleteImage(imageUrl: string): Promise<boolean> {
   try {
     // URLからファイルパスを抽出
     const url = new URL(imageUrl)
@@ -72,11 +72,13 @@ export async function deleteImage(imageUrl: string): Promise<void> {
 
     if (error) {
       console.error('Delete error:', error)
-      throw new Error(`削除に失敗しました: ${error.message}`)
+      return false
     }
+    
+    return true
   } catch (error) {
     console.error('Image delete error:', error)
-    // 削除エラーは致命的ではないので、ログのみ出力
+    return false
   }
 }
 
@@ -100,7 +102,8 @@ export async function uploadMultipleImages(
       uploadedUrls.push(url)
       
       if (onProgress) {
-        onProgress(((i + 1) / total) * 100)
+        const progress = Math.round(((i + 1) / total) * 100 * 100) / 100
+        onProgress(progress)
       }
     } catch (error) {
       console.error(`Failed to upload file ${file.name}:`, error)

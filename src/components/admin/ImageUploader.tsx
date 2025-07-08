@@ -95,6 +95,7 @@ export default function ImageUploader({
         accept="image/*"
         multiple
         className="hidden"
+        aria-label="画像ファイル"
         onChange={(e) => handleFileSelect(e.target.files)}
         disabled={!canAddMore || isUploading}
       />

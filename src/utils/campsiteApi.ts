@@ -51,6 +51,8 @@ export async function fetchCampsites(): Promise<Campsite[]> {
  * 価格文字列から数値を抽出する
  */
 export function extractPriceFromString(priceString: string): number {
-  const priceMatch = priceString.match(/\d+/)
+  // カンマを除去してから数値を抽出
+  const cleanedPrice = priceString.replace(/,/g, '')
+  const priceMatch = cleanedPrice.match(/\d+/)
   return priceMatch ? parseInt(priceMatch[0]) : 0
 }

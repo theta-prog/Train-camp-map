@@ -32,6 +32,11 @@ export function filterCampsites(campsites: Campsite[], filters: SearchFilters): 
 
 // 価格文字列から数値を抽出する関数
 export function extractPrice(priceString: string): number {
+  // null, undefined, 空文字の場合は0を返す
+  if (!priceString || typeof priceString !== 'string') {
+    return 0
+  }
+  
   // コンマを除去してから数値を抽出
   const cleanedString = priceString.replace(/,/g, '')
   const match = cleanedString.match(/(\d+)/)

@@ -4,6 +4,17 @@ import '@testing-library/jest-dom'
 import React from 'react'
 global.React = React
 
+// DOM環境の初期化
+beforeEach(() => {
+  // DOM環境をクリア
+  document.body.innerHTML = ''
+  
+  // コンテナ要素を確実に存在させる
+  if (!document.body) {
+    document.documentElement.appendChild(document.createElement('body'))
+  }
+})
+
 // Mock next-intl
 jest.mock('next-intl', () => ({
   useTranslations: () => (key, params) => {
@@ -128,3 +139,25 @@ global.IntersectionObserver = class IntersectionObserver {
   observe() {}
   unobserve() {}
 }
+
+// Mock window.location.reload  
+if (!window.location.reload || typeof window.location.reload !== 'function') {
+  Object.defineProperty(window, 'location', {
+    value: {
+      ...window.location,
+      reload: jest.fn(),
+    },
+    writable: true,
+  })
+}
+
+// Mock URL.createObjectURL and URL.revokeObjectURL
+global.URL.createObjectURL = jest.fn(() => 'blob:mock-url')
+global.URL.revokeObjectURL = jest.fn()
+
+// Mock Blob constructor
+global.Blob = jest.fn((content, options) => ({
+  size: content.reduce((acc, item) => acc + item.length, 0),
+  type: options?.type || '',
+  content: content.join('')
+}))

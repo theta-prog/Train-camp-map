@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
+import { useEffect, useState } from 'react'
 
 interface SearchFiltersProps {
   onFilterChange: (filters: {
@@ -44,12 +44,14 @@ export default function SearchFilters({ onFilterChange, initialFilters }: Search
   const [selectedActivities, setSelectedActivities] = useState<string[]>(initialFilters.activities)
 
   useEffect(() => {
-    onFilterChange({
-      keyword,
-      maxPrice,
-      facilities: selectedFacilities,
-      activities: selectedActivities
-    })
+    if (onFilterChange) {
+      onFilterChange({
+        keyword,
+        maxPrice,
+        facilities: selectedFacilities,
+        activities: selectedActivities
+      })
+    }
   }, [keyword, maxPrice, selectedFacilities, selectedActivities, onFilterChange])
 
   const handleFacilityChange = (facility: string) => {

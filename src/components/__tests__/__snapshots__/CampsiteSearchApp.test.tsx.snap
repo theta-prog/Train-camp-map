@@ -48,6 +48,26 @@ exports[`CampsiteSearchApp スナップショットテスト 基本表示（API�
           <div
             data-testid="mock-search-filters"
           >
+            <input
+              placeholder="キーワード検索"
+            />
+            <label>
+              最大料金
+              <input
+                type="number"
+              />
+            </label>
+            <div>
+              <input
+                id="toilet"
+                type="checkbox"
+              />
+              <label
+                for="toilet"
+              >
+                トイレ
+              </label>
+            </div>
             <button>
               Change Filter
             </button>
@@ -89,7 +109,14 @@ exports[`CampsiteSearchApp スナップショットテスト 基本表示（API�
             data-testid="mock-campsite-list"
           >
             <div>
-              高尾山キャンプ場
+              <span>
+                高尾山キャンプ場
+              </span>
+              <a
+                href="/campsites/1"
+              >
+                詳細を見る
+              </a>
             </div>
           </div>
         </div>
@@ -147,6 +174,26 @@ exports[`CampsiteSearchApp スナップショットテスト 英語ロケール 
           <div
             data-testid="mock-search-filters"
           >
+            <input
+              placeholder="キーワード検索"
+            />
+            <label>
+              最大料金
+              <input
+                type="number"
+              />
+            </label>
+            <div>
+              <input
+                id="toilet"
+                type="checkbox"
+              />
+              <label
+                for="toilet"
+              >
+                トイレ
+              </label>
+            </div>
             <button>
               Change Filter
             </button>
@@ -188,7 +235,14 @@ exports[`CampsiteSearchApp スナップショットテスト 英語ロケール 
             data-testid="mock-campsite-list"
           >
             <div>
-              高尾山キャンプ場
+              <span>
+                高尾山キャンプ場
+              </span>
+              <a
+                href="/campsites/1"
+              >
+                詳細を見る
+              </a>
             </div>
           </div>
         </div>
