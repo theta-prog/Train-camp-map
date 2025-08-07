@@ -44,7 +44,10 @@ const campsiteSchema = z.object({
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const query = searchParams.get('q')
+    const rawQuery = searchParams.get('q')
+    
+    // URLデコードと文字列の正規化
+    const query = rawQuery ? decodeURIComponent(rawQuery).trim() : null
 
     let campsites
     if (query) {
