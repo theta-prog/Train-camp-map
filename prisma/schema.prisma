@@ -42,9 +42,9 @@ model Campsite {
   accessTimeEn       String?  @map("access_time_en")
   descriptionJa      String   @map("description_ja")
   descriptionEn      String?  @map("description_en")
-  facilities         String   @default("[]") // JSON string
-  activities         String   @default("[]") // JSON string
-  images             String   @default("[]") // JSON string
+  facilities         String[] @default([]) // PostgreSQL array, fallback to JSON string for SQLite
+  activities         String[] @default([]) // PostgreSQL array, fallback to JSON string for SQLite
+  images             String[] @default([]) // PostgreSQL array, fallback to JSON string for SQLite
   priceMin           Int?     @map("price_min")
   priceMax           Int?     @map("price_max")
   reservationUrl     String?  @map("reservation_url")

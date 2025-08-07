@@ -32,8 +32,10 @@ NODE_ENV=production
 
 ### PostgreSQLの設定
 ```bash
-# Prismaのマイグレーション実行
-npx prisma generate
+# 本番環境でのテーブル作成
+psql $DATABASE_URL -f database/postgresql-schema.sql
+
+# または、Prismaのマイグレーション実行
 npx prisma migrate deploy
 
 # 管理者アカウントの作成
