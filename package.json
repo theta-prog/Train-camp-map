@@ -34,7 +34,10 @@
     "full-check": "./scripts/typecheck.sh",
     "ci": "npm run typecheck && npm run lint && npm run test:coverage && npm run build",
     "admin:create": "node scripts/create-admin.js",
-    "admin:help": "echo 'Usage: ADMIN_PASSWORD=your_password npm run admin:create'"
+    "admin:help": "echo 'Usage: ADMIN_PASSWORD=your_password npm run admin:create'",
+    "setup:prod": "./scripts/setup-production.sh",
+    "db:migrate": "npx prisma migrate deploy",
+    "db:schema": "psql $DATABASE_URL -f database/postgresql-schema.sql"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

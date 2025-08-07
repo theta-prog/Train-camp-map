@@ -85,6 +85,16 @@ npm start
 3. PostgreSQL データベースを準備
 4. 自動デプロイ
 
+**デプロイ後のセットアップ**:
+```bash
+# 本番データベースの初期化
+export DATABASE_URL="your-vercel-postgres-url"
+export ADMIN_PASSWORD="secure_password"
+./scripts/setup-production.sh
+```
+
+詳細は [本番環境セットアップガイド](docs/PRODUCTION_SETUP.md) を参照。
+
 ## プロジェクト構造
 
 ```
