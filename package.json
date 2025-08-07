@@ -28,6 +28,7 @@
     "test:smart:focused:staged": "node scripts/smart-test.js staged --focused",
     "test:types": "tsc --noEmit --skipLibCheck false",
     "validate": "npm run typecheck && npm run lint",
+    "validate:prod": "npm run build && npm run lint",
     "validate:strict": "npm run typecheck:strict && npm run lint",
     "full-check": "./scripts/typecheck.sh",
     "ci": "npm run typecheck && npm run lint && npm run test:coverage && npm run build",

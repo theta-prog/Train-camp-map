@@ -123,12 +123,12 @@ export default function CampsitesListPage() {
                               <div className="mt-2 flex flex-wrap gap-1">
                                 {campsite.facilities.map((facility, index) => (
                                   <span key={`facility-${index}`} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    {typeof facility === 'object' ? facility.ja || facility.en || String(facility) : facility}
+                                    {String(facility)}
                                   </span>
                                 ))}
                                 {campsite.activities.map((activity, index) => (
                                   <span key={`activity-${index}`} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    {typeof activity === 'object' ? activity.ja || activity.en || String(activity) : activity}
+                                    {String(activity)}
                                   </span>
                                 ))}
                               </div>

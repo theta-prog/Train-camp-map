@@ -1,4 +1,5 @@
-import { generateToken, verifyPassword } from '@/lib/auth'
+import { generateToken } from '@/lib/auth'
+import { verifyPassword } from '@/lib/auth-server'
 import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
 
     // JWTトークンを生成
-    const token = generateToken({
+    const token = await generateToken({
       userId: user.id,
       email: user.email,
       role: user.role

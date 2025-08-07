@@ -11,6 +11,7 @@
 - 📱 **レスポンシブデザイン**: PC・タブレット・スマートフォン対応
 - ⚙️ **管理機能**: キャンプ場の登録・編集・削除
 - 🌍 **多言語対応**: 日本語・英語対応
+- 🔐 **セキュリティ**: Edge Runtime対応JWT認証
 - 🧪 **100%テストカバレッジ**: Jest + Testing Library
 
 ## 🏗️ **技術スタック**
@@ -18,27 +19,23 @@
 - **フロントエンド**: Next.js 14, TypeScript, Tailwind CSS
 - **バックエンド**: Next.js API Routes, Prisma ORM
 - **データベース**: SQLite (開発環境), PostgreSQL (本番環境)
-- **認証**: JWT + HttpOnly Cookies
+- **認証**: JWT + HttpOnly Cookies (Edge Runtime対応)
 - **地図表示**: Google Maps API
 - **国際化**: next-intl
 - **テスト**: Jest, Testing Library
+- **デプロイ**: Vercel対応
 
 ## セットアップ
 
-### 1. 依存関係のインストール
+### 開発環境
 
+1. **依存関係のインストール**
 ```bash
 npm install
 ```
 
-### 2. 環境変数の設定
-
-`.env.local`ファイルを作成し、以下を追加：
-
-```env
-# Google Maps API
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
-
+2. **環境変数の設定**
+`.env.local`ファイルを作成：
 ```bash
 # データベース設定（SQLite for development）
 DATABASE_URL="file:./dev.db"
@@ -46,48 +43,47 @@ DATABASE_URL="file:./dev.db"
 # JWT認証設定
 JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
 
-# 管理者メールアドレス（カンマ区切りで複数指定可能）
-ADMIN_ALLOWED_EMAILS="admin@example.com,another@example.com"
+# 管理者設定
+ADMIN_EMAIL="admin@example.com"
+ADMIN_ALLOWED_EMAILS="admin@example.com"
 
-# Google Maps API Key
-NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=your_google_maps_map_id
-
-# Next.js設定
-NEXTAUTH_URL="http://localhost:3000"
-NODE_ENV="development"
-```
+# Google Maps API
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="your_google_maps_api_key"
 ```
 
-### 3. データベースセットアップ
-
+3. **データベースセットアップ**
 ```bash
-# Prismaクライアント生成
 npx prisma generate
-
-# データベースマイグレーション
 npx prisma migrate dev --name init
-
-# テストデータの挿入（オプション）
-node prisma/seed.js
 ```
-2. 新しいプロジェクトを作成
-3. SQL Editorで`database/create_campsites_table.sql`を実行
-4. プロジェクトURLとAnon Keyを`.env.local`に設定
 
-### 4. Google Maps APIキーの設定
+4. **管理者アカウント作成**
+```bash
+ADMIN_PASSWORD=secure_password node scripts/create-admin.js
+```
 
-1. [Google Cloud Console](https://console.cloud.google.com/)でプロジェクトを作成
-2. Maps JavaScript APIを有効化
-3. APIキーを作成し、`.env.local`に設定
-
-### 3. 開発サーバーの起動
-
+5. **開発サーバー起動**
 ```bash
 npm run dev
 ```
 
-ブラウザで [http://localhost:3000](http://localhost:3000) を開きます。
+### プロダクション環境
+
+詳細は [デプロイメントガイド](docs/DEPLOYMENT_GUIDE.md) を参照してください。
+
+## ビルド & デプロイ
+
+### ローカルビルド
+```bash
+npm run build
+npm start
+```
+
+### Vercelデプロイ
+1. GitHub リポジトリを Vercel に接続
+2. 環境変数を設定
+3. PostgreSQL データベースを準備
+4. 自動デプロイ
 
 ## プロジェクト構造
 

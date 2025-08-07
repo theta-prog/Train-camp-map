@@ -1,36 +1,25 @@
-import bcrypt from 'bcryptjs'
-import jwt from 'jsonwebtoken'
-import { jwtVerify } from 'jose'
+import { jwtVerify, SignJWT } from 'jose'
 import { NextRequest } from 'next/server'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret'
-const SALT_ROUNDS = 12
 
 /**
- * パスワードをハッシュ化する
+ * JWTトークンを生成する（Edge Runtime対応）
  */
-export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, SALT_ROUNDS)
-}
-
-/**
- * パスワードを検証する
- */
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash)
-}
-
-/**
- * JWTトークンを生成する
- */
-export function generateToken(payload: { userId: string; email: string; role: string }): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+export async function generateToken(payload: { userId: string; email: string; role: string }): Promise<string> {
+  const secret = new TextEncoder().encode(JWT_SECRET);
+  const jwt = await new SignJWT(payload)
+    .setProtectedHeader({ alg: 'HS256' })
+    .setExpirationTime('7d')
+    .setIssuedAt()
+    .sign(secret);
+  return jwt;
 }
 
 /**
  * JWTトークンを検証する（Edge Runtime対応）
  */
-export async function verifyTokenEdge(token: string) {
+export async function verifyToken(token: string) {
   try {
     console.log('Edge JWT検証開始:', { 
       tokenLength: token.length, 
@@ -43,24 +32,6 @@ export async function verifyTokenEdge(token: string) {
     return payload;
   } catch (error) {
     console.error('Edge JWT検証エラー:', error);
-    return null;
-  }
-}
-
-/**
- * JWTトークンを検証する
- */
-export function verifyToken(token: string) {
-  try {
-    console.log('JWT検証開始:', { 
-      tokenLength: token.length, 
-      secret: JWT_SECRET.substring(0, 10) + '...' 
-    });
-    const result = jwt.verify(token, JWT_SECRET);
-    console.log('JWT検証成功:', result);
-    return result;
-  } catch (error) {
-    console.error('JWT検証エラー:', error);
     return null;
   }
 }
@@ -84,7 +55,7 @@ export async function getAuthFromRequest(request: NextRequest) {
     return null
   }
 
-  const payload = await verifyTokenEdge(token)
+  const payload = await verifyToken(token)
   console.log('JWT検証結果:', payload);
   return payload as { userId: string; email: string; role: string } | null
 }
