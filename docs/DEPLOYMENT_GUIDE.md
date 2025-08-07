@@ -54,6 +54,11 @@ npm start
 3. PostgreSQLデータベースを用意（Vercel Postgres推奨）
 4. 自動デプロイ設定
 
+**重要**: Prismaクライアントの生成は自動的に実行されます：
+- `package.json`の`build`スクリプトに`prisma generate`が含まれています
+- `vercel.json`でビルドコマンドを明示的に指定
+- PostgreSQL用のバイナリターゲットを設定済み
+
 ### その他のプラットフォーム
 - Docker化対応
 - AWS/GCP/Azureでのデプロイ対応
