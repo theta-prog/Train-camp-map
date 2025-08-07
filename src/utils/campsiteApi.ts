@@ -2,24 +2,30 @@ import { Campsite } from '@/types/campsite'
 
 /**
  * API レスポンスをフロントエンド用のCampsite型に変換する
- * 新しいキャメルケース形式のAPIレスポンスに対応
+ * 新しいPrismaスキーマ形式のAPIレスポンスに対応
  */
 export function transformApiCampsiteToFrontend(apiCampsite: any): Campsite {
-  // APIが既にキャメルケース形式で返すため、直接使用
   return {
     id: apiCampsite.id,
-    name: apiCampsite.name,
+    name: apiCampsite.nameJa, // nameJa -> name
     lat: apiCampsite.lat,
     lng: apiCampsite.lng,
-    address: apiCampsite.address,
+    address: apiCampsite.addressJa, // addressJa -> address
     phone: apiCampsite.phone || '',
     website: apiCampsite.website || '',
+    reservationUrl: apiCampsite.reservationUrl,
     price: apiCampsite.price,
+    priceMin: apiCampsite.priceMin,
+    priceMax: apiCampsite.priceMax,
     facilities: apiCampsite.facilities || [],
     activities: apiCampsite.activities || [],
-    nearestStation: apiCampsite.nearestStation,
-    accessTime: apiCampsite.accessTime,
-    description: apiCampsite.description,
+    nearestStation: apiCampsite.nearestStationJa, // nearestStationJa -> nearestStation
+    accessTime: apiCampsite.accessTimeJa, // accessTimeJa -> accessTime
+    description: apiCampsite.descriptionJa, // descriptionJa -> description
+    images: apiCampsite.images || [],
+    checkInTime: apiCampsite.checkInTime,
+    checkOutTime: apiCampsite.checkOutTime,
+    cancellationPolicy: apiCampsite.cancellationPolicyJa // cancellationPolicyJa -> cancellationPolicy
   }
 }
 
@@ -36,11 +42,11 @@ export async function fetchCampsites(): Promise<Campsite[]> {
     
     const result = await response.json()
     
-    if (!result.data || !Array.isArray(result.data)) {
+    if (!result.campsites || !Array.isArray(result.campsites)) {
       throw new Error('Invalid API response format')
     }
     
-    return result.data.map(transformApiCampsiteToFrontend)
+    return result.campsites.map(transformApiCampsiteToFrontend)
   } catch (error) {
     console.error('Failed to fetch campsites:', error)
     throw error

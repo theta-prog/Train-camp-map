@@ -6,6 +6,7 @@ interface HomePageProps {
 
 // Server Componentでparamsを処理し、Client Componentに渡す
 export default async function HomePage({ params }: HomePageProps) {
-  const { locale } = await params
-  return <CampsiteSearchApp locale={locale} />
+  // paramsは使用しないが、動的ルーティングのために残しておく
+  await params
+  return <CampsiteSearchApp />
 }

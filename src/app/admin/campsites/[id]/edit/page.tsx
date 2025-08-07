@@ -28,23 +28,27 @@ export default function CampsiteEditPage({ params }: CampsiteEditPageProps) {
         if (response.ok) {
           // APIレスポンス（キャメルケース）をフォーム用（スネークケース）に変換
           const formData = {
-            name_ja: result.data.name.ja,
-            name_en: result.data.name.en,
-            address_ja: result.data.address.ja,
-            address_en: result.data.address.en,
+            name_ja: result.data.nameJa,
+            name_en: result.data.nameEn,
+            address_ja: result.data.addressJa,
+            address_en: result.data.addressEn,
             lat: result.data.lat,
             lng: result.data.lng,
             phone: result.data.phone || '',
             website: result.data.website || '',
             price: result.data.price,
-            nearest_station_ja: result.data.nearestStation.ja,
-            nearest_station_en: result.data.nearestStation.en,
-            access_time_ja: result.data.accessTime.ja,
-            access_time_en: result.data.accessTime.en,
-            description_ja: result.data.description.ja,
-            description_en: result.data.description.en,
+            nearest_station_ja: result.data.nearestStationJa,
+            nearest_station_en: result.data.nearestStationEn,
+            access_time_ja: result.data.accessTimeJa,
+            access_time_en: result.data.accessTimeEn,
+            description_ja: result.data.descriptionJa,
+            description_en: result.data.descriptionEn,
             facilities: result.data.facilities || [],
-            activities: result.data.activities || []
+            activities: result.data.activities || [],
+            check_in_time: result.data.checkInTime || '',
+            check_out_time: result.data.checkOutTime || '',
+            cancellation_policy_ja: result.data.cancellationPolicyJa || '',
+            cancellation_policy_en: result.data.cancellationPolicyEn || ''
           }
           setCampsite(formData)
         } else {
@@ -136,7 +140,6 @@ export default function CampsiteEditPage({ params }: CampsiteEditPageProps) {
             initialData={campsite}
             onSubmit={handleSubmit}
             isEditMode={true}
-            campsiteId={params.id}
           />
         </div>
       </div>

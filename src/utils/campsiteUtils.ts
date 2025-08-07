@@ -6,7 +6,7 @@ export function filterCampsites(campsites: Campsite[], filters: SearchFilters): 
     // キーワード検索
     if (filters.keyword) {
       const keyword = filters.keyword.toLowerCase()
-      const searchText = `${campsite.name.ja} ${campsite.name.en} ${campsite.address.ja} ${campsite.address.en}`.toLowerCase()
+      const searchText = `${campsite.name} ${campsite.address}`.toLowerCase()
       if (!searchText.includes(keyword)) {
         return false
       }

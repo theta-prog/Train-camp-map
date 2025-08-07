@@ -1,119 +1,123 @@
-import { supabase } from '@/lib/supabase'
-import { campsiteSchema } from '@/lib/validations/campsite'
+import { getAuthFromRequest, requireAdmin } from '@/lib/auth'
+import { formatCampsiteForClient, formatCampsiteForDb } from '@/lib/database-helpers'
+import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
-// データベースのスネークケースからキャメルケースに変換
-function transformFromDatabase(dbData: any) {
-  return {
-    id: dbData.id,
-    name: {
-      ja: dbData.name_ja,
-      en: dbData.name_en
-    },
-    lat: dbData.lat,
-    lng: dbData.lng,
-    address: {
-      ja: dbData.address_ja,
-      en: dbData.address_en
-    },
-    phone: dbData.phone || '',
-    website: dbData.website || '',
-    price: dbData.price,
-    nearestStation: {
-      ja: dbData.nearest_station_ja,
-      en: dbData.nearest_station_en
-    },
-    accessTime: {
-      ja: dbData.access_time_ja,
-      en: dbData.access_time_en
-    },
-    description: {
-      ja: dbData.description_ja,
-      en: dbData.description_en
-    },
-    facilities: dbData.facilities || [],
-    activities: dbData.activities || []
-  }
-}
+const campsiteSchema = z.object({
+  nameJa: z.string().min(1),
+  nameEn: z.string().optional(),
+  lat: z.number(),
+  lng: z.number(),
+  addressJa: z.string().min(1),
+  addressEn: z.string().optional(),
+  phone: z.string().optional(),
+  website: z.string().optional(),
+  price: z.string(),
+  nearestStationJa: z.string(),
+  nearestStationEn: z.string().optional(),
+  accessTimeJa: z.string(),
+  accessTimeEn: z.string().optional(),
+  descriptionJa: z.string(),
+  descriptionEn: z.string().optional(),
+  facilities: z.array(z.string()).optional(),
+  activities: z.array(z.string()).optional(),
+  images: z.array(z.string()).optional(),
+  priceMin: z.number().optional(),
+  priceMax: z.number().optional(),
+  reservationUrl: z.string().optional(),
+  reservationPhone: z.string().optional(),
+  reservationEmail: z.string().optional(),
+  checkInTime: z.string().optional(),
+  checkOutTime: z.string().optional(),
+  cancellationPolicyJa: z.string().optional(),
+  cancellationPolicyEn: z.string().optional()
+})
 
-// GET /api/campsites - キャンプ場一覧取得
-export async function GET() {
+/**
+ * セキュアなキャンプサイトAPI
+ * フロントエンドからDBへの直接アクセスは完全に遮断
+ * すべてのDB操作はサーバーサイドで制御
+ */
+
+// GET /api/secure/campsites - キャンプサイト一覧取得（認証不要）
+export async function GET(request: NextRequest) {
   try {
-    const { data, error } = await supabase
-      .from('campsites')
-      .select('*')
-      .order('created_at', { ascending: false })
+    const { searchParams } = new URL(request.url)
+    const query = searchParams.get('q')
 
-    if (error) {
-      console.error('Database error:', error)
-      return NextResponse.json(
-        { error: 'キャンプ場の取得に失敗しました' },
-        { status: 500 }
-      )
+    let campsites
+    if (query) {
+      campsites = await prisma.campsite.findMany({
+        where: {
+          OR: [
+            { nameJa: { contains: query } },
+            { nameEn: { contains: query } },
+            { addressJa: { contains: query } },
+            { descriptionJa: { contains: query } }
+          ]
+        }
+      })
+    } else {
+      campsites = await prisma.campsite.findMany()
     }
 
-    // データを変換
-    const transformedData = data?.map(transformFromDatabase) || []
+    // SQLiteのJSON文字列を配列に変換
+    const formattedCampsites = campsites.map(formatCampsiteForClient)
 
-    return NextResponse.json({ data: transformedData })
+    return NextResponse.json({ campsites: formattedCampsites })
+
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('Campsites fetch error:', error)
     return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
+      { error: 'キャンプサイトの取得に失敗しました' },
       { status: 500 }
     )
   }
 }
 
-// POST /api/campsites - キャンプ場新規作成
+// POST /api/secure/campsites - キャンプサイト作成（管理者権限必要）
 export async function POST(request: NextRequest) {
   try {
-    let body
-    try {
-      body = await request.json()
-    } catch (error) {
-      return NextResponse.json(
-        { error: '無効なJSONデータです' },
-        { status: 400 }
-      )
-    }
+    const auth = await getAuthFromRequest(request)
     
-    // バリデーション
-    const validatedData = campsiteSchema.parse(body)
-    
-    const { data, error } = await supabase
-      .from('campsites')
-      .insert([
-        {
-          ...validatedData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }
-      ])
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Database error:', error)
+    if (!requireAdmin(auth)) {
       return NextResponse.json(
-        { error: 'キャンプ場の作成に失敗しました' },
-        { status: 500 }
+        { error: '管理者権限が必要です' },
+        { status: 403 }
       )
     }
 
-    return NextResponse.json({ data }, { status: 201 })
+    const body = await request.json()
+    const data = campsiteSchema.parse(body)
+
+    // 配列をJSON文字列に変換
+    const formattedData = formatCampsiteForDb(data)
+
+    const campsite = await prisma.campsite.create({
+      data: formattedData
+    })
+
+    // レスポンス時は配列に戻す
+    const formattedCampsite = formatCampsiteForClient(campsite)
+
+    return NextResponse.json({
+      message: 'キャンプサイトが作成されました',
+      campsite: formattedCampsite
+    })
+
   } catch (error) {
-    if (error instanceof Error && 'issues' in error) {
-      // Zodバリデーションエラー
+    console.error('Campsite creation error:', error)
+    
+    if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'バリデーションエラー', details: error.issues },
+        { error: 'バリデーションエラー', details: error.errors },
         { status: 400 }
       )
     }
 
-    console.error('Unexpected error:', error)
     return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
+      { error: 'キャンプサイトの作成に失敗しました' },
       { status: 500 }
     )
   }

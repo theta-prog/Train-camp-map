@@ -13,16 +13,15 @@
 - 🌍 **多言語対応**: 日本語・英語対応
 - 🧪 **100%テストカバレッジ**: Jest + Testing Library
 
-## 技術スタック
+## 🏗️ **技術スタック**
 
-- **フロントエンド**: React 18, Next.js 14 (App Router)
-- **バックエンド**: Next.js API Routes, Supabase
-- **データベース**: PostgreSQL (Supabase)
-- **スタイリング**: Tailwind CSS
-- **地図**: Google Maps API (@vis.gl/react-google-maps)
-- **フォーム管理**: React Hook Form + Zod
-- **言語**: TypeScript
+- **フロントエンド**: Next.js 14, TypeScript, Tailwind CSS
+- **バックエンド**: Next.js API Routes, Prisma ORM
+- **データベース**: SQLite (開発環境), PostgreSQL (本番環境)
+- **認証**: JWT + HttpOnly Cookies
+- **地図表示**: Google Maps API
 - **国際化**: next-intl
+- **テスト**: Jest, Testing Library
 
 ## セットアップ
 
@@ -40,14 +39,38 @@ npm install
 # Google Maps API
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
 
-# Supabase Configuration
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```bash
+# データベース設定（SQLite for development）
+DATABASE_URL="file:./dev.db"
+
+# JWT認証設定
+JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+
+# 管理者メールアドレス（カンマ区切りで複数指定可能）
+ADMIN_ALLOWED_EMAILS="admin@example.com,another@example.com"
+
+# Google Maps API Key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=your_google_maps_map_id
+
+# Next.js設定
+NEXTAUTH_URL="http://localhost:3000"
+NODE_ENV="development"
+```
 ```
 
-### 3. Supabaseセットアップ
+### 3. データベースセットアップ
 
-1. [Supabase](https://supabase.com/)でアカウントを作成
+```bash
+# Prismaクライアント生成
+npx prisma generate
+
+# データベースマイグレーション
+npx prisma migrate dev --name init
+
+# テストデータの挿入（オプション）
+node prisma/seed.js
+```
 2. 新しいプロジェクトを作成
 3. SQL Editorで`database/create_campsites_table.sql`を実行
 4. プロジェクトURLとAnon Keyを`.env.local`に設定

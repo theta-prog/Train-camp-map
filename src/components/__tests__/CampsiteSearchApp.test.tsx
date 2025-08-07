@@ -134,7 +134,7 @@ jest.mock('../CampsiteList', () => {
       <div data-testid="mock-campsite-list">
         {campsites.map((campsite: any) => (
           <div key={campsite.id}>
-            <span>{campsite.name.ja}</span>
+            <span>{campsite.name}</span>
             <a href={`/campsites/${campsite.id}`}>詳細を見る</a>
           </div>
         ))}

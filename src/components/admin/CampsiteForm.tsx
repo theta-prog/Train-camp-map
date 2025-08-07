@@ -1,623 +1,460 @@
 'use client'
 
-import {
-    AVAILABLE_ACTIVITIES,
-    AVAILABLE_FACILITIES,
-    CampsiteFormData,
-    campsiteSchema
-} from '@/lib/validations/campsite'
-import { zodResolver } from '@hookform/resolvers/zod'
-import Image from 'next/image'
+import { CampsiteFormData, campsiteSchema, AVAILABLE_FACILITIES, AVAILABLE_ACTIVITIES } from '@/lib/validations/campsite'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import ImageUploader from './ImageUploader'
-import MapPicker from './MapPicker'
+import { z } from 'zod'
 
 interface CampsiteFormProps {
+  initialData?: Partial<CampsiteFormData>
   onSubmit: (data: CampsiteFormData) => Promise<void>
-  initialData?: Partial<Omit<CampsiteFormData, 'id'>>
-  isLoading?: boolean
+  submitButtonText?: string
   isEditMode?: boolean
-  campsiteId?: string  // 編集時のキャンプ場ID
+  isLoading?: boolean
 }
 
 export default function CampsiteForm({ 
+  initialData = {}, 
   onSubmit, 
-  initialData, 
-  isLoading = false,
-  isEditMode = false,
-  campsiteId
+  submitButtonText = '保存',
+  isEditMode: _isEditMode = false,
+  isLoading: _externalLoading = false
 }: CampsiteFormProps) {
-  const [selectedFacilities, setSelectedFacilities] = useState<string[]>(
-    initialData?.facilities || []
-  )
-  const [selectedActivities, setSelectedActivities] = useState<string[]>(
-    initialData?.activities || []
-  )
-  const [imageUrls, setImageUrls] = useState<string[]>(
-    initialData?.images || []
-  )
-  const [selectedLocation, setSelectedLocation] = useState({
-    lat: initialData?.lat || 35.6762,
-    lng: initialData?.lng || 139.6503
+  const [formData, setFormData] = useState<Partial<CampsiteFormData>>({
+    name_ja: '',
+    name_en: '',
+    address_ja: '',
+    address_en: '',
+    lat: undefined,
+    lng: undefined,
+    phone: '',
+    website: '',
+    reservationUrl: '',
+    price: '',
+    priceMin: undefined,
+    priceMax: undefined,
+    check_in_time: '',
+    check_out_time: '',
+    cancellation_policy_ja: '',
+    cancellation_policy_en: '',
+    nearest_station_ja: '',
+    nearest_station_en: '',
+    access_time_ja: '',
+    access_time_en: '',
+    description_ja: '',
+    description_en: '',
+    facilities: [],
+    activities: [],
+    images: [],
+    ...initialData
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-  } = useForm<CampsiteFormData>({
-    resolver: zodResolver(campsiteSchema),
-    mode: 'onBlur', // Enable validation on blur
-    defaultValues: {
-      name_ja: '',
-      name_en: '',
-      lat: initialData?.lat,
-      lng: initialData?.lng,
-      address_ja: '',
-      address_en: '',
-      phone: '',
-      website: '',
-      price: '',
-      nearest_station_ja: '',
-      nearest_station_en: '',
-      access_time_ja: '',
-      access_time_en: '',
-      description_ja: '',
-      description_en: '',
-      facilities: [],
-      activities: [],
-      ...initialData,
-    },
-  })
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleFacilityChange = (facilityId: string, checked: boolean) => {
-    const updated = checked
-      ? [...selectedFacilities, facilityId]
-      : selectedFacilities.filter(id => id !== facilityId)
-    
-    setSelectedFacilities(updated)
-    setValue('facilities', updated)
+  const handleInputChange = (field: keyof CampsiteFormData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }))
+    }
   }
 
-  const handleLocationSelect = (lat: number, lng: number) => {
-    setSelectedLocation({ lat, lng })
-    setValue('lat', lat)
-    setValue('lng', lng)
-  }
-
-  const handleActivityChange = (activityId: string, checked: boolean) => {
-    const updated = checked
-      ? [...selectedActivities, activityId]
-      : selectedActivities.filter(id => id !== activityId)
-    
-    setSelectedActivities(updated)
-    setValue('activities', updated)
-  }
-
-  const onFormSubmit = async (data: CampsiteFormData) => {
-    await onSubmit({
-      ...data,
-      facilities: selectedFacilities,
-      activities: selectedActivities,
-      images: imageUrls,
+  const handleCheckboxChange = (field: 'facilities' | 'activities', value: string, checked: boolean) => {
+    setFormData(prev => {
+      const currentArray = prev[field] || []
+      if (checked) {
+        return { ...prev, [field]: [...currentArray, value] }
+      } else {
+        return { ...prev, [field]: currentArray.filter(item => item !== value) }
+      }
     })
   }
 
-  const handleAddImage = (newUrls: string[]) => {
-    const updatedImages = [...imageUrls, ...newUrls]
-    setImageUrls(updatedImages)
-    setValue('images', updatedImages)
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setErrors({})
 
-  const handleRemoveImage = (index: number) => {
-    const newImages = imageUrls.filter((_, i) => i !== index)
-    setImageUrls(newImages)
-    setValue('images', newImages)
+    try {
+      const validatedData = campsiteSchema.parse(formData)
+      await onSubmit(validatedData)
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors: Record<string, string> = {}
+        error.errors.forEach(err => {
+          if (err.path[0]) {
+            fieldErrors[err.path[0] as string] = err.message
+          }
+        })
+        setErrors(fieldErrors)
+      } else {
+        console.error('Submit error:', error)
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* 基本情報 */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">基本情報</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="name_ja" className="block text-sm font-medium text-gray-700 mb-1">
-              名前（日本語）*
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              キャンプ場名（日本語）*
             </label>
             <input
-              id="name_ja"
               type="text"
-              {...register('name_ja')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: 高尾山キャンプ場"
+              value={formData.name_ja || ''}
+              onChange={(e) => handleInputChange('name_ja', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.name_ja && (
-              <p className="mt-1 text-sm text-red-600">{errors.name_ja.message}</p>
-            )}
+            {errors.name_ja && <p className="text-red-500 text-sm mt-1">{errors.name_ja}</p>}
           </div>
 
           <div>
-            <label htmlFor="name_en" className="block text-sm font-medium text-gray-700 mb-1">
-              名前（英語）
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              キャンプ場名（英語）
             </label>
             <input
-              id="name_en"
               type="text"
-              {...register('name_en')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="e.g. Takao Mountain Campsite"
+              value={formData.name_en || ''}
+              onChange={(e) => handleInputChange('name_en', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.name_en && (
-              <p className="mt-1 text-sm text-red-600">{errors.name_en.message}</p>
-            )}
+            {errors.name_en && <p className="text-red-500 text-sm mt-1">{errors.name_en}</p>}
           </div>
         </div>
       </div>
 
-      {/* 位置情報 */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">位置情報</h3>
-        
-        {/* Google Map による位置選択 */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            地図から位置を選択
-          </label>
-          <MapPicker
-            lat={selectedLocation.lat}
-            lng={selectedLocation.lng}
-            onLocationSelect={handleLocationSelect}
-            className="w-full"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 住所・位置情報 */}
+      <div className="bg-white shadow rounded-lg p-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">住所・位置情報</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="lat" className="block text-sm font-medium text-gray-700 mb-1">
-              緯度（手動入力・オプション）
-            </label>
-            <input
-              id="lat"
-              type="number"
-              step="any"
-              {...register('lat', { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: 35.6762"
-            />
-            {errors.lat && (
-              <p className="mt-1 text-sm text-red-600">{errors.lat.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label htmlFor="lng" className="block text-sm font-medium text-gray-700 mb-1">
-              経度（手動入力・オプション）
-            </label>
-            <input
-              id="lng"
-              type="number"
-              step="any"
-              {...register('lng', { valueAsNumber: true })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: 139.6503"
-            />
-            {errors.lng && (
-              <p className="mt-1 text-sm text-red-600">{errors.lng.message}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <div>
-            <label htmlFor="address_ja" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               住所（日本語）*
             </label>
             <input
-              id="address_ja"
               type="text"
-              {...register('address_ja')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: 東京都八王子市高尾町"
+              value={formData.address_ja || ''}
+              onChange={(e) => handleInputChange('address_ja', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.address_ja && (
-              <p className="mt-1 text-sm text-red-600">{errors.address_ja.message}</p>
-            )}
+            {errors.address_ja && <p className="text-red-500 text-sm mt-1">{errors.address_ja}</p>}
           </div>
 
           <div>
-            <label htmlFor="address_en" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               住所（英語）
             </label>
             <input
-              id="address_en"
               type="text"
-              {...register('address_en')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="e.g. Takao-cho, Hachioji-shi, Tokyo"
+              value={formData.address_en || ''}
+              onChange={(e) => handleInputChange('address_en', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.address_en && (
-              <p className="mt-1 text-sm text-red-600">{errors.address_en.message}</p>
-            )}
+            {errors.address_en && <p className="text-red-500 text-sm mt-1">{errors.address_en}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              緯度
+            </label>
+            <input
+              type="number"
+              step="any"
+              value={formData.lat || ''}
+              onChange={(e) => handleInputChange('lat', e.target.value ? Number(e.target.value) : undefined)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {errors.lat && <p className="text-red-500 text-sm mt-1">{errors.lat}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              経度
+            </label>
+            <input
+              type="number"
+              step="any"
+              value={formData.lng || ''}
+              onChange={(e) => handleInputChange('lng', e.target.value ? Number(e.target.value) : undefined)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {errors.lng && <p className="text-red-500 text-sm mt-1">{errors.lng}</p>}
           </div>
         </div>
       </div>
 
-      {/* 連絡先情報 */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">連絡先情報</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 連絡先・予約情報 */}
+      <div className="bg-white shadow rounded-lg p-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">連絡先・予約情報</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               電話番号
             </label>
             <input
-              id="phone"
               type="text"
-              {...register('phone')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: 042-123-4567"
+              value={formData.phone || ''}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.phone && (
-              <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
-            )}
+            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
           </div>
 
           <div>
-            <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">
-              公式ウェブサイト
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              ウェブサイト
             </label>
             <input
-              id="website"
               type="url"
-              {...register('website')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: https://example.com"
+              value={formData.website || ''}
+              onChange={(e) => handleInputChange('website', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.website && (
-              <p className="mt-1 text-sm text-red-600">{errors.website.message}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-6">
-          <label htmlFor="reservationUrl" className="block text-sm font-medium text-gray-700 mb-1">
-            予約サイトURL
-          </label>
-          <input
-            id="reservationUrl"
-            type="url"
-            {...register('reservationUrl')}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="例: https://reservation.example.com"
-          />
-          {errors.reservationUrl && (
-            <p className="mt-1 text-sm text-red-600">{errors.reservationUrl.message}</p>
-          )}
-        </div>
-
-        <div className="mt-6">
-          <h4 className="text-md font-medium text-gray-900 mb-4">料金情報</h4>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                表示用料金*
-              </label>
-              <input
-                id="price"
-                type="text"
-                {...register('price')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="例: ¥2,000-¥5,000/泊 or ¥3,000/泊"
-              />
-              {errors.price && (
-                <p className="mt-1 text-sm text-red-600">{errors.price.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="priceMin" className="block text-sm font-medium text-gray-700 mb-1">
-                最小料金（円）
-              </label>
-              <input
-                id="priceMin"
-                type="number"
-                {...register('priceMin', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="例: 2000"
-              />
-              {errors.priceMin && (
-                <p className="mt-1 text-sm text-red-600">{errors.priceMin.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="priceMax" className="block text-sm font-medium text-gray-700 mb-1">
-                最大料金（円）
-              </label>
-              <input
-                id="priceMax"
-                type="number"
-                {...register('priceMax', { valueAsNumber: true })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="例: 5000"
-              />
-              {errors.priceMax && (
-                <p className="mt-1 text-sm text-red-600">{errors.priceMax.message}</p>
-              )}
-            </div>
-          </div>
-          
-          {/* チェックイン・チェックアウト情報 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div>
-              <label htmlFor="checkInTime" className="block text-sm font-medium text-gray-700 mb-1">
-                チェックイン時間
-              </label>
-              <input
-                id="checkInTime"
-                type="text"
-                {...register('checkInTime')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="例: 14:00"
-              />
-              {errors.checkInTime && (
-                <p className="mt-1 text-sm text-red-600">{errors.checkInTime.message}</p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="checkOutTime" className="block text-sm font-medium text-gray-700 mb-1">
-                チェックアウト時間
-              </label>
-              <input
-                id="checkOutTime"
-                type="text"
-                {...register('checkOutTime')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="例: 11:00"
-              />
-              {errors.checkOutTime && (
-                <p className="mt-1 text-sm text-red-600">{errors.checkOutTime.message}</p>
-              )}
-            </div>
+            {errors.website && <p className="text-red-500 text-sm mt-1">{errors.website}</p>}
           </div>
 
-          {/* キャンセルポリシー */}
-          <div className="mt-6">
-            <label htmlFor="cancellationPolicy" className="block text-sm font-medium text-gray-700 mb-1">
-              キャンセルポリシー
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              予約URL
             </label>
-            <textarea
-              id="cancellationPolicy"
-              {...register('cancellationPolicy')}
-              rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="キャンセル料金や注意事項を記載してください"
+            <input
+              type="url"
+              value={formData.reservationUrl || ''}
+              onChange={(e) => handleInputChange('reservationUrl', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.cancellationPolicy && (
-              <p className="mt-1 text-sm text-red-600">{errors.cancellationPolicy.message}</p>
-            )}
+            {errors.reservationUrl && <p className="text-red-500 text-sm mt-1">{errors.reservationUrl}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              料金*
+            </label>
+            <input
+              type="text"
+              value={formData.price || ''}
+              onChange={(e) => handleInputChange('price', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="例: 3,000円/泊"
+            />
+            {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+          </div>
+        </div>
+      </div>
+
+      {/* チェックイン・チェックアウト */}
+      <div className="bg-white shadow rounded-lg p-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">チェックイン・チェックアウト</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              チェックイン時間
+            </label>
+            <input
+              type="text"
+              value={formData.check_in_time || ''}
+              onChange={(e) => handleInputChange('check_in_time', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="例: 15:00"
+            />
+            {errors.check_in_time && <p className="text-red-500 text-sm mt-1">{errors.check_in_time}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              チェックアウト時間
+            </label>
+            <input
+              type="text"
+              value={formData.check_out_time || ''}
+              onChange={(e) => handleInputChange('check_out_time', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="例: 10:00"
+            />
+            {errors.check_out_time && <p className="text-red-500 text-sm mt-1">{errors.check_out_time}</p>}
           </div>
         </div>
       </div>
 
       {/* アクセス情報 */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">アクセス情報</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="nearest_station_ja" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               最寄り駅（日本語）*
             </label>
             <input
-              id="nearest_station_ja"
               type="text"
-              {...register('nearest_station_ja')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: JR高尾駅"
+              value={formData.nearest_station_ja || ''}
+              onChange={(e) => handleInputChange('nearest_station_ja', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.nearest_station_ja && (
-              <p className="mt-1 text-sm text-red-600">{errors.nearest_station_ja.message}</p>
-            )}
+            {errors.nearest_station_ja && <p className="text-red-500 text-sm mt-1">{errors.nearest_station_ja}</p>}
           </div>
 
           <div>
-            <label htmlFor="nearest_station_en" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               最寄り駅（英語）
             </label>
             <input
-              id="nearest_station_en"
               type="text"
-              {...register('nearest_station_en')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="e.g. JR Takao Station"
+              value={formData.nearest_station_en || ''}
+              onChange={(e) => handleInputChange('nearest_station_en', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.nearest_station_en && (
-              <p className="mt-1 text-sm text-red-600">{errors.nearest_station_en.message}</p>
-            )}
+            {errors.nearest_station_en && <p className="text-red-500 text-sm mt-1">{errors.nearest_station_en}</p>}
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
-            <label htmlFor="access_time_ja" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               アクセス時間（日本語）*
             </label>
             <input
-              id="access_time_ja"
               type="text"
-              {...register('access_time_ja')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="例: 徒歩15分"
+              value={formData.access_time_ja || ''}
+              onChange={(e) => handleInputChange('access_time_ja', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.access_time_ja && (
-              <p className="mt-1 text-sm text-red-600">{errors.access_time_ja.message}</p>
-            )}
+            {errors.access_time_ja && <p className="text-red-500 text-sm mt-1">{errors.access_time_ja}</p>}
           </div>
 
           <div>
-            <label htmlFor="access_time_en" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               アクセス時間（英語）
             </label>
             <input
-              id="access_time_en"
               type="text"
-              {...register('access_time_en')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="e.g. 15 min walk"
+              value={formData.access_time_en || ''}
+              onChange={(e) => handleInputChange('access_time_en', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.access_time_en && (
-              <p className="mt-1 text-sm text-red-600">{errors.access_time_en.message}</p>
-            )}
+            {errors.access_time_en && <p className="text-red-500 text-sm mt-1">{errors.access_time_en}</p>}
           </div>
         </div>
       </div>
 
       {/* 説明 */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">説明</h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="description_ja" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               説明（日本語）*
             </label>
             <textarea
-              id="description_ja"
-              {...register('description_ja')}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="キャンプ場の特徴や魅力を詳しく説明してください"
+              value={formData.description_ja || ''}
+              onChange={(e) => handleInputChange('description_ja', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.description_ja && (
-              <p className="mt-1 text-sm text-red-600">{errors.description_ja.message}</p>
-            )}
+            {errors.description_ja && <p className="text-red-500 text-sm mt-1">{errors.description_ja}</p>}
           </div>
 
           <div>
-            <label htmlFor="description_en" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               説明（英語）
             </label>
             <textarea
-              id="description_en"
-              {...register('description_en')}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="Please describe the features and attractions of the campsite"
+              value={formData.description_en || ''}
+              onChange={(e) => handleInputChange('description_en', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             />
-            {errors.description_en && (
-              <p className="mt-1 text-sm text-red-600">{errors.description_en.message}</p>
-            )}
+            {errors.description_en && <p className="text-red-500 text-sm mt-1">{errors.description_en}</p>}
+          </div>
+        </div>
+      </div>
+
+      {/* キャンセルポリシー */}
+      <div className="bg-white shadow rounded-lg p-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4">キャンセルポリシー</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              キャンセルポリシー（日本語）
+            </label>
+            <textarea
+              rows={3}
+              value={formData.cancellation_policy_ja || ''}
+              onChange={(e) => handleInputChange('cancellation_policy_ja', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {errors.cancellation_policy_ja && <p className="text-red-500 text-sm mt-1">{errors.cancellation_policy_ja}</p>}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              キャンセルポリシー（英語）
+            </label>
+            <textarea
+              rows={3}
+              value={formData.cancellation_policy_en || ''}
+              onChange={(e) => handleInputChange('cancellation_policy_en', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            {errors.cancellation_policy_en && <p className="text-red-500 text-sm mt-1">{errors.cancellation_policy_en}</p>}
           </div>
         </div>
       </div>
 
       {/* 設備 */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">設備</h3>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {AVAILABLE_FACILITIES.map((facility) => (
-            <label key={facility.id} className="flex items-center">
+            <label key={facility.id} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={selectedFacilities.includes(facility.id)}
-                onChange={(e) => handleFacilityChange(facility.id, e.target.checked)}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                checked={formData.facilities?.includes(facility.id) || false}
+                onChange={(e) => handleCheckboxChange('facilities', facility.id, e.target.checked)}
+                className="rounded border-gray-300 text-green-600 focus:ring-green-500"
               />
-              <span className="ml-2 text-sm text-gray-700">{facility.label_ja}</span>
+              <span className="text-sm text-gray-700">{facility.label_ja}</span>
             </label>
           ))}
         </div>
       </div>
 
       {/* アクティビティ */}
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4">アクティビティ</h3>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {AVAILABLE_ACTIVITIES.map((activity) => (
-            <label key={activity.id} className="flex items-center">
+            <label key={activity.id} className="flex items-center space-x-2">
               <input
                 type="checkbox"
-                checked={selectedActivities.includes(activity.id)}
-                onChange={(e) => handleActivityChange(activity.id, e.target.checked)}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                checked={formData.activities?.includes(activity.id) || false}
+                onChange={(e) => handleCheckboxChange('activities', activity.id, e.target.checked)}
+                className="rounded border-gray-300 text-green-600 focus:ring-green-500"
               />
-              <span className="ml-2 text-sm text-gray-700">{activity.label_ja}</span>
+              <span className="text-sm text-gray-700">{activity.label_ja}</span>
             </label>
           ))}
         </div>
-      </div>
-
-      {/* 画像管理 */}
-      <div className="bg-white p-6 rounded-lg border border-gray-200">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">画像</h3>
-        
-        {/* 現在の画像一覧 */}
-        {imageUrls.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-            {imageUrls.map((url, index) => (
-              <div key={index} className="relative group">
-                <div className="aspect-w-16 aspect-h-12 bg-gray-100 rounded-lg overflow-hidden">
-                  <div className="relative w-full h-32">
-                    <Image
-                      src={url}
-                      alt={`画像 ${index + 1}`}
-                      fill
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                      className="object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEyMCIgdmlld0JveD0iMCAwIDIwMCAxMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTIwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xMDAgNDBDMTA2LjYyNyA0MCAxMTIgNDUuMzczIDExMiA1MkMxMTIgNTguNjI3IDEwNi42MjcgNjQgMTAwIDY0QzkzLjM3MyA2NCA4OCA1OC42MjcgODggNTJDODggNDUuMzczIDkzLjM3MyA0MCAxMDAgNDBaIiBmaWxsPSIjOUI5QkE0Ii8+CjxwYXRoIGQ9Ik04MCA3NkwxMDAgNTZMMTIwIDc2SDE2MEwxNDAgNTZMMTcwIDg2SDE3NlY5MkgxNzZIMjRWOTJIMjRMNTQgNjJMODAgNzZaIiBmaWxsPSIjOUI5QkE0Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTA0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNkI3MjgwIiBmb250LXNpemU9IjEyIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiI+dum7vOOBn+OBruiqreOBv+i+vOOBv+OBq+WksOaVlzwvdGV4dD4KPC9zdmc+';
-                      }}
-                    />
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveImage(index)}
-                  className="absolute top-2 right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  ×
-                </button>
-                <p className="mt-2 text-xs text-gray-500 truncate">{url}</p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ファイルアップローダー */}
-        <ImageUploader
-          campsiteId={campsiteId || 'new-campsite'}
-          onImagesUploaded={handleAddImage}
-          existingImages={imageUrls}
-          maxImages={10}
-        />
       </div>
 
       {/* 送信ボタン */}
       <div className="flex justify-end space-x-4">
         <button
           type="button"
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500"
           onClick={() => window.history.back()}
+          className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
         >
           キャンセル
         </button>
         <button
           type="submit"
-          disabled={isLoading}
-          className="px-4 py-2 bg-green-600 text-white rounded-md text-sm font-medium hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isSubmitting}
+          className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors disabled:opacity-50"
         >
-          {isLoading ? (isEditMode ? '更新中...' : '保存中...') : (isEditMode ? '更新' : '保存')}
+          {isSubmitting ? '保存中...' : submitButtonText}
         </button>
       </div>
     </form>

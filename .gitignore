@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+*.env
 
 # vercel
 .vercel
@@ -47,3 +48,7 @@ Thumbs.db
 mcp-*.json
 mcp_*.json
 mcp.json
+
+/generated/prisma
+
+*.txt

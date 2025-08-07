@@ -123,7 +123,8 @@ export default function NewCampsitePage() {
               
               {/* 重複チェック */}
               <DuplicateChecker 
-                formData={formData}
+                existingCampsites={existingCampsites}
+                currentData={formData}
                 onDuplicateFound={handleDuplicateFound}
               />
               
@@ -133,8 +134,6 @@ export default function NewCampsitePage() {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">地図で位置を選択</h3>
                   <MapAddComponent
                     onLocationSelect={handleMapLocationSelect}
-                    selectedLocation={formData.lat && formData.lng ? { lat: formData.lat, lng: formData.lng } : null}
-                    existingCampsites={existingCampsites}
                   />
                   {formData.lat && formData.lng && (
                     <div className="mt-2 text-sm text-gray-600">
@@ -157,7 +156,7 @@ export default function NewCampsitePage() {
                       <ul className="list-disc list-inside">
                         {duplicates.map((campsite, index) => (
                           <li key={index}>
-                            {campsite.name.ja} - {campsite.address.ja}
+                            {campsite.name} - {campsite.address}
                           </li>
                         ))}
                       </ul>

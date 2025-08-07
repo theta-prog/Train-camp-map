@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Campsite {
+  id                 String   @id @default(cuid())
+  nameJa             String   @map("name_ja")
+  nameEn             String?  @map("name_en")
+  lat                Float
+  lng                Float
+  addressJa          String   @map("address_ja")
+  addressEn          String?  @map("address_en")
+  phone              String?
+  website            String?
+  price              String
+  nearestStationJa   String   @map("nearest_station_ja")
+  nearestStationEn   String?  @map("nearest_station_en")
+  accessTimeJa       String   @map("access_time_ja")
+  accessTimeEn       String?  @map("access_time_en")
+  descriptionJa      String   @map("description_ja")
+  descriptionEn      String?  @map("description_en")
+  facilities         String   @default("[]") // JSON string
+  activities         String   @default("[]") // JSON string
+  images             String   @default("[]") // JSON string
+  priceMin           Int?     @map("price_min")
+  priceMax           Int?     @map("price_max")
+  reservationUrl     String?  @map("reservation_url")
+  reservationPhone   String?  @map("reservation_phone")
+  reservationEmail   String?  @map("reservation_email")
+  checkInTime        String?  @map("check_in_time")
+  checkOutTime       String?  @map("check_out_time")
+  cancellationPolicyJa String? @map("cancellation_policy_ja")
+  cancellationPolicyEn String? @map("cancellation_policy_en")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("campsites")
+}
+
+enum Role {
+  ADMIN
+  USER
+}

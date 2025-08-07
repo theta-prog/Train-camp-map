@@ -33,9 +33,9 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
           <LanguageSwitcher />
         </div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {campsite.name[locale]}
+          {campsite.name}
         </h1>
-        <p className="text-gray-600">{campsite.address[locale]}</p>
+        <p className="text-gray-600">{campsite.address}</p>
       </div>
 
       {/* 基本情報 */}
@@ -55,7 +55,7 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
                     <div className="relative w-full h-48 bg-gray-200 rounded-lg overflow-hidden">
                       <Image
                         src={image}
-                        alt={`${campsite.name[locale]} - ${locale === 'ja' ? '画像' : 'Image'} ${index + 1}`}
+                        alt={`${campsite.name} - ${locale === 'ja' ? '画像' : 'Image'} ${index + 1}`}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-200"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -83,7 +83,7 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
               {t('campsiteDetail.description')}
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              {campsite.description[locale]}
+              {campsite.description}
             </p>
           </div>
 
@@ -174,7 +174,7 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
                   {t('campsiteList.nearestStation')}
                 </dt>
                 <dd className="text-sm text-gray-900">
-                  {campsite.nearestStation[locale]}
+                  {campsite.nearestStation}
                 </dd>
               </div>
               
@@ -183,7 +183,7 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
                   {t('campsiteList.access')}
                 </dt>
                 <dd className="text-sm text-gray-900">
-                  {campsite.accessTime[locale]}
+                  {campsite.accessTime}
                 </dd>
               </div>
               
@@ -266,7 +266,7 @@ export default function CampsiteDetail({ campsite }: CampsiteDetailProps) {
                   {t('campsiteDetail.address')}
                 </p>
                 <p className="text-gray-900 font-medium">
-                  {campsite.address[locale]}
+                  {campsite.address}
                 </p>
               </div>
               

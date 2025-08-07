@@ -33,9 +33,10 @@ export const campsiteSchema = z.object({
   priceMax: z.number().min(0, '最大料金は0以上である必要があります').optional(),
   
   // チェックイン・チェックアウト
-  checkInTime: z.string().max(50, '50文字以内で入力してください').optional().or(z.literal('')),
-  checkOutTime: z.string().max(50, '50文字以内で入力してください').optional().or(z.literal('')),
-  cancellationPolicy: z.string().max(500, '500文字以内で入力してください').optional().or(z.literal('')),
+  check_in_time: z.string().max(50, '50文字以内で入力してください').optional().or(z.literal('')),
+  check_out_time: z.string().max(50, '50文字以内で入力してください').optional().or(z.literal('')),
+  cancellation_policy_ja: z.string().max(500, '500文字以内で入力してください').optional().or(z.literal('')),
+  cancellation_policy_en: z.string().max(500, '500文字以内で入力してください').optional().or(z.literal('')),
   
   // アクセス情報
   nearest_station_ja: z.string().min(1, '最寄り駅（日本語）は必須です').max(100, '100文字以内で入力してください'),

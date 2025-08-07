@@ -53,27 +53,27 @@ export default function CampsiteList({
             }`}
           >
             <div className="flex justify-between items-start mb-2">
-              <h3 className="font-semibold text-gray-800 text-sm">{campsite.name[locale]}</h3>
+              <h3 className="font-semibold text-gray-800 text-sm">{campsite.name}</h3>
               <span className="text-sm font-medium text-green-600">{campsite.price}</span>
             </div>
             
-            <p className="text-xs text-gray-600 mb-2">{campsite.address[locale]}</p>
+            <p className="text-xs text-gray-600 mb-2">{campsite.address}</p>
             
             <div className="space-y-1 mb-3">
               <div className="flex items-center text-xs text-gray-600">
                 <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
                 <span className="font-medium">{t('campsiteList.nearestStation')}:</span>
-                <span className="ml-1">{campsite.nearestStation[locale]}</span>
+                <span className="ml-1">{campsite.nearestStation}</span>
               </div>
               <div className="flex items-center text-xs text-gray-600">
                 <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
                 <span className="font-medium">{t('campsiteList.access')}:</span>
-                <span className="ml-1">{campsite.accessTime[locale]}</span>
+                <span className="ml-1">{campsite.accessTime}</span>
               </div>
             </div>
             
             <div className="mb-2">
-              <p className="text-xs text-gray-700 line-clamp-2">{campsite.description[locale]}</p>
+              <p className="text-xs text-gray-700 line-clamp-2">{campsite.description}</p>
             </div>
             
             {/* 設備アイコン */}

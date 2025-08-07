@@ -21,7 +21,7 @@ export default function CampsitesListPage() {
       const result = await response.json()
 
       if (response.ok) {
-        setCampsites(result.data || [])
+        setCampsites(result.campsites || [])  // APIレスポンス形式に合わせて修正
       } else {
         setError(result.error || 'キャンプ場の取得に失敗しました')
       }
@@ -106,11 +106,11 @@ export default function CampsitesListPage() {
                         <div className="flex items-center space-x-3">
                           <div className="flex-1">
                             <h3 className="text-lg font-medium text-gray-900 truncate">
-                              {campsite.name.ja}
+                              {campsite.name}
                             </h3>
-                            {campsite.address.ja && (
+                            {campsite.address && (
                               <p className="text-sm text-gray-500">
-                                {campsite.address.ja}
+                                {campsite.address}
                               </p>
                             )}
                             <div className="mt-1 flex items-center space-x-4 text-sm text-gray-500">
@@ -123,12 +123,12 @@ export default function CampsitesListPage() {
                               <div className="mt-2 flex flex-wrap gap-1">
                                 {campsite.facilities.map((facility, index) => (
                                   <span key={`facility-${index}`} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                    {facility}
+                                    {typeof facility === 'object' ? facility.ja || facility.en || String(facility) : facility}
                                   </span>
                                 ))}
                                 {campsite.activities.map((activity, index) => (
                                   <span key={`activity-${index}`} className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                    {activity}
+                                    {typeof activity === 'object' ? activity.ja || activity.en || String(activity) : activity}
                                   </span>
                                 ))}
                               </div>

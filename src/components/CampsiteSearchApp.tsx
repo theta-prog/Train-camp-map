@@ -26,11 +26,7 @@ const MapComponent = dynamic(
   }
 )
 
-interface CampsiteSearchAppProps {
-  locale: string
-}
-
-export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
+export default function CampsiteSearchApp() {
   const t = useTranslations()
   const [selectedCampsite, setSelectedCampsite] = useState<Campsite | null>(null)
   const [allCampsites, setAllCampsites] = useState<Campsite[]>([])
@@ -76,14 +72,11 @@ export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
     }
     
     let filtered = allCampsites.filter((campsite: Campsite) => {
-      const validLocale = locale === 'ja' || locale === 'en' ? locale : null
-      const currentLocale = validLocale || 'ja'
-      
       const keywordLower = filters.keyword.toLowerCase()
       const keywordMatch = !filters.keyword || 
-        campsite.name[currentLocale].toLowerCase().includes(keywordLower) ||
-        campsite.address[currentLocale].toLowerCase().includes(keywordLower) ||
-        campsite.nearestStation[currentLocale].toLowerCase().includes(keywordLower)
+        campsite.name.toLowerCase().includes(keywordLower) ||
+        campsite.address.toLowerCase().includes(keywordLower) ||
+        campsite.nearestStation.toLowerCase().includes(keywordLower)
       
       const priceValue = extractPriceFromString(campsite.price)
       const priceWithinLimit = priceValue <= filters.maxPrice
@@ -98,7 +91,7 @@ export default function CampsiteSearchApp({ locale }: CampsiteSearchAppProps) {
     })
     
     setFilteredCampsites(filtered)
-  }, [locale, isFiltersInitialized, allCampsites])
+  }, [isFiltersInitialized, allCampsites])
 
   if (!apiKey) {
     return (

@@ -4,33 +4,35 @@ import { Campsite, SearchFilters } from '@/types/campsite'
 const mockCampsites: Campsite[] = [
   {
     id: '1',
-    name: { ja: '山のキャンプ場', en: 'Mountain Campsite' },
+    name: '山のキャンプ場',
     lat: 35.6762,
     lng: 139.6503,
-    address: { ja: '東京都渋谷区', en: 'Shibuya, Tokyo' },
+    address: '東京都渋谷区',
     phone: '03-1234-5678',
     website: 'https://mountain.com',
     price: '¥2,000/泊',
-    nearestStation: { ja: '渋谷駅', en: 'Shibuya Station' },
-    accessTime: { ja: '徒歩15分', en: '15 min walk' },
-    description: { ja: '美しい山の景色', en: 'Beautiful mountain view' },
+    nearestStation: '渋谷駅',
+    accessTime: '徒歩15分',
+    description: '美しい山の景色',
     facilities: ['restroom', 'shower', 'parking'],
     activities: ['hiking', 'fishing'],
+    images: []
   },
   {
     id: '2',
-    name: { ja: '海のキャンプ場', en: 'Beach Campsite' },
+    name: '海のキャンプ場',
     lat: 35.4437,
     lng: 139.6380,
-    address: { ja: '神奈川県横浜市', en: 'Yokohama, Kanagawa' },
+    address: '神奈川県横浜市',
     phone: '045-1234-5678',
     website: 'https://beach.com',
     price: '¥3,500/泊',
-    nearestStation: { ja: '横浜駅', en: 'Yokohama Station' },
-    accessTime: { ja: 'バス20分', en: '20 min by bus' },
-    description: { ja: '海辺のキャンプ場', en: 'Beachfront camping' },
+    nearestStation: '横浜駅',
+    accessTime: 'バス20分',
+    description: '海辺のキャンプ場',
     facilities: ['restroom', 'wifi'],
     activities: ['swimming', 'surfing'],
+    images: []
   },
 ]
 
@@ -46,7 +48,7 @@ describe('campsiteUtils', () => {
       
       const result = filterCampsites(mockCampsites, filters)
       expect(result).toHaveLength(1)
-      expect(result[0]!.name.ja).toBe('山のキャンプ場')
+      expect(result[0]!.name).toBe('山のキャンプ場')
     })
 
     it('設備でフィルタリングできる', () => {
@@ -59,7 +61,7 @@ describe('campsiteUtils', () => {
       
       const result = filterCampsites(mockCampsites, filters)
       expect(result).toHaveLength(1)
-      expect(result[0]!.name.ja).toBe('山のキャンプ場')
+      expect(result[0]!.name).toBe('山のキャンプ場')
     })
 
     it('アクティビティでフィルタリングできる', () => {
@@ -72,7 +74,7 @@ describe('campsiteUtils', () => {
       
       const result = filterCampsites(mockCampsites, filters)
       expect(result).toHaveLength(1)
-      expect(result[0]!.name.ja).toBe('海のキャンプ場')
+      expect(result[0]!.name).toBe('海のキャンプ場')
     })
 
     it('条件に合わない場合は空配列を返す', () => {

@@ -12,54 +12,67 @@ describe('campsiteApi', () => {
     it('API レスポンスをフロントエンド用の型に変換する', () => {
       const apiCampsite = {
         id: '1',
-        name: { ja: 'テストキャンプ場', en: 'Test Campsite' },
+        nameJa: 'テストキャンプ場',
+        nameEn: 'Test Campsite',
         lat: 35.6762,
         lng: 139.6503,
-        address: { ja: '東京都', en: 'Tokyo' },
+        addressJa: '東京都',
+        addressEn: 'Tokyo',
         phone: '03-1234-5678',
         website: 'https://test.com',
         price: '¥3000/泊',
         facilities: ['restroom', 'parking'],
         activities: ['hiking'],
-        nearestStation: { ja: '新宿駅', en: 'Shinjuku Station' },
-        accessTime: { ja: '徒歩10分', en: '10 min walk' },
-        description: { ja: 'テスト用キャンプ場', en: 'Test campsite' }
+        nearestStationJa: '新宿駅',
+        nearestStationEn: 'Shinjuku Station',
+        accessTimeJa: '徒歩10分',
+        accessTimeEn: '10 min walk',
+        descriptionJa: 'テスト用キャンプ場',
+        descriptionEn: 'Test campsite',
+        images: []
       }
 
       const result = transformApiCampsiteToFrontend(apiCampsite)
 
       expect(result).toEqual({
         id: '1',
-        name: { ja: 'テストキャンプ場', en: 'Test Campsite' },
+        name: 'テストキャンプ場',
         lat: 35.6762,
         lng: 139.6503,
-        address: { ja: '東京都', en: 'Tokyo' },
+        address: '東京都',
         phone: '03-1234-5678',
         website: 'https://test.com',
         price: '¥3000/泊',
         facilities: ['restroom', 'parking'],
         activities: ['hiking'],
-        nearestStation: { ja: '新宿駅', en: 'Shinjuku Station' },
-        accessTime: { ja: '徒歩10分', en: '10 min walk' },
-        description: { ja: 'テスト用キャンプ場', en: 'Test campsite' }
+        nearestStation: '新宿駅',
+        accessTime: '徒歩10分',
+        description: 'テスト用キャンプ場',
+        images: []
       })
     })
 
     it('必須でないフィールドがnullの場合、デフォルト値を設定する', () => {
       const apiCampsite = {
         id: '1',
-        name: { ja: 'テストキャンプ場', en: 'Test Campsite' },
+        nameJa: 'テストキャンプ場',
+        nameEn: 'Test Campsite',
         lat: 35.6762,
         lng: 139.6503,
-        address: { ja: '東京都', en: 'Tokyo' },
+        addressJa: '東京都',
+        addressEn: 'Tokyo',
         phone: null,
         website: null,
         price: '¥3000/泊',
         facilities: null,
         activities: null,
-        nearestStation: { ja: '新宿駅', en: 'Shinjuku Station' },
-        accessTime: { ja: '徒歩10分', en: '10 min walk' },
-        description: { ja: 'テスト用キャンプ場', en: 'Test campsite' }
+        nearestStationJa: '新宿駅',
+        nearestStationEn: 'Shinjuku Station',
+        accessTimeJa: '徒歩10分',
+        accessTimeEn: '10 min walk',
+        descriptionJa: 'テスト用キャンプ場',
+        descriptionEn: 'Test campsite',
+        images: null
       }
 
       const result = transformApiCampsiteToFrontend(apiCampsite)
@@ -68,6 +81,7 @@ describe('campsiteApi', () => {
       expect(result.website).toBe('')
       expect(result.facilities).toEqual([])
       expect(result.activities).toEqual([])
+      expect(result.images).toEqual([])
     })
   })
 
@@ -77,33 +91,45 @@ describe('campsiteApi', () => {
         data: [
           {
             id: '1',
-            name: { ja: 'テストキャンプ場1', en: 'Test Campsite 1' },
+            nameJa: 'テストキャンプ場1',
+            nameEn: 'Test Campsite 1',
             lat: 35.6762,
             lng: 139.6503,
-            address: { ja: '東京都', en: 'Tokyo' },
+            addressJa: '東京都',
+            addressEn: 'Tokyo',
             phone: '03-1234-5678',
             website: 'https://test1.com',
             price: '¥3000/泊',
             facilities: ['restroom', 'parking'],
             activities: ['hiking'],
-            nearestStation: { ja: '新宿駅', en: 'Shinjuku Station' },
-            accessTime: { ja: '徒歩10分', en: '10 min walk' },
-            description: { ja: 'テスト用キャンプ場1', en: 'Test campsite 1' }
+            nearestStationJa: '新宿駅',
+            nearestStationEn: 'Shinjuku Station',
+            accessTimeJa: '徒歩10分',
+            accessTimeEn: '10 min walk',
+            descriptionJa: 'テスト用キャンプ場1',
+            descriptionEn: 'Test campsite 1',
+            images: []
           },
           {
             id: '2',
-            name: { ja: 'テストキャンプ場2', en: 'Test Campsite 2' },
+            nameJa: 'テストキャンプ場2',
+            nameEn: 'Test Campsite 2',
             lat: 35.6895,
             lng: 139.6917,
-            address: { ja: '東京都', en: 'Tokyo' },
+            addressJa: '東京都',
+            addressEn: 'Tokyo',
             phone: '03-1234-5679',
             website: 'https://test2.com',
             price: '¥4000/泊',
             facilities: ['restroom', 'parking', 'shower'],
             activities: ['hiking', 'cycling'],
-            nearestStation: { ja: '渋谷駅', en: 'Shibuya Station' },
-            accessTime: { ja: '徒歩15分', en: '15 min walk' },
-            description: { ja: 'テスト用キャンプ場2', en: 'Test campsite 2' }
+            nearestStationJa: '渋谷駅',
+            nearestStationEn: 'Shibuya Station',
+            accessTimeJa: '徒歩15分',
+            accessTimeEn: '15 min walk',
+            descriptionJa: 'テスト用キャンプ場2',
+            descriptionEn: 'Test campsite 2',
+            images: []
           }
         ]
       }
@@ -118,9 +144,9 @@ describe('campsiteApi', () => {
       expect(fetch).toHaveBeenCalledWith('/api/campsites')
       expect(result).toHaveLength(2)
       expect(result[0]?.id).toBe('1')
-      expect(result[0]?.name.ja).toBe('テストキャンプ場1')
+      expect(result[0]?.name).toBe('テストキャンプ場1')
       expect(result[1]?.id).toBe('2')
-      expect(result[1]?.name.ja).toBe('テストキャンプ場2')
+      expect(result[1]?.name).toBe('テストキャンプ場2')
     })
 
     it('APIリクエストが失敗した場合、エラーを投げる', async () => {

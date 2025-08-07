@@ -1,39 +1,24 @@
 export interface Campsite {
   id: string
-  name: {
-    ja: string
-    en: string
-  }
+  name: string // nameJaから変換
   lat: number | null
   lng: number | null
-  address: {
-    ja: string
-    en: string
-  }
+  address: string // addressJaから変換
   phone: string
   website: string
-  reservationUrl?: string // 予約サイトURL
-  price: string // 表示用の価格文字列（例: "¥2,000-¥5,000/泊" or "¥3,000/泊"）
-  priceMin?: number // 最小料金（数値）
-  priceMax?: number // 最大料金（数値）
-  checkInTime?: string // チェックイン時間
-  checkOutTime?: string // チェックアウト時間
-  cancellationPolicy?: string // キャンセルポリシー
-  images?: string[] // 画像URL配列
+  reservationUrl?: string
+  price: string
+  priceMin?: number
+  priceMax?: number
   facilities: string[]
   activities: string[]
-  nearestStation: {
-    ja: string
-    en: string
-  }
-  accessTime: {
-    ja: string
-    en: string
-  }
-  description: {
-    ja: string
-    en: string
-  }
+  nearestStation: string // nearestStationJaから変換
+  accessTime: string // accessTimeJaから変換
+  description: string // descriptionJaから変換
+  images: string[]
+  checkInTime?: string
+  checkOutTime?: string
+  cancellationPolicy?: string // cancellationPolicyJaから変換
 }
 
 export interface SearchFilters {

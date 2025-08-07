@@ -97,7 +97,7 @@ export default function MapComponent({
             key={campsite.id}
             position={{ lat: campsite.lat!, lng: campsite.lng! }}
             onClick={() => handleMarkerClick(campsite)}
-            title={campsite.name[locale]}
+            title={campsite.name}
           >
             <div style={{
               width: '30px',
@@ -123,13 +123,13 @@ export default function MapComponent({
             onCloseClick={handleInfoWindowClose}
           >
             <div className="p-2 max-w-xs">
-              <h3 className="font-bold text-lg mb-1">{selectedCampsite.name[locale]}</h3>
-              <p className="text-sm text-gray-600 mb-2">{selectedCampsite.address[locale]}</p>
+              <h3 className="font-bold text-lg mb-1">{selectedCampsite.name}</h3>
+              <p className="text-sm text-gray-600 mb-2">{selectedCampsite.address}</p>
               <p className="text-sm mb-1">
-                <span className="font-semibold">{t('campsiteList.nearestStation')}:</span> {selectedCampsite.nearestStation[locale]}
+                <span className="font-semibold">{t('campsiteList.nearestStation')}:</span> {selectedCampsite.nearestStation}
               </p>
               <p className="text-sm mb-1">
-                <span className="font-semibold">{t('campsiteList.access')}:</span> {selectedCampsite.accessTime[locale]}
+                <span className="font-semibold">{t('campsiteList.access')}:</span> {selectedCampsite.accessTime}
               </p>
               <p className="text-sm mb-2">
                 <span className="font-semibold">{t('campsiteList.price')}:</span> {selectedCampsite.price}

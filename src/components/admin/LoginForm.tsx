@@ -1,214 +1,123 @@
-'use client'
+'use client';
 
-import { supabase } from '@/lib/supabase'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginForm() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  const [mode, setMode] = useState<'login' | 'signup'>('login')
-  const router = useRouter()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-  // URLパラメータからエラーを取得（クライアントサイドのみ）
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const urlParams = new URLSearchParams(window.location.search)
-    const urlError = urlParams.get('error')
-    const errorDescription = urlParams.get('error_description')
-    
-    if (urlError) {
-      switch(urlError) {
-        case 'access_denied':
-          setError('アクセスが拒否されました。メール確認リンクの期限が切れている可能性があります。')
-          break
-        case 'session_error':
-          setError('セッションエラーが発生しました。再度ログインしてください。')
-          break
-        case 'auth_error':
-          setError('認証エラーが発生しました。')
-          break
-        default:
-          if (errorDescription) {
-            setError(decodeURIComponent(errorDescription))
-          } else {
-            setError('エラーが発生しました。')
-          }
-      }
-    }
-  }, [])
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setSuccess(null)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('=== ログインフォーム送信開始 ===');
+    console.log('入力値:', { username, password });
+    setIsLoading(true);
+    setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      
-      if (error) {
-        setError(error.message)
-      } else {
-        router.push('/admin/campsites')
-        router.refresh()
-      }
-    } catch (err) {
-      setError('ログインに失敗しました')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
-    setSuccess(null)
-
-    try {
-      // メールアドレス制限チェック（API経由）
-      const checkResponse = await fetch('/api/admin/check-email', {
+      console.log('=== APIリクエスト送信中 ===');
+      const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
-      })
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
 
-      if (!checkResponse.ok) {
-        const errorData = await checkResponse.json()
-        setError(errorData.error || 'メールアドレスのチェックに失敗しました')
-        setLoading(false)
-        return
-      }
-
-      const { allowed } = await checkResponse.json()
-      if (!allowed) {
-        setError('このメールアドレスでは登録できません。管理者にお問い合わせください。')
-        setLoading(false)
-        return
-      }
-
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-      })
+      console.log('=== APIレスポンス受信 ===');
+      console.log('ステータス:', response.status);
+      console.log('Set-Cookieヘッダー:', response.headers.get('Set-Cookie'));
       
-      if (error) {
-        setError(error.message)
+      if (response.ok) {
+        const data = await response.json();
+        console.log('=== ログイン成功 ===');
+        console.log('レスポンスデータ:', data);
+        console.log('=== リダイレクト実行中 ===');
+        
+        // 少し待ってからリダイレクト
+        setTimeout(() => {
+          console.log('router.push(/admin) を実行');
+          router.push('/admin');
+        }, 1000);
       } else {
-        setSuccess(
-          '確認メールを送信しました。メール内のリンクをクリックしてアカウントを有効化してください。' +
-          'リンクは5分間有効です。期限切れの場合は再度登録してください。'
-        )
-        setMode('login')
+        const errorData = await response.json();
+        setError(errorData.error || 'ログインに失敗しました');
       }
     } catch (err) {
-      setError('アカウント登録に失敗しました')
+      console.error('ログインエラー:', err);
+      setError('ログインエラーが発生しました');
     } finally {
-      setLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            {mode === 'login' ? '管理画面ログイン' : 'アカウント登録'}
+            管理者ログイン
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            キャンプ場管理システム
-          </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={mode === 'login' ? handleLogin : handleSignup}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                メールアドレス
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-                placeholder="メールアドレス"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                パスワード
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm"
-                placeholder={mode === 'login' ? 'パスワード' : 'パスワード（6文字以上）'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                minLength={mode === 'signup' ? 6 : undefined}
-              />
-            </div>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <p className="text-sm text-gray-600 mb-4">
+              デバッグ: ユーザー名={username}, パスワード={password}
+            </p>
+            <label htmlFor="username" className="sr-only">
+              ユーザー名
+            </label>
+            <input
+              id="username"
+              name="username"
+              type="text"
+              required
+              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="ユーザー名"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
-
+          <div>
+            <label htmlFor="password" className="sr-only">
+              パスワード
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              required
+              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+              placeholder="パスワード"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          
           {error && (
             <div className="text-red-600 text-sm text-center">
               {error}
             </div>
           )}
 
-          {success && (
-            <div className="text-green-600 text-sm text-center">
-              {success}
-            </div>
-          )}
-
           <div>
             <button
               type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading}
+              onClick={() => console.log('ボタンがクリックされました')}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
             >
-              {loading 
-                ? (mode === 'login' ? 'ログイン中...' : '登録中...') 
-                : (mode === 'login' ? 'ログイン' : 'アカウント登録')
-              }
-            </button>
-          </div>
-
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setMode(mode === 'login' ? 'signup' : 'login')
-                setError(null)
-                setSuccess(null)
-              }}
-              className="text-green-600 hover:text-green-700 text-sm"
-            >
-              {mode === 'login' 
-                ? 'アカウントをお持ちでない方はこちら' 
-                : 'すでにアカウントをお持ちの方はこちら'
-              }
+              {isLoading ? 'ログイン中...' : 'ログイン'}
             </button>
           </div>
         </form>
       </div>
     </div>
-  )
+  );
 }

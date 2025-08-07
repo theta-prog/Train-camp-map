@@ -1,161 +1,135 @@
-import { supabase } from '@/lib/supabase'
-import { campsiteSchema } from '@/lib/validations/campsite'
+import { getAuthFromRequest, requireAdmin } from '@/lib/auth'
+import { formatCampsiteForClient, formatCampsiteForDb } from '@/lib/database-helpers'
+import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 
-interface Params {
-  id: string
-}
+/**
+ * 個別キャンプサイトAPI
+ */
 
-// データベースのスネークケースからキャメルケースに変換
-function transformFromDatabase(dbData: any) {
-  return {
-    id: dbData.id,
-    name: {
-      ja: dbData.name_ja,
-      en: dbData.name_en
-    },
-    lat: dbData.lat,
-    lng: dbData.lng,
-    address: {
-      ja: dbData.address_ja,
-      en: dbData.address_en
-    },
-    phone: dbData.phone || '',
-    website: dbData.website || '',
-    price: dbData.price,
-    nearestStation: {
-      ja: dbData.nearest_station_ja,
-      en: dbData.nearest_station_en
-    },
-    accessTime: {
-      ja: dbData.access_time_ja,
-      en: dbData.access_time_en
-    },
-    description: {
-      ja: dbData.description_ja,
-      en: dbData.description_en
-    },
-    facilities: dbData.facilities || [],
-    activities: dbData.activities || []
-  }
-}
-
-// GET /api/campsites/[id] - 個別キャンプ場取得
+// GET /api/campsites/[id] - 特定のキャンプサイト取得
 export async function GET(
   _request: NextRequest,
-  { params }: { params: Params }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { data, error } = await supabase
-      .from('campsites')
-      .select('*')
-      .eq('id', params.id)
-      .single()
+    const campsite = await prisma.campsite.findUnique({
+      where: { id: params.id }
+    })
 
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'キャンプ場が見つかりません' },
-          { status: 404 }
-        )
-      }
-      console.error('Database error:', error)
+    if (!campsite) {
       return NextResponse.json(
-        { error: 'キャンプ場の取得に失敗しました' },
-        { status: 500 }
+        { error: 'キャンプサイトが見つかりません' },
+        { status: 404 }
       )
     }
 
-    // データを変換
-    const transformedData = transformFromDatabase(data)
-
-    return NextResponse.json({ data: transformedData })
+    return NextResponse.json({
+      success: true,
+      data: formatCampsiteForClient(campsite)
+    })
   } catch (error) {
-    console.error('Unexpected error:', error)
+    console.error('Campsite fetch error:', error)
     return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
+      { error: 'キャンプサイトの取得に失敗しました' },
       { status: 500 }
     )
   }
 }
 
-// PUT /api/campsites/[id] - キャンプ場更新
+// PUT /api/campsites/[id] - キャンプサイト更新（管理者のみ）
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Params }
+  { params }: { params: { id: string } }
 ) {
+  const auth = await getAuthFromRequest(request)
+  
+  if (!requireAdmin(auth)) {
+    return NextResponse.json(
+      { error: '管理者権限が必要です' },
+      { status: 403 }
+    )
+  }
+
   try {
     const body = await request.json()
     
-    // バリデーション
-    const validatedData = campsiteSchema.parse(body)
-    
-    const { data, error } = await supabase
-      .from('campsites')
-      .update({
-        ...validatedData,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', params.id)
-      .select()
-      .single()
-
-    if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'キャンプ場が見つかりません' },
-          { status: 404 }
-        )
-      }
-      console.error('Database error:', error)
-      return NextResponse.json(
-        { error: 'キャンプ場の更新に失敗しました' },
-        { status: 500 }
-      )
+    // 既にキャメルケースの場合とスネークケースの場合の両方に対応
+    const data = {
+      nameJa: body.nameJa || body.name_ja,
+      nameEn: body.nameEn || body.name_en,
+      lat: body.lat,
+      lng: body.lng,
+      addressJa: body.addressJa || body.address_ja,
+      addressEn: body.addressEn || body.address_en,
+      phone: body.phone,
+      website: body.website,
+      price: body.price,
+      nearestStationJa: body.nearestStationJa || body.nearest_station_ja,
+      nearestStationEn: body.nearestStationEn || body.nearest_station_en,
+      accessTimeJa: body.accessTimeJa || body.access_time_ja,
+      accessTimeEn: body.accessTimeEn || body.access_time_en,
+      descriptionJa: body.descriptionJa || body.description_ja,
+      descriptionEn: body.descriptionEn || body.description_en,
+      facilities: body.facilities || [],
+      activities: body.activities || [],
+      images: body.images || [],
+      priceMin: body.priceMin,
+      priceMax: body.priceMax,
+      reservationUrl: body.reservationUrl,
+      reservationPhone: body.reservationPhone,
+      reservationEmail: body.reservationEmail,
+      checkInTime: body.checkInTime || body.check_in_time,
+      checkOutTime: body.checkOutTime || body.check_out_time,
+      cancellationPolicyJa: body.cancellationPolicyJa || body.cancellation_policy_ja,
+      cancellationPolicyEn: body.cancellationPolicyEn || body.cancellation_policy_en
     }
 
-    return NextResponse.json({ data })
+    const updatedCampsite = await prisma.campsite.update({
+      where: { id: params.id },
+      data: formatCampsiteForDb(data)
+    })
+
+    return NextResponse.json({
+      success: true,
+      data: formatCampsiteForClient(updatedCampsite)
+    })
   } catch (error) {
-    if (error instanceof Error && 'issues' in error) {
-      // Zodバリデーションエラー
-      return NextResponse.json(
-        { error: 'バリデーションエラー', details: error.issues },
-        { status: 400 }
-      )
-    }
-
-    console.error('Unexpected error:', error)
+    console.error('Campsite update error:', error)
     return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
+      { error: 'キャンプサイトの更新に失敗しました' },
       { status: 500 }
     )
   }
 }
 
-// DELETE /api/campsites/[id] - キャンプ場削除
+// DELETE /api/campsites/[id] - キャンプサイト削除（管理者のみ）
 export async function DELETE(
-  _request: NextRequest,
-  { params }: { params: Params }
+  request: NextRequest,
+  { params }: { params: { id: string } }
 ) {
-  try {
-    const { error } = await supabase
-      .from('campsites')
-      .delete()
-      .eq('id', params.id)
-
-    if (error) {
-      console.error('Database error:', error)
-      return NextResponse.json(
-        { error: 'キャンプ場の削除に失敗しました' },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ message: 'キャンプ場を削除しました' })
-  } catch (error) {
-    console.error('Unexpected error:', error)
+  const auth = await getAuthFromRequest(request)
+  
+  if (!requireAdmin(auth)) {
     return NextResponse.json(
-      { error: 'サーバーエラーが発生しました' },
+      { error: '管理者権限が必要です' },
+      { status: 403 }
+    )
+  }
+
+  try {
+    await prisma.campsite.delete({
+      where: { id: params.id }
+    })
+
+    return NextResponse.json({
+      success: true,
+      message: 'キャンプサイトを削除しました'
+    })
+  } catch (error) {
+    console.error('Campsite delete error:', error)
+    return NextResponse.json(
+      { error: 'キャンプサイトの削除に失敗しました' },
       { status: 500 }
     )
   }
