@@ -16,12 +16,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Prismaを使ってマイグレーション実行
+    // まず、Roleタイプを作成
+    await prisma.$executeRaw`
+      DO $$ BEGIN
+        CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
+      EXCEPTION
+        WHEN duplicate_object THEN null;
+      END $$;
+    `
+
     await prisma.$executeRaw`
       CREATE TABLE IF NOT EXISTS "users" (
         "id" TEXT NOT NULL,
         "email" TEXT NOT NULL,
         "password" TEXT NOT NULL,
-        "role" TEXT NOT NULL DEFAULT 'ADMIN',
+        "role" "Role" NOT NULL DEFAULT 'ADMIN',
         "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updated_at" TIMESTAMP(3) NOT NULL,
         CONSTRAINT "users_pkey" PRIMARY KEY ("id")
