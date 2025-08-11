@@ -1,6 +1,6 @@
 'use client'
 
-import { CampsiteFormData, campsiteSchema, AVAILABLE_FACILITIES, AVAILABLE_ACTIVITIES } from '@/lib/validations/campsite'
+import { AVAILABLE_ACTIVITIES, AVAILABLE_FACILITIES, CampsiteFormData, campsiteSchema } from '@/lib/validations/campsite'
 import { useState } from 'react'
 import { z } from 'zod'
 

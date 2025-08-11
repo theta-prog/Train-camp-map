@@ -1,5 +1,5 @@
-import { jwtVerify, SignJWT } from 'jose'
-import { NextRequest } from 'next/server'
+import { jwtVerify, SignJWT } from 'jose';
+import { NextRequest } from 'next/server';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret'
 

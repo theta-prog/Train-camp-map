@@ -37,7 +37,8 @@
     "admin:help": "echo 'Usage: ADMIN_PASSWORD=your_password npm run admin:create'",
     "setup:prod": "./scripts/setup-production.sh",
     "db:migrate": "npx prisma migrate deploy",
-    "db:schema": "psql $DATABASE_URL -f database/postgresql-schema.sql"
+    "db:schema": "psql $DATABASE_URL -f database/postgresql-schema.sql",
+    "jwt:generate": "node scripts/generate-jwt-secret.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

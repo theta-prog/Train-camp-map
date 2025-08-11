@@ -1,5 +1,5 @@
-import { filterCampsites, extractPrice } from '../campsiteUtils'
 import { Campsite, SearchFilters } from '@/types/campsite'
+import { extractPrice, filterCampsites } from '../campsiteUtils'
 
 const mockCampsites: Campsite[] = [
   {

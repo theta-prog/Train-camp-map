@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
+import { NextRequest, NextResponse } from 'next/server'
 
 /**
  * データベース初期化API
@@ -72,11 +72,15 @@ export async function POST(request: NextRequest) {
     const users = await prisma.$queryRaw`SELECT COUNT(*) FROM users`
     const campsites = await prisma.$queryRaw`SELECT COUNT(*) FROM campsites`
 
+    // BigInt を Number に変換してシリアライゼーション可能にする
+    const usersCount = Number((users as any)[0].count)
+    const campsitesCount = Number((campsites as any)[0].count)
+
     return NextResponse.json({
       message: 'データベース初期化完了',
       tables: {
-        users: users,
-        campsites: campsites
+        users: usersCount,
+        campsites: campsitesCount
       },
       timestamp: new Date().toISOString()
     })
