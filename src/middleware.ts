@@ -11,25 +11,48 @@ import { routing } from './i18n/routing'
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // API routes は最初に処理して即座にreturn
+  // API routes は最初に処理して即座にreturn（国際化処理をスキップ）
   if (pathname.startsWith('/api/')) {
     const response = NextResponse.next()
     response.headers.set('X-Frame-Options', 'DENY')
     response.headers.set('X-Content-Type-Options', 'nosniff')
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
     response.headers.set('X-XSS-Protection', '1; mode=block')
+    
+    // セキュアAPI(/api/secure/*)の保護
+    if (pathname.startsWith('/api/secure/')) {
+      const adminRequiredPaths = [
+        '/api/secure/campsites',
+        '/api/secure/admin'
+      ]
+
+      const requiresAdmin = adminRequiredPaths.some(path => 
+        pathname.startsWith(path) && request.method !== 'GET'
+      )
+
+      if (requiresAdmin) {
+        const auth = await getAuthFromRequest(request)
+        
+        if (!auth || auth.role !== 'ADMIN') {
+          return NextResponse.json(
+            { error: '管理者権限が必要です' },
+            { status: 403 }
+          )
+        }
+      }
+    }
+    
     return response
   }
 
-  // セキュリティヘッダーの設定
-  const response = NextResponse.next()
-  response.headers.set('X-Frame-Options', 'DENY')
-  response.headers.set('X-Content-Type-Options', 'nosniff')
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
-  response.headers.set('X-XSS-Protection', '1; mode=block')
-
   // 管理者エリアは国際化の対象外として先に処理
   if (pathname.startsWith('/admin')) {
+    const response = NextResponse.next()
+    response.headers.set('X-Frame-Options', 'DENY')
+    response.headers.set('X-Content-Type-Options', 'nosniff')
+    response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.set('X-XSS-Protection', '1; mode=block')
+    
     if (!pathname.startsWith('/admin/login')) {
       console.log('=== Admin認証チェック ===', pathname);
       const auth = await getAuthFromRequest(request)
@@ -41,31 +64,6 @@ export default async function middleware(request: NextRequest) {
       }
       console.log('認証成功 - アクセス許可');
     }
-    return response
-  }
-
-  // セキュアAPI(/api/secure/*)の保護
-  if (pathname.startsWith('/api/secure/')) {
-    const adminRequiredPaths = [
-      '/api/secure/campsites',
-      '/api/secure/admin'
-    ]
-
-    const requiresAdmin = adminRequiredPaths.some(path => 
-      pathname.startsWith(path) && request.method !== 'GET'
-    )
-
-    if (requiresAdmin) {
-      const auth = await getAuthFromRequest(request)
-      
-      if (!auth || auth.role !== 'ADMIN') {
-        return NextResponse.json(
-          { error: '管理者権限が必要です' },
-          { status: 403 }
-        )
-      }
-    }
-
     return response
   }
 

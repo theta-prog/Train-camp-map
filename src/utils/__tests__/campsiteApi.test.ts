@@ -9,7 +9,57 @@ describe('campsiteApi', () => {
   })
 
   describe('transformApiCampsiteToFrontend', () => {
-    it('API レスポンスをフロントエンド用の型に変換する', () => {
+    it('should handle new API response format (already formatted)', () => {
+      const apiCampsite = {
+        id: '1',
+        name: 'テストキャンプ場',
+        lat: 35.6762,
+        lng: 139.6503,
+        address: '東京都',
+        phone: '03-1234-5678',
+        website: 'https://test.com',
+        price: '¥3000/泊',
+        facilities: ['restroom', 'parking'],
+        activities: ['hiking'],
+        nearestStation: '新宿駅',
+        accessTime: '徒歩10分',
+        description: 'テスト用キャンプ場',
+        images: [],
+        priceMin: 3000,
+        priceMax: 3000,
+        reservationUrl: 'https://test.com/reserve',
+        checkInTime: '14:00',
+        checkOutTime: '11:00',
+        cancellationPolicy: 'キャンセル料あり'
+      }
+
+      const result = transformApiCampsiteToFrontend(apiCampsite)
+
+      expect(result).toEqual({
+        id: '1',
+        name: 'テストキャンプ場',
+        lat: 35.6762,
+        lng: 139.6503,
+        address: '東京都',
+        phone: '03-1234-5678',
+        website: 'https://test.com',
+        reservationUrl: 'https://test.com/reserve',
+        price: '¥3000/泊',
+        priceMin: 3000,
+        priceMax: 3000,
+        facilities: ['restroom', 'parking'],
+        activities: ['hiking'],
+        nearestStation: '新宿駅',
+        accessTime: '徒歩10分',
+        description: 'テスト用キャンプ場',
+        images: [],
+        checkInTime: '14:00',
+        checkOutTime: '11:00',
+        cancellationPolicy: 'キャンセル料あり'
+      })
+    })
+
+    it('should handle old API response format (with Ja suffixes)', () => {
       const apiCampsite = {
         id: '1',
         nameJa: 'テストキャンプ場',
@@ -34,25 +84,36 @@ describe('campsiteApi', () => {
 
       const result = transformApiCampsiteToFrontend(apiCampsite)
 
-      expect(result).toEqual({
-        id: '1',
-        name: 'テストキャンプ場',
-        lat: 35.6762,
-        lng: 139.6503,
-        address: '東京都',
-        phone: '03-1234-5678',
-        website: 'https://test.com',
-        price: '¥3000/泊',
-        facilities: ['restroom', 'parking'],
-        activities: ['hiking'],
-        nearestStation: '新宿駅',
-        accessTime: '徒歩10分',
-        description: 'テスト用キャンプ場',
-        images: []
-      })
+      expect(result.name).toBe('テストキャンプ場')
+      expect(result.address).toBe('東京都')
+      expect(result.nearestStation).toBe('新宿駅')
+      expect(result.accessTime).toBe('徒歩10分')
+      expect(result.description).toBe('テスト用キャンプ場')
     })
 
-    it('必須でないフィールドがnullの場合、デフォルト値を設定する', () => {
+    it('should handle missing optional fields', () => {
+      const apiCampsite = {
+        id: '1',
+        name: 'Test Camp',
+        address: 'Test Address',
+        lat: 35.0,
+        lng: 139.0,
+        price: '¥1,000/泊',
+        nearestStation: 'Test Station',
+        accessTime: '10分',
+        description: 'Test Description'
+      }
+
+      const result = transformApiCampsiteToFrontend(apiCampsite)
+
+      expect(result.phone).toBe('')
+      expect(result.website).toBe('')
+      expect(result.facilities).toEqual([])
+      expect(result.activities).toEqual([])
+      expect(result.images).toEqual([])
+    })
+
+    it('should handle null values for optional fields', () => {
       const apiCampsite = {
         id: '1',
         nameJa: 'テストキャンプ場',

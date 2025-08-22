@@ -1,6 +1,7 @@
 'use client'
 
 import AdminLayout from '@/components/admin/AdminLayout'
+import MapComponent from '@/components/MapComponent'
 import { Campsite } from '@/types/campsite'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -9,6 +10,7 @@ export default function CampsitesListPage() {
   const [campsites, setCampsites] = useState<Campsite[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
 
   useEffect(() => {
     fetchCampsites()
@@ -69,12 +71,37 @@ export default function CampsitesListPage() {
         {/* ヘッダー */}
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-900">キャンプ場一覧</h1>
-          <Link
-            href="/admin/campsites/new"
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-          >
-            新規登録
-          </Link>
+          <div className="flex items-center space-x-4">
+            {/* ビュー切り替えボタン */}
+            <div className="bg-gray-100 rounded-lg p-1 flex">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'list'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                リスト
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  viewMode === 'map'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                マップ
+              </button>
+            </div>
+            <Link
+              href="/admin/campsites/new"
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+            >
+              新規登録
+            </Link>
+          </div>
         </div>
 
         {/* エラー表示 */}
@@ -95,7 +122,48 @@ export default function CampsitesListPage() {
               最初のキャンプ場を登録する
             </Link>
           </div>
+        ) : viewMode === 'map' ? (
+          /* マップビュー */
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div className="h-96">
+              <MapComponent
+                campsites={campsites}
+                selectedCampsite={null}
+                onCampsiteSelect={(campsite: Campsite | null) => {
+                  // マーカークリック時にキャンプサイト詳細を表示またはリストビューに切り替え
+                  console.log('Selected campsite:', campsite)
+                }}
+              />
+            </div>
+            {/* マップ下にキャンプサイトの概要リスト */}
+            <div className="p-4 max-h-64 overflow-y-auto">
+              <h3 className="text-lg font-medium text-gray-900 mb-3">登録済みキャンプ場 ({campsites.length}件)</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {campsites.map((campsite) => (
+                  <div key={campsite.id} className="bg-gray-50 rounded-lg p-3">
+                    <h4 className="font-medium text-gray-900 truncate">{campsite.name}</h4>
+                    <p className="text-sm text-gray-500 truncate">{campsite.address}</p>
+                    <div className="mt-2 flex items-center space-x-2">
+                      <Link
+                        href={`/admin/campsites/${campsite.id}/edit` as any}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs"
+                      >
+                        編集
+                      </Link>
+                      <button
+                        onClick={() => handleDelete(campsite.id)}
+                        className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded text-xs"
+                      >
+                        削除
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         ) : (
+          /* リストビュー */
           <div className="bg-white shadow overflow-hidden sm:rounded-md">
             <ul className="divide-y divide-gray-200">
               {campsites.map((campsite) => (

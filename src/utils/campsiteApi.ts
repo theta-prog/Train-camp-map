@@ -2,15 +2,44 @@ import { Campsite } from '@/types/campsite'
 
 /**
  * API レスポンスをフロントエンド用のCampsite型に変換する
- * 新しいPrismaスキーマ形式のAPIレスポンスに対応
+ * 新しいformatCampsiteForClient関数で変換済みのAPIレスポンスに対応
  */
 export function transformApiCampsiteToFrontend(apiCampsite: any): Campsite {
+  // 新しいAPIレスポンスでは既にクライアント用にフォーマット済み
+  // nameJa -> name, addressJa -> address など
+  if (apiCampsite.name && apiCampsite.address) {
+    // 既に変換済みの場合はそのまま返す
+    return {
+      id: apiCampsite.id,
+      name: apiCampsite.name,
+      lat: apiCampsite.lat,
+      lng: apiCampsite.lng,
+      address: apiCampsite.address,
+      phone: apiCampsite.phone || '',
+      website: apiCampsite.website || '',
+      reservationUrl: apiCampsite.reservationUrl,
+      price: apiCampsite.price,
+      priceMin: apiCampsite.priceMin,
+      priceMax: apiCampsite.priceMax,
+      facilities: apiCampsite.facilities || [],
+      activities: apiCampsite.activities || [],
+      nearestStation: apiCampsite.nearestStation,
+      accessTime: apiCampsite.accessTime,
+      description: apiCampsite.description,
+      images: apiCampsite.images || [],
+      checkInTime: apiCampsite.checkInTime,
+      checkOutTime: apiCampsite.checkOutTime,
+      cancellationPolicy: apiCampsite.cancellationPolicy
+    }
+  }
+  
+  // 古いAPIレスポンス形式（nameJa, addressJaなど）の場合は変換
   return {
     id: apiCampsite.id,
-    name: apiCampsite.nameJa, // nameJa -> name
+    name: apiCampsite.nameJa || apiCampsite.name, // nameJa -> name
     lat: apiCampsite.lat,
     lng: apiCampsite.lng,
-    address: apiCampsite.addressJa, // addressJa -> address
+    address: apiCampsite.addressJa || apiCampsite.address, // addressJa -> address
     phone: apiCampsite.phone || '',
     website: apiCampsite.website || '',
     reservationUrl: apiCampsite.reservationUrl,
@@ -19,18 +48,19 @@ export function transformApiCampsiteToFrontend(apiCampsite: any): Campsite {
     priceMax: apiCampsite.priceMax,
     facilities: apiCampsite.facilities || [],
     activities: apiCampsite.activities || [],
-    nearestStation: apiCampsite.nearestStationJa, // nearestStationJa -> nearestStation
-    accessTime: apiCampsite.accessTimeJa, // accessTimeJa -> accessTime
-    description: apiCampsite.descriptionJa, // descriptionJa -> description
+    nearestStation: apiCampsite.nearestStationJa || apiCampsite.nearestStation, // nearestStationJa -> nearestStation
+    accessTime: apiCampsite.accessTimeJa || apiCampsite.accessTime, // accessTimeJa -> accessTime
+    description: apiCampsite.descriptionJa || apiCampsite.description, // descriptionJa -> description
     images: apiCampsite.images || [],
     checkInTime: apiCampsite.checkInTime,
     checkOutTime: apiCampsite.checkOutTime,
-    cancellationPolicy: apiCampsite.cancellationPolicyJa // cancellationPolicyJa -> cancellationPolicy
+    cancellationPolicy: apiCampsite.cancellationPolicyJa || apiCampsite.cancellationPolicy // cancellationPolicyJa -> cancellationPolicy
   }
 }
 
 /**
  * API からキャンプサイト一覧を取得する
+ * 新しいformatCampsiteForClient関数で既にフォーマット済みのデータを受信
  */
 export async function fetchCampsites(): Promise<Campsite[]> {
   try {
@@ -46,7 +76,8 @@ export async function fetchCampsites(): Promise<Campsite[]> {
       throw new Error('Invalid API response format')
     }
     
-    return result.campsites.map(transformApiCampsiteToFrontend)
+    // APIが既にクライアント用にフォーマット済みなので、そのまま返す
+    return result.campsites as Campsite[]
   } catch (error) {
     console.error('Failed to fetch campsites:', error)
     throw error
