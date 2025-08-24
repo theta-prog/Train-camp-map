@@ -1,6 +1,9 @@
 import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 /**
  * データベース初期化API
  * 本番環境でのテーブル作成用（一度だけ実行）

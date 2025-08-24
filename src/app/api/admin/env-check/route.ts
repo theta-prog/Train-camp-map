@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getAuthFromRequest, requireAdmin } from '@/lib/auth'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 // GET /api/admin/env-check - 環境変数の確認（管理者専用）
 export async function GET(request: NextRequest) {
   try {

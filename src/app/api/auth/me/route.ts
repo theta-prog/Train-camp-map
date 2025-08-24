@@ -1,6 +1,9 @@
 import { getAuthFromRequest } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 // GET /api/auth/me - 認証状態確認
 export async function GET(request: NextRequest) {
   try {
