@@ -3,6 +3,9 @@ import { formatCampsiteForClient, formatCampsiteForDb } from '@/lib/database-hel
 import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 /**
  * 個別キャンプサイトAPI
  */

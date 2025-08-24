@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 /**
  * ログアウトAPI
  * HttpOnly Cookieを削除してセキュアにログアウト

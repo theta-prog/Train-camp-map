@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 /**
  * 環境変数確認用API（開発・デバッグ用）
  * 本番環境でのデバッグに使用

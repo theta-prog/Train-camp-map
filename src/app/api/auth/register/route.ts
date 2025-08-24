@@ -4,6 +4,9 @@ import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
+// このルートは動的にレンダリングされる必要がある
+export const dynamic = 'force-dynamic'
+
 const registerSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8)
