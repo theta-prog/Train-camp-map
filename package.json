@@ -75,7 +75,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.5",
+    "eslint-config-next": "15.5.0",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
     "postcss": "^8",
