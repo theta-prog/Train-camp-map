@@ -8,17 +8,17 @@
 
 ## 主な機能
 
-- 🗺️ **インタラクティブ地図**: Google Maps APIを使用した地図表示
-- 🔍 **詳細検索**: キーワード、価格、設備、アクティビティでの絞り込み
-- 🚂 **電車アクセス情報**: 最寄り駅からのアクセス時間を表示
-- 📍 **リアルタイム表示**: 地図上でキャンプ場の位置を確認
-- 📱 **レスポンシブデザイン**: PC・タブレット・スマートフォン対応
-- ⚙️ **管理機能**: キャンプ場の登録・編集・削除
-- 🌍 **多言語対応**: 日本語・英語対応
-- 🔐 **セキュリティ**: Edge Runtime対応JWT認証
-- 🧪 **100%テストカバレッジ**: Jest + Testing Library
+- **インタラクティブ地図**: Google Maps APIを使用した地図表示
+- **詳細検索**: キーワード、価格、設備、アクティビティでの絞り込み
+- **電車アクセス情報**: 最寄り駅からのアクセス時間を表示
+- **リアルタイム表示**: 地図上でキャンプ場の位置を確認
+- **レスポンシブデザイン**: PC・タブレット・スマートフォン対応
+- **管理機能**: キャンプ場の登録・編集・削除
+- **多言語対応**: 日本語・英語対応
+- **セキュリティ**: Edge Runtime対応JWT認証
+- **テスト**: Jest + Testing Library（現在のカバレッジ: 45%）
 
-## 🏗️ **技術スタック**
+## 技術スタック
 
 - **フロントエンド**: Next.js 14, TypeScript, Tailwind CSS
 - **バックエンド**: Next.js API Routes, Prisma ORM
@@ -71,10 +71,6 @@ ADMIN_PASSWORD=secure_password node scripts/create-admin.js
 npm run dev
 ```
 
-### プロダクション環境
-
-詳細は [デプロイメントガイド](docs/DEPLOYMENT_GUIDE.md) を参照してください。
-
 ## ビルド & デプロイ
 
 ### ローカルビルド
@@ -83,51 +79,41 @@ npm run build
 npm start
 ```
 
-### Vercelデプロイ
-1. GitHub リポジトリを Vercel に接続
-2. 環境変数を設定
-3. PostgreSQL データベースを準備
-4. 自動デプロイ
-
-**デプロイ後のセットアップ**:
-```bash
-# 本番データベースの初期化
-export DATABASE_URL="your-vercel-postgres-url"
-export ADMIN_PASSWORD="secure_password"
-./scripts/setup-production.sh
-```
-
-詳細は [本番環境セットアップガイド](docs/PRODUCTION_SETUP.md) を参照。
-
 ## プロジェクト構造
 
 ```
 src/
 ├── app/
 │   ├── admin/                 # 管理画面
-│   │   ├── campsites/
-│   │   │   └── new/page.tsx   # キャンプ場新規登録
+│   │   ├── campsites/         # キャンプ場管理
+│   │   ├── login/             # ログイン
 │   │   └── page.tsx           # 管理ダッシュボード
 │   ├── api/
 │   │   └── campsites/         # キャンプ場API
 │   ├── [locale]/              # 国際化対応ページ
-│   ├── globals.css            # グローバルスタイル
 │   ├── layout.tsx             # アプリケーションレイアウト
 │   └── page.tsx               # メインページ
 ├── components/
 │   ├── admin/                 # 管理画面コンポーネント
-│   │   ├── AdminLayout.tsx
-│   │   └── CampsiteForm.tsx
+│   │   ├── AdminLayout.tsx    # 管理画面レイアウト
+│   │   ├── CampsiteForm.tsx   # キャンプ場フォーム
+│   │   ├── LoginForm.tsx      # ログインフォーム
+│   │   └── ...               # その他管理画面コンポーネント
 │   ├── MapComponent.tsx       # 地図表示コンポーネント
 │   ├── SearchFilters.tsx     # 検索フィルターコンポーネント
 │   ├── CampsiteList.tsx      # キャンプ場リストコンポーネント
 │   └── LanguageSwitcher.tsx  # 言語切り替え
 ├── lib/
-│   ├── supabase.ts           # Supabaseクライアント
+│   ├── auth-server.ts        # サーバーサイド認証
+│   ├── auth.ts              # クライアントサイド認証
+│   ├── database-helpers.ts   # データベースヘルパー
+│   ├── imageUpload.ts       # 画像アップロード
+│   ├── prisma.ts            # Prismaクライアント
 │   └── validations/
 │       └── campsite.ts       # バリデーションスキーマ
 ├── types/
-│   └── campsite.ts           # 型定義
+│   ├── campsite.ts           # キャンプ場型定義
+│   └── jest-dom.d.ts         # Jest DOM型定義
 ├── i18n/                     # 国際化設定
 ├── utils/                    # ユーティリティ関数
 └── __tests__/                # テストファイル
@@ -176,14 +162,14 @@ src/
 
 ## 今後の拡張予定
 
-- [ ] 実際のキャンプ場データベースとの連携
-- [ ] 公共交通機関の路線情報表示
-- [ ] ルート検索機能（出発地からキャンプ場まで）
-- [ ] ユーザーレビュー機能
-- [ ] お気に入り機能
-- [ ] キャンプ場の管理者向け登録・編集機能
-- [ ] オフライン対応
-- [ ] 多言語対応
+- 実際のキャンプ場データベースとの連携
+- 公共交通機関の路線情報表示
+- ルート検索機能（出発地からキャンプ場まで）
+- ユーザーレビュー機能
+- お気に入り機能
+- キャンプ場の管理者向け登録・編集機能
+- オフライン対応
+- 多言語対応の拡張
 
 ## ライセンス
 
@@ -212,18 +198,6 @@ MIT License
   - バンドルサイズチェック
   - ESLint（変更ファイルのみ）
 
-#### セキュリティチェック (`security.yml`)
-- **トリガー**: `main` ブランチへのプッシュ・プルリクエスト、定期実行（毎週月曜）
-- **実行内容**:
-  - npm audit によるセキュリティ脆弱性チェック
-  - 依存関係の最新バージョンチェック
-
-### 品質基準
-
-- **テストカバレッジ**: 80%以上（目標）
-- **新規コードカバレッジ**: 85%以上（目標）
-- **セキュリティ**: 高・重要レベルの脆弱性ゼロ
-- **TypeScript**: 厳格な型チェックパス
 
 ### Dependabot
 
@@ -231,11 +205,7 @@ MIT License
 - **GitHub Actions**: 毎月チェック
 - 自動でプルリクエストを作成し、セキュリティアップデートを提案
 
-## 開発者向け情報
 
-### 環境変数
-
-- `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY`: Google Maps APIキー（必須）
 
 ### スクリプト
 
