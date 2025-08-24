@@ -6,17 +6,25 @@ import CampsiteSearchApp from '../CampsiteSearchApp'
 const sampleCampsites = [
   {
     id: '1',
-    name: { ja: '高尾山キャンプ場', en: 'Takao Mountain Campsite' },
-    description: { ja: '高尾山の麓にある自然豊かなキャンプ場', en: 'A nature-rich campsite at the foot of Mount Takao' },
-    location: { lat: 35.6422, lng: 139.2676 },
-    address: { ja: '東京都八王子市高尾町', en: 'Takao, Hachioji City, Tokyo' },
-    nearestStation: { ja: 'JR高尾駅', en: 'JR Takao Station' },
-    accessTime: { ja: '徒歩15分', en: '15 min walk' },
+    name: '高尾山キャンプ場',
+    description: '高尾山の麓にある自然豊かなキャンプ場',
+    lat: 35.6422,
+    lng: 139.2676,
+    address: '東京都八王子市高尾町',
+    nearestStation: 'JR高尾駅',
+    accessTime: '徒歩15分',
     price: '¥2,000/泊',
     facilities: ['restroom', 'shower', 'parking'],
     activities: ['hiking', 'photography'],
     website: 'https://example.com',
-    phone: '042-xxx-xxxx'
+    phone: '042-xxx-xxxx',
+    images: [],
+    reservationUrl: '',
+    priceMin: 2000,
+    priceMax: 2000,
+    checkInTime: '',
+    checkOutTime: '',
+    cancellationPolicy: '',
   }
 ]
 
@@ -32,6 +40,18 @@ jest.mock('next-intl', () => ({
     return translations[key] || key
   }
 }))
+
+// useParams のモック
+jest.mock('next/navigation', () => ({
+  useParams: jest.fn(() => ({ locale: 'ja' })),
+  useRouter: jest.fn(() => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    back: jest.fn(),
+  })),
+}))
+
+const { useParams } = require('next/navigation')
 
 // Google Maps API keyを設定
 const originalEnv = process.env
@@ -161,7 +181,7 @@ describe('CampsiteSearchApp', () => {
     it('基本表示（APIキーあり）', async () => {
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = 'test-api-key'
       
-      const { container } = render(<CampsiteSearchApp locale="ja" />)
+      const { container } = render(<CampsiteSearchApp />)
       
       // データが読み込まれるまで待つ
       await waitFor(() => {
@@ -174,7 +194,7 @@ describe('CampsiteSearchApp', () => {
     it('英語ロケール', async () => {
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = 'test-api-key'
       
-      const { container } = render(<CampsiteSearchApp locale="en" />)
+      const { container } = render(<CampsiteSearchApp />)
       
       // データが読み込まれるまで待つ
       await waitFor(() => {
@@ -189,7 +209,7 @@ describe('CampsiteSearchApp', () => {
     it('APIキーがない場合エラーメッセージ表示', () => {
       delete process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
       
-      render(<CampsiteSearchApp locale="ja" />)
+      render(<CampsiteSearchApp />)
       
       expect(screen.getByText('Google Maps API key is missing')).toBeInTheDocument()
       expect(screen.getByText('Please set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY')).toBeInTheDocument()
@@ -198,7 +218,7 @@ describe('CampsiteSearchApp', () => {
     it('APIキーがある場合正常表示', async () => {
       process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = 'test-api-key'
       
-      render(<CampsiteSearchApp locale="ja" />)
+      render(<CampsiteSearchApp />)
       
       // データが読み込まれるまで待つ
       await waitFor(() => {
@@ -214,7 +234,7 @@ describe('CampsiteSearchApp', () => {
   it('フィルター適用時に結果が更新される', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByText('高尾山キャンプ場')).toBeInTheDocument()
@@ -230,12 +250,12 @@ describe('CampsiteSearchApp', () => {
   it.skip('価格範囲フィルターが正しく動作する', async () => {
     const campsitesWithPrices = [
       { ...sampleCampsites[0], price: '¥1,000/泊' },
-      { ...sampleCampsites[0], id: '2', price: '¥3,000/泊', name: { ja: '高価なキャンプ場', en: 'Expensive Campsite' } },
+      { ...sampleCampsites[0], id: '2', price: '¥3,000/泊', name: '高価なキャンプ場' },
     ]
     
     mockFetchCampsites.mockResolvedValue(campsitesWithPrices)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     // 最初にすべてのキャンプ場が表示されることを確認
     await waitFor(() => {
@@ -269,7 +289,7 @@ describe('CampsiteSearchApp', () => {
   it('設備フィルターが正しく動作する', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByText('高尾山キャンプ場')).toBeInTheDocument()
@@ -287,7 +307,7 @@ describe('CampsiteSearchApp', () => {
     // 最初にエラーを返すモック
     mockFetchCampsites.mockRejectedValueOnce(new Error('Network error'))
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByText(/キャンプサイトの読み込みに失敗しました/)).toBeInTheDocument()
@@ -304,7 +324,7 @@ describe('CampsiteSearchApp', () => {
   it('空の検索結果が正しく表示される', async () => {
     mockFetchCampsites.mockResolvedValue([])
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByText(/キャンプ場が見つかりませんでした/)).toBeInTheDocument()
@@ -314,7 +334,7 @@ describe('CampsiteSearchApp', () => {
   it('詳細ページへのナビゲーションが正しく動作する', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByText('高尾山キャンプ場')).toBeInTheDocument()
@@ -329,7 +349,7 @@ describe('CampsiteSearchApp', () => {
   it('API取得エラー時にエラーメッセージが表示される', async () => {
     mockFetchCampsites.mockRejectedValue(new Error('Network error'))
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByText('キャンプサイトの読み込みに失敗しました')).toBeInTheDocument()
@@ -340,7 +360,7 @@ describe('CampsiteSearchApp', () => {
   it('無効なロケールの場合はjaにフォールバックする', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="invalid" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByTestId('mock-campsite-list')).toBeInTheDocument()
@@ -356,7 +376,7 @@ describe('CampsiteSearchApp', () => {
   it('地図でキャンプサイトを選択できる', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByTestId('mock-map-component')).toBeInTheDocument()
@@ -371,7 +391,7 @@ describe('CampsiteSearchApp', () => {
   it('フィルタをリセットできる', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByTestId('mock-search-filters')).toBeInTheDocument()
@@ -393,23 +413,31 @@ describe('CampsiteSearchApp', () => {
       ...sampleCampsites,
       {
         id: '2',
-        name: { ja: '湖畔キャンプ場', en: 'Lakeside Campsite' },
-        description: { ja: '湖のほとりの静かなキャンプ場', en: 'Quiet campsite by the lake' },
-        location: { lat: 35.7, lng: 139.3 },
-        address: { ja: '山梨県富士五湖', en: 'Fuji Five Lakes, Yamanashi' },
-        nearestStation: { ja: '河口湖駅', en: 'Kawaguchiko Station' },
-        accessTime: { ja: 'バス30分', en: '30 min by bus' },
+        name: '湖畔キャンプ場',
+        description: '湖のほとりの静かなキャンプ場',
+        lat: 35.7,
+        lng: 139.3,
+        address: '山梨県富士五湖',
+        nearestStation: '河口湖駅',
+        accessTime: 'バス30分',
         price: '¥5,000/泊',
         facilities: ['restroom', 'cooking'],
         activities: ['fishing', 'canoeing'],
         website: 'https://example2.com',
-        phone: '055-xxx-xxxx'
+        phone: '055-xxx-xxxx',
+        images: [],
+        reservationUrl: '',
+        priceMin: 5000,
+        priceMax: 5000,
+        checkInTime: '',
+        checkOutTime: '',
+        cancellationPolicy: '',
       }
     ]
     
     mockFetchCampsites.mockResolvedValue(multipleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByTestId('mock-search-filters')).toBeInTheDocument()
@@ -435,7 +463,7 @@ describe('CampsiteSearchApp', () => {
     // fetchCampsitesが解決されないPromiseを返すようにする
     mockFetchCampsites.mockImplementation(() => new Promise(() => {}))
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     // ローディングメッセージが表示されることを確認
     expect(screen.getByText('キャンプサイトを読み込み中...')).toBeInTheDocument()
@@ -445,7 +473,7 @@ describe('CampsiteSearchApp', () => {
   it('言語切り替えができる', async () => {
     mockFetchCampsites.mockResolvedValue(sampleCampsites)
     
-    render(<CampsiteSearchApp locale="ja" />)
+    render(<CampsiteSearchApp />)
     
     await waitFor(() => {
       expect(screen.getByTestId('mock-language-switcher')).toBeInTheDocument()

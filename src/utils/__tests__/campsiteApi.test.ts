@@ -149,47 +149,37 @@ describe('campsiteApi', () => {
   describe('fetchCampsites', () => {
     it('キャンプサイト一覧を正常に取得できる', async () => {
       const mockApiResponse = {
-        data: [
+        campsites: [
           {
             id: '1',
-            nameJa: 'テストキャンプ場1',
-            nameEn: 'Test Campsite 1',
+            name: 'テストキャンプ場1',
             lat: 35.6762,
             lng: 139.6503,
-            addressJa: '東京都',
-            addressEn: 'Tokyo',
+            address: '東京都',
             phone: '03-1234-5678',
             website: 'https://test1.com',
             price: '¥3000/泊',
             facilities: ['restroom', 'parking'],
             activities: ['hiking'],
-            nearestStationJa: '新宿駅',
-            nearestStationEn: 'Shinjuku Station',
-            accessTimeJa: '徒歩10分',
-            accessTimeEn: '10 min walk',
-            descriptionJa: 'テスト用キャンプ場1',
-            descriptionEn: 'Test campsite 1',
+            nearestStation: '新宿駅',
+            accessTime: '徒歩10分',
+            description: 'テスト用キャンプ場1',
             images: []
           },
           {
             id: '2',
-            nameJa: 'テストキャンプ場2',
-            nameEn: 'Test Campsite 2',
+            name: 'テストキャンプ場2',
             lat: 35.6895,
             lng: 139.6917,
-            addressJa: '東京都',
-            addressEn: 'Tokyo',
+            address: '東京都',
             phone: '03-1234-5679',
             website: 'https://test2.com',
             price: '¥4000/泊',
             facilities: ['restroom', 'parking', 'shower'],
             activities: ['hiking', 'cycling'],
-            nearestStationJa: '渋谷駅',
-            nearestStationEn: 'Shibuya Station',
-            accessTimeJa: '徒歩15分',
-            accessTimeEn: '15 min walk',
-            descriptionJa: 'テスト用キャンプ場2',
-            descriptionEn: 'Test campsite 2',
+            nearestStation: '渋谷駅',
+            accessTime: '徒歩15分',
+            description: 'テスト用キャンプ場2',
             images: []
           }
         ]
@@ -228,10 +218,10 @@ describe('campsiteApi', () => {
       await expect(fetchCampsites()).rejects.toThrow('Invalid API response format')
     })
 
-    it('dataが配列でない場合、エラーを投げる', async () => {
+    it('campsitesが配列でない場合、エラーを投げる', async () => {
       ;(fetch as jest.Mock).mockResolvedValue({
         ok: true,
-        json: async () => ({ data: 'not an array' })
+        json: async () => ({ campsites: 'not an array' })
       })
 
       await expect(fetchCampsites()).rejects.toThrow('Invalid API response format')

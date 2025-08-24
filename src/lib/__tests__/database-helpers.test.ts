@@ -1,5 +1,4 @@
 import {
-    arrayToJson,
     formatCampsiteForClient,
     formatCampsiteForDb,
     jsonToArray
@@ -40,17 +39,34 @@ describe('database-helpers', () => {
 
   describe('arrayToJson', () => {
     it('should return array for PostgreSQL', () => {
+      // PostgreSQLの判定をモック
+      const originalUrl = process.env.DATABASE_URL
       process.env.DATABASE_URL = 'postgresql://user:pass@host/db'
+      
+      // モジュールを再読み込み
+      jest.resetModules()
+      const { arrayToJson } = require('../database-helpers')
+      
       const array = ['facility1', 'facility2']
       const result = arrayToJson(array)
       expect(result).toEqual(['facility1', 'facility2'])
+      
+      process.env.DATABASE_URL = originalUrl
     })
 
     it('should return JSON string for SQLite', () => {
+      const originalUrl = process.env.DATABASE_URL
       process.env.DATABASE_URL = 'file:./dev.db'
+      
+      // モジュールを再読み込み
+      jest.resetModules()
+      const { arrayToJson } = require('../database-helpers')
+      
       const array = ['facility1', 'facility2']
       const result = arrayToJson(array)
       expect(result).toBe('["facility1","facility2"]')
+      
+      process.env.DATABASE_URL = originalUrl
     })
   })
 

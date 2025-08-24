@@ -1,10 +1,10 @@
 'use client'
 
-import { render, screen } from '@testing-library/react'
-import { useParams } from 'next/navigation'
 import CampsiteDetail from '@/components/CampsiteDetail'
 import { Campsite } from '@/types/campsite'
 import '@testing-library/jest-dom'
+import { render, screen } from '@testing-library/react'
+import { useParams } from 'next/navigation'
 
 // next-intlのモック
 jest.mock('next-intl', () => ({
@@ -57,34 +57,25 @@ jest.mock('../LanguageSwitcher', () => {
 
 const mockCampsite: Campsite = {
   id: '1',
-  name: {
-    ja: 'テストキャンプ場',
-    en: 'Test Campsite'
-  },
+  name: 'テストキャンプ場',
   lat: 35.6762,
   lng: 139.6503,
-  address: {
-    ja: '東京都渋谷区',
-    en: 'Shibuya, Tokyo'
-  },
-  description: {
-    ja: 'テストキャンプ場の説明です',
-    en: 'Test campsite description'
-  },
+  address: '東京都渋谷区',
+  description: 'テストキャンプ場の説明です',
   facilities: ['restroom', 'shower', 'parking'],
   activities: ['hiking', 'fishing'],
-  nearestStation: {
-    ja: 'JR渋谷駅',
-    en: 'JR Shibuya Station'
-  },
-  accessTime: {
-    ja: '徒歩15分',
-    en: '15 min walk'
-  },
+  nearestStation: 'JR渋谷駅',
+  accessTime: '徒歩15分',
   price: '¥2,000/泊',
   phone: '03-1234-5678',
   website: 'https://example.com',
-  images: ['image1.jpg', 'image2.jpg']
+  images: ['image1.jpg', 'image2.jpg'],
+  reservationUrl: 'https://example.com/reserve',
+  priceMin: 2000,
+  priceMax: 2000,
+  checkInTime: '14:00',
+  checkOutTime: '11:00',
+  cancellationPolicy: 'キャンセル料あり',
 }
 
 describe('CampsiteDetail', () => {
@@ -109,9 +100,10 @@ describe('CampsiteDetail', () => {
     
     render(<CampsiteDetail campsite={mockCampsite} />)
 
-    expect(screen.getByText('Test Campsite')).toBeInTheDocument()
-    // 英語モードでは英語の住所が表示される
-    const addressElements = screen.getAllByText(/Shibuya/)
+    // 現在のデータは日本語なので、日本語で確認
+    expect(screen.getByText('テストキャンプ場')).toBeInTheDocument()
+    // 住所も日本語なので、東京で確認
+    const addressElements = screen.getAllByText(/東京/)
     expect(addressElements.length).toBeGreaterThan(0)
   })
 
@@ -163,19 +155,25 @@ describe('CampsiteDetail', () => {
   it('データが不足している場合のフォールバック表示', () => {
     const incompleteCampsite: Campsite = {
       id: '2',
-      name: { ja: '不完全キャンプ場', en: 'Incomplete Campsite' },
+      name: '不完全キャンプ場',
       lat: 35.6762,
       lng: 139.6503,
-      address: { ja: '', en: '' },
-      description: { ja: '', en: '' },
+      address: '',
+      description: '',
       facilities: [],
       activities: [],
-      nearestStation: { ja: '', en: '' },
-      accessTime: { ja: '', en: '' },
+      nearestStation: '',
+      accessTime: '',
       price: '',
       phone: '',
       website: '',
-      images: []
+      images: [],
+      reservationUrl: '',
+      priceMin: 0,
+      priceMax: 0,
+      checkInTime: '',
+      checkOutTime: '',
+      cancellationPolicy: '',
     }
 
     render(<CampsiteDetail campsite={incompleteCampsite} />)

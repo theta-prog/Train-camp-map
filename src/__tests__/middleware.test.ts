@@ -1,4 +1,28 @@
-import '@testing-library/jest-dom'
+import '@testing-library/jest-dom';
+(global as any).Response = function Response() {
+  return {}
+}
+
+// joseライブラリのモック
+jest.mock('jose', () => ({
+  jwtVerify: jest.fn()
+}))
+
+// auth関数のモック
+jest.mock('../lib/auth', () => ({
+  getAuthFromRequest: jest.fn().mockResolvedValue(null)
+}))
+
+// NextResponseのモック
+jest.mock('next/server', () => ({
+  NextResponse: {
+    next: jest.fn().mockReturnValue({
+      headers: {
+        set: jest.fn()
+      }
+    })
+  }
+}))
 
 // next-intl/middlewareのモック
 const mockCreateMiddleware = jest.fn()
@@ -18,17 +42,29 @@ jest.mock('../i18n/routing', () => ({
 describe('middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    mockCreateMiddleware.mockReturnValue(jest.fn())
+    const mockIntlMiddleware = jest.fn().mockResolvedValue(new Response())
+    mockCreateMiddleware.mockReturnValue(mockIntlMiddleware)
   })
 
-  test('middlewareが正しく作成される', () => {
+  test('middlewareが正しく作成される', async () => {
     // middlewareをインポート
-    require('../middleware')
+    const middlewareModule = require('../middleware')
+    const middleware = middlewareModule.default
     
-    expect(mockCreateMiddleware).toHaveBeenCalledWith({
+    // テスト用のリクエストを作成
+    const mockRequest = {
+      nextUrl: {
+        pathname: '/ja/test'
+      }
+    } as any
+    
+    // middlewareを実行
+    await middleware(mockRequest)
+    
+    expect(mockCreateMiddleware).toHaveBeenCalledWith(expect.objectContaining({
       locales: ['ja', 'en'],
       defaultLocale: 'ja'
-    })
+    }))
     expect(mockCreateMiddleware).toHaveBeenCalledTimes(1)
   })
 
@@ -36,7 +72,10 @@ describe('middleware', () => {
     const middlewareModule = require('../middleware')
     
     expect(middlewareModule.config).toBeDefined()
-    expect(middlewareModule.config.matcher).toEqual(['/', '/(ja|en)/:path*'])
+    expect(middlewareModule.config.matcher).toEqual([
+      '/((?!_next|[^?]*\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+      '/(api|trpc)(.*)',
+    ])
   })
 
   test('middlewareがexportされている', () => {

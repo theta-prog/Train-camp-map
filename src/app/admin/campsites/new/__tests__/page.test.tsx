@@ -28,10 +28,10 @@ jest.mock('@/components/admin/AdminLayout', () => {
   }
 })
 
-// MapPickerをモック
-jest.mock('@/components/admin/MapPicker', () => {
-  return function MockMapPicker() {
-    return <div data-testid="map-picker">Map Picker Mock</div>
+// MapAddComponentをモック
+jest.mock('@/components/admin/MapAddComponent', () => {
+  return function MockMapAddComponent() {
+    return <div data-testid="map-add-component">Map Add Component Mock</div>
   }
 })
 

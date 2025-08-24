@@ -18,13 +18,23 @@ const FACILITY_MAPPING: Record<string, string> = {
   shop: 'shop',
   laundry: 'laundry',
   
-  // 日本語の設備名（実際に使用される分）
+  // 日本語の設備名
+  'オートサイト': 'campsite',
   'トイレ': 'toilet',
   'シャワー': 'shower',
   '炊事場': 'kitchen',
   '駐車場': 'parking',
   'コインランドリー': 'laundry',
   'レストラン': 'restaurant',
+  'Wi-Fi': 'wifi',
+  '売店': 'shop',
+  'プール': 'pool',
+  'グランピング': 'glamping',
+  'ハンモックサイト': 'hammocksite',
+  '河原サイト': 'riverside',
+  'ログキャビン': 'logcabin',
+  '水洗トイレ': 'toilet',
+  'プール(夏季)': 'pool',
 }
 
 const ACTIVITY_MAPPING: Record<string, string> = {
@@ -42,7 +52,7 @@ const ACTIVITY_MAPPING: Record<string, string> = {
   cycling: 'cycling',
   birdwatching: 'birdwatching',
   
-    // 日本語のアクティビティ名（実際に使用される分）
+  // 日本語のアクティビティ名
   'ハイキング': 'hiking',
   '星空観察': 'stargazing',
   'バーベキュー': 'bbq',
@@ -51,6 +61,15 @@ const ACTIVITY_MAPPING: Record<string, string> = {
   '温泉': 'hotspring',
   '森林浴': 'forestbath',
   '野鳥観察': 'birdwatching',
+  '川遊び': 'river',
+  '渓谷散策': 'valley',
+  '流しそうめん': 'nagashisomen',
+  '潮干狩り': 'shellfishing',
+  '動物ふれあい': 'animals',
+  '電車見学': 'train',
+  'プール': 'pool',
+  '写真撮影': 'photography',
+  'バードウォッチング': 'birdwatching',
 }
 
 /**

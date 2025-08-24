@@ -49,18 +49,27 @@ global.fetch = jest.fn()
 
 const mockCampsiteData = {
   id: '1',
-  name: { ja: 'テストキャンプ場', en: 'Test Campsite' },
+  nameJa: 'テストキャンプ場',
+  nameEn: 'Test Campsite',
   lat: 35.6762,
   lng: 139.6503,
-  address: { ja: '東京都渋谷区', en: 'Shibuya, Tokyo' },
-  description: { ja: 'テスト説明', en: 'Test description' },
+  addressJa: '東京都渋谷区',
+  addressEn: 'Shibuya, Tokyo',
+  descriptionJa: 'テスト説明',
+  descriptionEn: 'Test description',
   facilities: ['restroom', 'shower'],
   activities: ['hiking'],
-  nearestStation: { ja: 'JR渋谷駅', en: 'JR Shibuya Station' },
-  accessTime: { ja: '徒歩15分', en: '15 min walk' },
+  nearestStationJa: 'JR渋谷駅',
+  nearestStationEn: 'JR Shibuya Station',
+  accessTimeJa: '徒歩15分',
+  accessTimeEn: '15 min walk',
   price: '¥2,000/泊',
   phone: '03-1234-5678',
   website: 'https://example.com',
+  checkInTime: '14:00',
+  checkOutTime: '11:00',
+  cancellationPolicyJa: 'キャンセル料あり',
+  cancellationPolicyEn: 'Cancellation fee applies',
 }
 
 describe('EditCampsitePage', () => {

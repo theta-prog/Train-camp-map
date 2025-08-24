@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react'
 
 // CampsiteSearchAppのモック
 jest.mock('@/components/CampsiteSearchApp', () => {
-  return function MockCampsiteSearchApp({ locale }: { locale: string }) {
-    return <div data-testid="campsite-search-app">CampsiteSearchApp with locale: {locale}</div>
+  return function MockCampsiteSearchApp() {
+    return <div data-testid="campsite-search-app">CampsiteSearchApp component</div>
   }
 })
 
@@ -21,7 +21,7 @@ describe('HomePage ([locale])', () => {
     render(result)
     
     expect(screen.getByTestId('campsite-search-app')).toBeInTheDocument()
-    expect(screen.getByText('CampsiteSearchApp with locale: ja')).toBeInTheDocument()
+    expect(screen.getByText('CampsiteSearchApp component')).toBeInTheDocument()
   })
 
   test('英語ロケールで正しくレンダリングされる', async () => {
@@ -34,7 +34,7 @@ describe('HomePage ([locale])', () => {
     render(result)
     
     expect(screen.getByTestId('campsite-search-app')).toBeInTheDocument()
-    expect(screen.getByText('CampsiteSearchApp with locale: en')).toBeInTheDocument()
+    expect(screen.getByText('CampsiteSearchApp component')).toBeInTheDocument()
   })
 
   test('カスタムロケールでレンダリングされる', async () => {
@@ -46,7 +46,7 @@ describe('HomePage ([locale])', () => {
     
     render(result)
     
-    expect(screen.getByText('CampsiteSearchApp with locale: custom-locale')).toBeInTheDocument()
+    expect(screen.getByText('CampsiteSearchApp component')).toBeInTheDocument()
   })
 
   test('paramsが正しく処理される', async () => {
@@ -59,7 +59,7 @@ describe('HomePage ([locale])', () => {
     
     render(result)
     
-    expect(screen.getByText('CampsiteSearchApp with locale: test-locale')).toBeInTheDocument()
+    expect(screen.getByText('CampsiteSearchApp component')).toBeInTheDocument()
   })
 
   test('HomePageコンポーネントがasync関数である', () => {

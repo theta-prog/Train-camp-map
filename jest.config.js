@@ -38,7 +38,7 @@ const customJestConfig = {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
   transformIgnorePatterns: [
-    '/node_modules/(?!(next-intl|@formatjs|intl-messageformat)/)',
+    '/node_modules/(?!(next-intl|@formatjs|intl-messageformat|jose)/)',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
   extensionsToTreatAsEsm: ['.ts', '.tsx'],

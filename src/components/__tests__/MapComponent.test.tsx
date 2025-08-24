@@ -3,6 +3,19 @@ import '@testing-library/jest-dom'
 import { fireEvent, render, screen } from '@testing-library/react'
 import MapComponent from '../MapComponent'
 
+// next-intlのモック
+jest.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => {
+    const translations: Record<string, string> = {
+      'details': 'Details',
+      'close': 'Close',
+      'map.loading': 'Loading map...',
+      // 他の必要な翻訳キーを追加
+    }
+    return translations[key] || key
+  }
+}))
+
 // 環境変数のモック
 const originalEnv = process.env
 beforeAll(() => {
@@ -62,18 +75,25 @@ jest.mock('@vis.gl/react-google-maps', () => ({
 const mockCampsites: Campsite[] = [
   {
     id: '1',
-    name: { ja: 'テストキャンプ場1', en: 'Test Campsite 1' },
+    name: 'テストキャンプ場1',
     lat: 35.6762,
     lng: 139.6503,
-    address: { ja: '東京都渋谷区', en: 'Shibuya, Tokyo' },
+    address: '東京都渋谷区',
     phone: '03-1234-5678',
     website: 'https://test1.com',
     price: '¥2,000/泊',
-    nearestStation: { ja: '渋谷駅', en: 'Shibuya Station' },
-    accessTime: { ja: '徒歩15分', en: '15 min walk' },
-    description: { ja: '美しい自然に囲まれたキャンプ場', en: 'Beautiful campsite surrounded by nature' },
+    nearestStation: '渋谷駅',
+    accessTime: '徒歩15分',
+    description: '美しい自然に囲まれたキャンプ場',
     facilities: ['restroom', 'shower', 'parking'],
     activities: ['hiking', 'fishing'],
+    images: [],
+    reservationUrl: 'https://test1.com/reserve',
+    priceMin: 2000,
+    priceMax: 2000,
+    checkInTime: '14:00',
+    checkOutTime: '11:00',
+    cancellationPolicy: 'キャンセル料あり',
   },
 ]
 

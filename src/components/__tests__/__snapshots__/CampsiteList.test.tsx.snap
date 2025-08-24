@@ -678,7 +678,7 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
         <h3
           class="font-semibold text-gray-800 text-sm"
         >
-          Test Campsite 1
+          テストキャンプ場1
         </h3>
         <span
           class="text-sm font-medium text-green-600"
@@ -689,7 +689,7 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
       <p
         class="text-xs text-gray-600 mb-2"
       >
-        Shibuya, Tokyo
+        東京都渋谷区
       </p>
       <div
         class="space-y-1 mb-3"
@@ -709,7 +709,7 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
           <span
             class="ml-1"
           >
-            Shibuya Station
+            渋谷駅
           </span>
         </div>
         <div
@@ -727,7 +727,7 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
           <span
             class="ml-1"
           >
-            15 min walk
+            徒歩15分
           </span>
         </div>
       </div>
@@ -737,7 +737,7 @@ exports[`CampsiteList スナップショットテスト 英語ロケール 1`] =
         <p
           class="text-xs text-gray-700 line-clamp-2"
         >
-          Beautiful campsite surrounded by nature
+          美しい自然に囲まれたキャンプ場
         </p>
       </div>
       <div

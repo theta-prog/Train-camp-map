@@ -30,63 +30,47 @@ global.confirm = jest.fn()
 const mockCampsites = [
   {
     id: '1',
-    name: {
-      ja: 'テストキャンプ場1',
-      en: 'Test Campsite 1'
-    },
+    name: 'テストキャンプ場1',
     lat: 35.6762,
     lng: 139.6503,
-    address: {
-      ja: '東京都渋谷区',
-      en: 'Shibuya, Tokyo'
-    },
+    address: '東京都渋谷区',
     phone: '',
     website: '',
     price: '¥2,000/泊',
-    nearestStation: {
-      ja: 'JR渋谷駅',
-      en: 'JR Shibuya Station'
-    },
-    accessTime: {
-      ja: '徒歩15分',
-      en: '15 min walk'
-    },
-    description: {
-      ja: 'テスト用のキャンプ場です',
-      en: 'Test campsite'
-    },
+    nearestStation: 'JR渋谷駅',
+    accessTime: '徒歩15分',
+    description: 'テスト用のキャンプ場です',
     facilities: ['restroom', 'shower'],
     activities: ['hiking'],
+    images: [],
+    reservationUrl: '',
+    priceMin: 2000,
+    priceMax: 2000,
+    checkInTime: '',
+    checkOutTime: '',
+    cancellationPolicy: '',
   },
   {
     id: '2',
-    name: {
-      ja: 'テストキャンプ場2',
-      en: 'Test Campsite 2'
-    },
+    name: 'テストキャンプ場2',
     lat: 35.6762,
     lng: 139.6503,
-    address: {
-      ja: '東京都新宿区',
-      en: 'Shinjuku, Tokyo'
-    },
+    address: '東京都新宿区',
     phone: '',
     website: '',
     price: '¥3,000/泊',
-    nearestStation: {
-      ja: 'JR新宿駅',
-      en: 'JR Shinjuku Station'
-    },
-    accessTime: {
-      ja: 'バス10分',
-      en: '10 min by bus'
-    },
-    description: {
-      ja: 'テスト用のキャンプ場です',
-      en: 'Test campsite'
-    },
+    nearestStation: 'JR新宿駅',
+    accessTime: 'バス10分',
+    description: 'テスト用のキャンプ場です',
     facilities: ['restroom', 'parking'],
     activities: ['fishing'],
+    images: [],
+    reservationUrl: '',
+    priceMin: 3000,
+    priceMax: 3000,
+    checkInTime: '',
+    checkOutTime: '',
+    cancellationPolicy: '',
   },
 ]
 
@@ -106,7 +90,7 @@ describe('CampsitesListPage', () => {
   it('キャンプ場一覧が正しく表示される', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ data: mockCampsites }),
+      json: async () => ({ campsites: mockCampsites }),
     })
 
     render(<CampsitesListPage />)
@@ -163,7 +147,7 @@ describe('CampsitesListPage', () => {
     ;(fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: mockCampsites }),
+        json: async () => ({ campsites: mockCampsites }),
       })
       .mockResolvedValueOnce({
         ok: true,
@@ -193,7 +177,7 @@ describe('CampsitesListPage', () => {
   it('削除のキャンセルが正しく動作する', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ data: mockCampsites }),
+      json: async () => ({ campsites: mockCampsites }),
     })
 
     ;(global.confirm as jest.Mock).mockReturnValueOnce(false)
@@ -217,7 +201,7 @@ describe('CampsitesListPage', () => {
     ;(fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ data: mockCampsites }),
+        json: async () => ({ campsites: mockCampsites }),
       })
       .mockResolvedValueOnce({
         ok: false,
@@ -243,7 +227,7 @@ describe('CampsitesListPage', () => {
   it('正しいリンクが設定されている', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ data: mockCampsites }),
+      json: async () => ({ campsites: mockCampsites }),
     })
 
     render(<CampsitesListPage />)
@@ -265,7 +249,7 @@ describe('CampsitesListPage', () => {
   it('キャンプ場の詳細情報が正しく表示される', async () => {
     ;(fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ data: mockCampsites }),
+      json: async () => ({ campsites: mockCampsites }),
     })
 
     render(<CampsitesListPage />)
