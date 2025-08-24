@@ -51,8 +51,6 @@ jest.mock('next/navigation', () => ({
   })),
 }))
 
-const { useParams } = require('next/navigation')
-
 // Google Maps API keyを設定
 const originalEnv = process.env
 beforeAll(() => {

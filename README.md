@@ -1,5 +1,9 @@
 # 電車で行けるキャンプ場検索アプリ
 
+[![CI](https://github.com/theta-prog/Train-camp-map/actions/workflows/ci.yml/badge.svg)](https://github.com/theta-prog/Train-camp-map/actions/workflows/ci.yml)
+[![Security Check](https://github.com/theta-prog/Train-camp-map/actions/workflows/security.yml/badge.svg)](https://github.com/theta-prog/Train-camp-map/actions/workflows/security.yml)
+[![codecov](https://codecov.io/gh/theta-prog/Train-camp-map/branch/main/graph/badge.svg)](https://codecov.io/gh/theta-prog/Train-camp-map)
+
 公共交通機関でアクセス可能なキャンプ場を検索できるWebアプリケーションです。
 
 ## 主な機能
@@ -184,6 +188,48 @@ src/
 ## ライセンス
 
 MIT License
+
+## CI/CD
+
+このプロジェクトはGitHub Actionsを使用した継続的インテグレーション（CI）を実装しています。
+
+### ワークフロー
+
+#### メインCI (`ci.yml`)
+- **トリガー**: `main`, `develop` ブランチへのプッシュ・プルリクエスト
+- **実行内容**:
+  - TypeScript型チェック
+  - ESLint実行
+  - Jest テストカバレッジ付き実行
+  - Next.js ビルド
+  - Codecovへのカバレッジレポート送信
+
+#### プルリクエストチェック (`pr.yml`)
+- **トリガー**: プルリクエストの作成・更新
+- **実行内容**:
+  - 変更ファイルの検出
+  - 変更されたファイルに関連するテストのみ実行
+  - バンドルサイズチェック
+  - ESLint（変更ファイルのみ）
+
+#### セキュリティチェック (`security.yml`)
+- **トリガー**: `main` ブランチへのプッシュ・プルリクエスト、定期実行（毎週月曜）
+- **実行内容**:
+  - npm audit によるセキュリティ脆弱性チェック
+  - 依存関係の最新バージョンチェック
+
+### 品質基準
+
+- **テストカバレッジ**: 80%以上（目標）
+- **新規コードカバレッジ**: 85%以上（目標）
+- **セキュリティ**: 高・重要レベルの脆弱性ゼロ
+- **TypeScript**: 厳格な型チェックパス
+
+### Dependabot
+
+- **npm依存関係**: 毎週月曜日にチェック
+- **GitHub Actions**: 毎月チェック
+- 自動でプルリクエストを作成し、セキュリティアップデートを提案
 
 ## 開発者向け情報
 

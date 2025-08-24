@@ -1,0 +1,33 @@
+# Codecov Configuration
+# https://docs.codecov.io/docs/codecovyml-reference
+
+coverage:
+  status:
+    project:
+      default:
+        target: 80%  # プロジェクト全体のカバレッジ目標
+        threshold: 2%  # カバレッジ低下の許容範囲
+    patch:
+      default:
+        target: 85%  # 新しいコードのカバレッジ目標
+        threshold: 5%
+
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+
+ignore:
+  - "**/*.config.js"
+  - "**/*.config.ts"
+  - "**/next.config.js"
+  - "**/jest.config.js"
+  - "**/tailwind.config.js"
+  - "**/postcss.config.js"
+  - "**/.next/**"
+  - "**/node_modules/**"
+  - "**/coverage/**"
+  - "**/scripts/**"
+  - "**/database/**"
+  - "**/prisma/migrations/**"
+  - "**/*.d.ts"

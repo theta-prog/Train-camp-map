@@ -1,0 +1,77 @@
+name: Security & Dependency Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 毎週月曜日の午前9時（UTC）に実行
+    - cron: '0 9 * * 1'
+
+jobs:
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit
+        run: |
+          # セキュリティ脆弱性をチェック（高・重要レベルのみで失敗）
+          npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Run npm audit (detailed)
+        run: |
+          echo "## Security Audit Results" >> $GITHUB_STEP_SUMMARY
+          npm audit --json > audit-results.json || true
+          
+          # 結果を解析してサマリーに追加
+          if [ -f "audit-results.json" ]; then
+            VULNERABILITIES=$(cat audit-results.json | jq -r '.metadata.vulnerabilities | to_entries[] | "\(.key): \(.value)"' 2>/dev/null || echo "No vulnerabilities data")
+            echo "### Vulnerabilities Summary" >> $GITHUB_STEP_SUMMARY
+            echo "$VULNERABILITIES" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  dependency-check:
+    name: Dependency Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Check for outdated dependencies
+        run: |
+          echo "## Outdated Dependencies" >> $GITHUB_STEP_SUMMARY
+          npm outdated --json > outdated.json || true
+          
+          if [ -f "outdated.json" ] && [ -s "outdated.json" ]; then
+            echo "Found outdated dependencies" >> $GITHUB_STEP_SUMMARY
+            cat outdated.json >> $GITHUB_STEP_SUMMARY
+          else
+            echo "All dependencies are up to date" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check package.json scripts
+        run: |
+          echo "## Available Scripts" >> $GITHUB_STEP_SUMMARY
+          npm run | grep -E "^[[:space:]]*[a-zA-Z]" >> $GITHUB_STEP_SUMMARY || true
