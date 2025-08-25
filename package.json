@@ -41,7 +41,7 @@
     "jwt:generate": "node scripts/generate-jwt-secret.js"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.2.1",
     "@prisma/client": "^6.12.0",
     "@types/node": "^20",
     "@types/react": "^18",
