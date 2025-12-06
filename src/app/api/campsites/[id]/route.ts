@@ -13,11 +13,12 @@ export const dynamic = 'force-dynamic'
 // GET /api/campsites/[id] - 特定のキャンプサイト取得
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   try {
     const campsite = await prisma.campsite.findUnique({
-      where: { id: params.id }
+      where: { id }
     })
 
     if (!campsite) {
@@ -43,8 +44,9 @@ export async function GET(
 // PUT /api/campsites/[id] - キャンプサイト更新（管理者のみ）
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const auth = await getAuthFromRequest(request)
   
   if (!requireAdmin(auth)) {
@@ -89,7 +91,7 @@ export async function PUT(
     }
 
     const updatedCampsite = await prisma.campsite.update({
-      where: { id: params.id },
+      where: { id },
       data: formatCampsiteForDb(data)
     })
 
@@ -109,8 +111,9 @@ export async function PUT(
 // DELETE /api/campsites/[id] - キャンプサイト削除（管理者のみ）
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const auth = await getAuthFromRequest(request)
   
   if (!requireAdmin(auth)) {
@@ -122,7 +125,7 @@ export async function DELETE(
 
   try {
     await prisma.campsite.delete({
-      where: { id: params.id }
+      where: { id }
     })
 
     return NextResponse.json({
