@@ -1,6 +1,6 @@
 'use client'
 
-import EditCampsitePage from '@/app/admin/campsites/[id]/edit/page'
+import CampsiteEditClient from '@/components/admin/CampsiteEditClient'
 import '@testing-library/jest-dom'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -72,7 +72,7 @@ const mockCampsiteData = {
   cancellationPolicyEn: 'Cancellation fee applies',
 }
 
-describe('EditCampsitePage', () => {
+describe('CampsiteEditClient', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     
@@ -84,7 +84,7 @@ describe('EditCampsitePage', () => {
   })
 
   it('ページが正しく表示される', async () => {
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByText('キャンプ場編集')).toBeInTheDocument()
@@ -96,7 +96,7 @@ describe('EditCampsitePage', () => {
   })
 
   it('キャンプ場データが正常に読み込まれる', async () => {
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/campsites/1')
@@ -108,7 +108,7 @@ describe('EditCampsitePage', () => {
   })
 
   it('データ読み込み中にローディング表示される', () => {
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     expect(screen.getByText('読み込み中...')).toBeInTheDocument()
   })
@@ -119,7 +119,7 @@ describe('EditCampsitePage', () => {
       json: async () => ({ error: 'キャンプ場が見つかりません' })
     })
 
-    render(<EditCampsitePage params={{ id: '999' }} />)
+    render(<CampsiteEditClient id="999" />)
 
     await waitFor(() => {
       expect(screen.getByText('キャンプ場が見つかりません')).toBeInTheDocument()
@@ -129,7 +129,7 @@ describe('EditCampsitePage', () => {
   it('データ読み込みエラー時にエラーメッセージが表示される', async () => {
     ;(global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'))
 
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByText('ネットワークエラーが発生しました')).toBeInTheDocument()
@@ -148,7 +148,7 @@ describe('EditCampsitePage', () => {
       })
       
     const user = userEvent.setup()
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByTestId('submit-button')).toBeInTheDocument()
@@ -184,7 +184,7 @@ describe('EditCampsitePage', () => {
       })
       
     const user = userEvent.setup()
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByTestId('submit-button')).toBeInTheDocument()
@@ -210,7 +210,7 @@ describe('EditCampsitePage', () => {
       })
 
     const user = userEvent.setup()
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByTestId('submit-button')).toBeInTheDocument()
@@ -233,7 +233,7 @@ describe('EditCampsitePage', () => {
       .mockRejectedValueOnce(new Error('Network error'))
 
     const user = userEvent.setup()
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByTestId('submit-button')).toBeInTheDocument()
@@ -261,7 +261,7 @@ describe('EditCampsitePage', () => {
       .mockReturnValueOnce(promise)
 
     const user = userEvent.setup()
-    render(<EditCampsitePage params={{ id: '1' }} />)
+    render(<CampsiteEditClient id="1" />)
 
     await waitFor(() => {
       expect(screen.getByTestId('submit-button')).toBeInTheDocument()
@@ -285,7 +285,7 @@ describe('EditCampsitePage', () => {
   })
 
   it('パラメータが変更されると適切なAPIが呼ばれる', async () => {
-    render(<EditCampsitePage params={{ id: '999' }} />)
+    render(<CampsiteEditClient id="999" />)
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/campsites/999')
