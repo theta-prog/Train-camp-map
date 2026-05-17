@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { useLocale } from 'next-intl'
 import { useRouter, usePathname } from '@/i18n/navigation'
@@ -12,7 +14,7 @@ export default function LanguageSwitcher() {
   
   const handleLanguageChange = (newLocale: string) => {
     setIsOpen(false)
-    router.push(pathname, { locale: newLocale as 'ja' | 'en' })
+    router.replace(pathname, { locale: newLocale as 'ja' | 'en' })
   }
 
   const currentLanguage = currentLocale === 'en' ? 'English' : '日本語'

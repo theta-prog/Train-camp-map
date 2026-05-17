@@ -1,12 +1,225 @@
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
+
 import prisma from '@/lib/prisma'
+import { Prisma } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 
 // このルートは動的にレンダリングされる必要がある
 export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
+
+type CsvRecord = Record<string, string>
+
+function splitCsvLine(line: string): string[] {
+  const values: string[] = []
+  let current = ''
+  let inQuotes = false
+
+  for (let index = 0; index < line.length; index++) {
+    const char = line[index]
+
+    if (char === '"') {
+      if (inQuotes && line[index + 1] === '"') {
+        current += '"'
+        index++
+      } else {
+        inQuotes = !inQuotes
+      }
+      continue
+    }
+
+    if (char === ',' && !inQuotes) {
+      values.push(current.trim())
+      current = ''
+      continue
+    }
+
+    current += char
+  }
+
+  values.push(current.trim())
+  return values
+}
+
+function parseCsv(content: string): CsvRecord[] {
+  const normalized = content.replace(/^\uFEFF/, '').trim()
+  const lines = normalized.split(/\r?\n/).filter((line) => line.trim().length > 0)
+
+  if (lines.length < 2) {
+    return []
+  }
+
+  const headerLine = lines[0]
+
+  if (!headerLine) {
+    return []
+  }
+
+  const headers = splitCsvLine(headerLine)
+
+  return lines.slice(1).map((line, rowIndex) => {
+    const values = splitCsvLine(line)
+
+    if (values.length !== headers.length) {
+      throw new Error(
+        `CSV row ${rowIndex + 2} has ${values.length} columns. Expected ${headers.length}.`
+      )
+    }
+
+    return headers.reduce<CsvRecord>((record, header, columnIndex) => {
+      record[header] = values[columnIndex] ?? ''
+      return record
+    }, {})
+  })
+}
+
+function splitList(value: string): string[] {
+  if (!value) {
+    return []
+  }
+
+  return value
+    .split(/[・/]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+}
+
+function getRequiredField(row: CsvRecord, fieldName: string): string {
+  const value = row[fieldName]
+
+  if (value === undefined) {
+    throw new Error(`Missing required field: ${fieldName}`)
+  }
+
+  return value
+}
+
+function getOptionalField(row: CsvRecord, fieldName: string): string | undefined {
+  const value = row[fieldName]
+
+  if (value === undefined) {
+    return undefined
+  }
+
+  const trimmed = value.trim()
+  return trimmed ? trimmed : undefined
+}
+
+function parseRequiredNumber(value: string, fieldName: string, campsiteName: string): number {
+  const parsed = Number(value)
+
+  if (!Number.isFinite(parsed)) {
+    throw new Error(`Invalid ${fieldName} for ${campsiteName}: ${value}`)
+  }
+
+  return parsed
+}
+
+function normalizePrice(value: string) {
+  const trimmed = value.trim()
+  const numericParts = Array.from(trimmed.matchAll(/\d[\d,]*/g))
+    .map((match) => Number(match[0].replace(/,/g, '')))
+    .filter((number) => Number.isFinite(number))
+
+  if (!trimmed) {
+    return {
+      label: '',
+      min: undefined,
+      max: undefined,
+    }
+  }
+
+  if (/[¥円]/.test(trimmed)) {
+    return {
+      label: trimmed,
+      min: numericParts[0],
+      max: numericParts.at(-1) ?? numericParts[0],
+    }
+  }
+
+  if (numericParts.length === 0) {
+    return {
+      label: trimmed,
+      min: undefined,
+      max: undefined,
+    }
+  }
+
+  if (numericParts.length === 1) {
+    const amount = numericParts[0]
+
+    if (amount === undefined) {
+      throw new Error(`Unable to normalize price: ${trimmed}`)
+    }
+
+    return {
+      label: `¥${amount.toLocaleString()}/泊`,
+      min: amount,
+      max: amount,
+    }
+  }
+
+  const min = numericParts[0]
+  const max = numericParts.at(-1) ?? min
+
+  if (min === undefined || max === undefined) {
+    throw new Error(`Unable to normalize price range: ${trimmed}`)
+  }
+
+  return {
+    label: `¥${min.toLocaleString()}-¥${max.toLocaleString()}/泊`,
+    min,
+    max,
+  }
+}
+
+async function loadSeedCampsites(): Promise<Prisma.CampsiteCreateInput[]> {
+  const csvPath = path.join(process.cwd(), 'data', 'public_transport_campsites.csv')
+  const csvContent = await readFile(csvPath, 'utf8')
+  const rows = parseCsv(csvContent)
+
+  return rows.map((row) => {
+    const nameJa = getRequiredField(row, 'name_ja')
+    const nameEn = getOptionalField(row, 'name_en')
+    const addressJa = getRequiredField(row, 'address_ja')
+    const addressEn = getOptionalField(row, 'address_en')
+    const nearestStationJa = getRequiredField(row, 'nearest_station_ja')
+    const nearestStationEn = getOptionalField(row, 'nearest_station_en')
+    const accessTimeJa = getRequiredField(row, 'access_time_ja')
+    const accessTimeEn = getOptionalField(row, 'access_time_en')
+    const descriptionJa = getRequiredField(row, 'description_ja')
+    const descriptionEn = getOptionalField(row, 'description_en')
+    const website = getOptionalField(row, 'homepage_url')
+    const price = normalizePrice(getRequiredField(row, 'price'))
+
+    return {
+      nameJa,
+      addressJa,
+      lat: parseRequiredNumber(getRequiredField(row, 'lat'), 'lat', nameJa),
+      lng: parseRequiredNumber(getRequiredField(row, 'lng'), 'lng', nameJa),
+      price: price.label,
+      facilities: splitList(getRequiredField(row, 'amenities')),
+      activities: splitList(getRequiredField(row, 'activities')),
+      nearestStationJa,
+      accessTimeJa,
+      descriptionJa,
+      images: [],
+      ...(nameEn ? { nameEn } : {}),
+      ...(addressEn ? { addressEn } : {}),
+      ...(website ? { website, reservationUrl: website } : {}),
+      ...(price.min !== undefined ? { priceMin: price.min } : {}),
+      ...(price.max !== undefined ? { priceMax: price.max } : {}),
+      ...(nearestStationEn ? { nearestStationEn } : {}),
+      ...(accessTimeEn ? { accessTimeEn } : {}),
+      ...(descriptionEn ? { descriptionEn } : {}),
+    }
+  })
+}
 
 /**
- * サンプルデータ挿入API
- * 本番環境でのサンプルキャンプサイトデータ挿入用
+ * CSVベースのキャンプ場データ挿入API
+ * 管理画面から実データをまとめて登録するために使用する
  */
 export async function POST(request: NextRequest) {
   try {
@@ -18,182 +231,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // サンプルキャンプサイトデータ
-    const sampleCampsites = [
-      {
-        id: '1',
-        nameJa: '高尾の森わくわくビレッジ',
-        nameEn: 'Takao Forest Wakuwaku Village',
-        addressJa: '東京都八王子市川町55',
-        addressEn: '55 Kawamachi, Hachioji, Tokyo',
-        lat: 35.6328,
-        lng: 139.2644,
-        phone: '042-691-1166',
-        website: 'https://www.wakuwaku-village.com/',
-        price: '¥2,000-¥4,000/泊',
-        facilities: ['toilet', 'shower', 'kitchen', 'bbq', 'parking', 'wifi'],
-        activities: ['hiking', 'bbq', 'stargazing', 'photography'],
-        nearestStationJa: 'JR高尾駅',
-        nearestStationEn: 'JR Takao Station',
-        accessTimeJa: 'バス15分',
-        accessTimeEn: '15 min by bus',
-        descriptionJa: '高尾山の麓にある自然豊かなキャンプ場。BBQやハイキングを楽しめ、星空観察にも最適です。',
-        descriptionEn: 'A nature-rich campsite at the foot of Mt. Takao. Perfect for BBQ, hiking, and stargazing.',
-        priceMin: 2000,
-        priceMax: 4000,
-        reservationUrl: 'https://www.wakuwaku-village.com/reservation',
-        checkInTime: '14:00',
-        checkOutTime: '11:00',
-        cancellationPolicyJa: 'キャンセル料：利用日の7日前から30%、3日前から50%、当日100%',
-        cancellationPolicyEn: 'Cancellation fee: 30% from 7 days before, 50% from 3 days before, 100% on the day',
-        images: [
-          'https://images.unsplash.com/photo-1504851149312-7a075b496cc7?w=800',
-          'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?w=800',
-          'https://images.unsplash.com/photo-1537225228614-56cc3556d7ed?w=800'
-        ]
-      },
-      {
-        id: '2',
-        nameJa: '奥多摩湖畔キャンプ場',
-        nameEn: 'Lake Okutama Campsite',
-        addressJa: '東京都西多摩郡奥多摩町原5',
-        addressEn: '5 Hara, Okutama, Nishitama, Tokyo',
-        lat: 35.7891,
-        lng: 139.0234,
-        phone: '0428-86-2556',
-        website: 'https://okutama-camp.com/',
-        price: '¥1,500-¥3,500/泊',
-        facilities: ['toilet', 'kitchen', 'bbq', 'parking', 'rental'],
-        activities: ['fishing', 'canoe', 'hiking', 'river', 'photography'],
-        nearestStationJa: 'JR奥多摩駅',
-        nearestStationEn: 'JR Okutama Station',
-        accessTimeJa: 'バス20分',
-        accessTimeEn: '20 min by bus',
-        descriptionJa: '奥多摩湖の美しい景色を楽しめるキャンプ場。釣りやカヌーなどの水上アクティビティが充実しています。',
-        descriptionEn: 'Enjoy the beautiful scenery of Lake Okutama. Rich in water activities such as fishing and canoeing.',
-        priceMin: 1500,
-        priceMax: 3500,
-        reservationUrl: 'https://okutama-camp.com/booking',
-        checkInTime: '13:00',
-        checkOutTime: '10:00',
-        cancellationPolicyJa: 'キャンセル料：利用日の3日前から50%、当日100%',
-        cancellationPolicyEn: 'Cancellation fee: 50% from 3 days before, 100% on the day',
-        images: [
-          'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
-          'https://images.unsplash.com/photo-1476041800959-2f6bb412c8ce?w=800'
-        ]
-      },
-      {
-        id: '3',
-        nameJa: '相模湖プレジャーフォレスト',
-        nameEn: 'Sagamiko Pleasure Forest',
-        addressJa: '神奈川県相模原市緑区若柳1634',
-        addressEn: '1634 Wakayanagi, Midori-ku, Sagamihara, Kanagawa',
-        lat: 35.6045,
-        lng: 139.2511,
-        phone: '042-685-1111',
-        website: 'https://www.sagamiko-resort.jp/',
-        price: '¥3,000-¥6,000/泊',
-        facilities: ['toilet', 'shower', 'kitchen', 'bbq', 'parking', 'wifi', 'shop'],
-        activities: ['bbq', 'fishing', 'boating', 'cycling', 'hiking'],
-        nearestStationJa: 'JR相模湖駅',
-        nearestStationEn: 'JR Sagamiko Station',
-        accessTimeJa: 'バス8分',
-        accessTimeEn: '8 min by bus',
-        descriptionJa: '相模湖畔の大型リゾート施設内にあるキャンプ場。遊園地も併設しており、家族連れに人気です。',
-        descriptionEn: 'A campsite within a large resort facility by Lake Sagami. Popular with families as it also has an amusement park.',
-        priceMin: 3000,
-        priceMax: 6000,
-        reservationUrl: 'https://www.sagamiko-resort.jp/camp/reservation',
-        checkInTime: '15:00',
-        checkOutTime: '10:00',
-        cancellationPolicyJa: 'キャンセル料：利用日の7日前から20%、3日前から50%、当日100%',
-        cancellationPolicyEn: 'Cancellation fee: 20% from 7 days before, 50% from 3 days before, 100% on the day',
-        images: [
-          'https://images.unsplash.com/photo-1508873696983-2dfd5898f08b?w=800',
-          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
-          'https://images.unsplash.com/photo-1445308394109-4ec2920981b1?w=800'
-        ]
-      },
-      {
-        id: '4',
-        nameJa: '富士五湖キャンプ場',
-        nameEn: 'Fuji Five Lakes Campsite',
-        addressJa: '山梨県南都留郡富士河口湖町船津1',
-        addressEn: '1 Funatsu, Fujikawaguchiko, Minamitsuru, Yamanashi',
-        lat: 35.5089,
-        lng: 138.7628,
-        phone: '0555-72-1331',
-        website: 'https://fujigoko-camp.com/',
-        price: '¥2,500-¥5,000/泊',
-        facilities: ['toilet', 'shower', 'kitchen', 'bbq', 'parking', 'wifi', 'hot_spring'],
-        activities: ['hiking', 'fishing', 'photography', 'cycling', 'stargazing', 'hot_spring'],
-        nearestStationJa: 'JR河口湖駅',
-        nearestStationEn: 'JR Kawaguchiko Station',
-        accessTimeJa: 'バス10分',
-        accessTimeEn: '10 min by bus',
-        descriptionJa: '富士山の絶景を望める湖畔のキャンプ場。温泉施設もあり、リラックスできる環境です。',
-        descriptionEn: 'Lakeside campsite with spectacular views of Mt. Fuji. Hot spring facilities are also available for relaxation.',
-        priceMin: 2500,
-        priceMax: 5000,
-        reservationUrl: 'https://fujigoko-camp.com/reserve',
-        checkInTime: '14:00',
-        checkOutTime: '11:00',
-        cancellationPolicyJa: 'キャンセル料：利用日の5日前から30%、当日100%',
-        cancellationPolicyEn: 'Cancellation fee: 30% from 5 days before, 100% on the day',
-        images: [
-          'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
-          'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800',
-          'https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=800'
-        ]
-      },
-      {
-        id: '5',
-        nameJa: 'あしがら森林公園キャンプ場',
-        nameEn: 'Ashigara Forest Park Campsite',
-        addressJa: '神奈川県足柄上郡山北町皆瀬川635',
-        addressEn: '635 Minasegawa, Yamakita, Ashigarakami, Kanagawa',
-        lat: 35.3667,
-        lng: 139.0833,
-        phone: '0465-78-3181',
-        website: 'https://ashigara-forest.com/',
-        price: '¥1,800-¥3,200/泊',
-        facilities: ['toilet', 'shower', 'kitchen', 'bbq', 'parking'],
-        activities: ['hiking', 'bbq', 'river', 'cycling', 'photography'],
-        nearestStationJa: 'JR谷峨駅',
-        nearestStationEn: 'JR Yaga Station',
-        accessTimeJa: 'バス25分',
-        accessTimeEn: '25 min by bus',
-        descriptionJa: '森林に囲まれた静かなキャンプ場。清流での川遊びや森林浴を楽しめます。',
-        descriptionEn: 'A quiet campsite surrounded by forest. Enjoy river play in clear streams and forest bathing.',
-        priceMin: 1800,
-        priceMax: 3200,
-        reservationUrl: 'https://ashigara-forest.com/booking',
-        checkInTime: '13:30',
-        checkOutTime: '10:30',
-        cancellationPolicyJa: 'キャンセル料：利用日の3日前から30%、当日100%',
-        cancellationPolicyEn: 'Cancellation fee: 30% from 3 days before, 100% on the day',
-        images: [
-          'https://images.unsplash.com/photo-1486022119932-526259183edc?w=800',
-          'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800'
-        ]
-      }
-    ]
+    const sampleCampsites = await loadSeedCampsites()
 
     // データベースに挿入（upsert使用で重複を避ける）
     let insertedCount = 0
     let updatedCount = 0
 
     for (const campsite of sampleCampsites) {
-      // 既存のキャンプサイトをチェック
-      const existing = await prisma.campsite.findUnique({
-        where: { id: campsite.id }
+      // 名前+住所または座標が一致する既存レコードを更新する
+      const existing = await prisma.campsite.findFirst({
+        where: {
+          OR: [
+            {
+              AND: [
+                { nameJa: campsite.nameJa },
+                { addressJa: campsite.addressJa },
+              ],
+            },
+            {
+              AND: [
+                { lat: campsite.lat },
+                { lng: campsite.lng },
+              ],
+            },
+          ],
+        },
       })
 
       if (existing) {
         // 更新
         await prisma.campsite.update({
-          where: { id: campsite.id },
+          where: { id: existing.id },
           data: {
             ...campsite,
             updatedAt: new Date()
@@ -223,6 +291,7 @@ export async function POST(request: NextRequest) {
         updated: updatedCount,
         total: totalCampsites
       },
+      source: 'data/public_transport_campsites.csv',
       timestamp: new Date().toISOString()
     })
 
