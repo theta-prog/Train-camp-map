@@ -45,13 +45,7 @@ jest.mock('next-intl', () => ({
 jest.mock('next-intl/routing', () => ({
   defineRouting: (config) => config,
   createSharedPathnamesNavigation: () => ({
-    Link: ({ children, href, ...props }) => ({
-      $$typeof: Symbol.for('react.element'),
-      type: 'a',
-      props: { href, ...props, children },
-      key: null,
-      ref: null,
-    }),
+    Link: ({ children, href, ...props }) => React.createElement('a', { href, ...props }, children),
     redirect: jest.fn(),
     usePathname: () => '/ja',
     useRouter: () => ({
@@ -77,14 +71,8 @@ jest.mock('next/navigation', () => ({
 jest.mock('next/image', () => ({
   __esModule: true,
   default: (props) => {
-    const { src, alt, ...rest } = props
-    return {
-      $$typeof: Symbol.for('react.element'),
-      type: 'img',
-      props: { src, alt, ...rest },
-      key: null,
-      ref: null,
-    }
+    const { src, alt, fill: _fill, priority: _priority, ...rest } = props
+    return React.createElement('img', { src, alt, ...rest })
   },
 }))
 

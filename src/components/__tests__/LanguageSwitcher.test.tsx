@@ -9,12 +9,12 @@ jest.mock('next-intl', () => ({
 }))
 
 // モック next/navigation
-const mockPush = jest.fn()
+const mockReplace = jest.fn()
 const mockPathname = '/test'
 
 jest.mock('@/i18n/navigation', () => ({
   useRouter: () => ({
-    push: mockPush
+    replace: mockReplace
   }),
   usePathname: () => mockPathname
 }))
@@ -82,7 +82,7 @@ describe('LanguageSwitcher', () => {
     fireEvent.click(englishButton)
     
     // ルーター遷移が呼ばれることを確認
-    expect(mockPush).toHaveBeenCalledWith('/test', { locale: 'en' })
+    expect(mockReplace).toHaveBeenCalledWith('/test', { locale: 'en' })
   })
 
   it('背景クリックでドロップダウンが閉じる', () => {
@@ -165,7 +165,7 @@ describe('LanguageSwitcher', () => {
     }
     
     // ルーター遷移が呼ばれることを確認
-    expect(mockPush).toHaveBeenCalledWith('/test', { locale: 'ja' })
+    expect(mockReplace).toHaveBeenCalledWith('/test', { locale: 'ja' })
   })
 
   it('locale未定義時のフォールバック処理', () => {

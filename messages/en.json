@@ -17,6 +17,7 @@
   },
   "campsiteList": {
     "title": "Campsite List",
+    "loading": "Loading campsites...",
     "count": "{count} sites",
     "noResults": "No campsites found matching the criteria.",
     "changeFilters": "Please try changing your search criteria.",

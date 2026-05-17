@@ -34,6 +34,7 @@ jest.mock('next-intl', () => ({
     const translations: Record<string, string> = {
       'title': 'Campsite Search',
       'subtitle': 'Find campsites accessible by train',
+      'campsiteList.loading': 'キャンプ場を読み込み中...',
       'map.apiKeyMissing': 'Google Maps API key is missing',
       'map.apiKeyInstruction': 'Please set NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',
     }
@@ -464,7 +465,7 @@ describe('CampsiteSearchApp', () => {
     render(<CampsiteSearchApp />)
     
     // ローディングメッセージが表示されることを確認
-    expect(screen.getByText('キャンプサイトを読み込み中...')).toBeInTheDocument()
+    expect(screen.getByText('キャンプ場を読み込み中...')).toBeInTheDocument()
   })
 
   // 言語切り替えのテスト

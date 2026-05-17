@@ -17,6 +17,7 @@
   },
   "campsiteList": {
     "title": "キャンプ場一覧",
+    "loading": "キャンプ場を読み込み中...",
     "count": "{count}件",
     "noResults": "条件に一致するキャンプ場が見つかりませんでした。",
     "changeFilters": "検索条件を変更してお試しください。",
