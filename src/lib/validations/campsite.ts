@@ -9,11 +9,11 @@ export const campsiteSchema = z.object({
   name_en: z.string().max(100, '100文字以内で入力してください').optional(),
   
   // 位置情報 (Google Mapで選択可能、手動入力も可能)
-  lat: z.number({ invalid_type_error: '緯度は数値で入力してください' })
+  lat: z.number({ error: '緯度は数値で入力してください' })
     .min(-90, '緯度は-90以上である必要があります')
     .max(90, '緯度は90以下である必要があります')
     .optional(),
-  lng: z.number({ invalid_type_error: '経度は数値で入力してください' })
+  lng: z.number({ error: '経度は数値で入力してください' })
     .min(-180, '経度は-180以上である必要があります')
     .max(180, '経度は180以下である必要があります')
     .optional(),
