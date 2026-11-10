@@ -1,29 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 // このルートは動的にレンダリングされる必要がある
 export const dynamic = 'force-dynamic'
 
 /**
  * 環境変数確認用API（開発・デバッグ用）
- * 本番環境でのデバッグに使用
+ * ローカル開発環境でのみ使用
  */
-export async function GET(request: NextRequest) {
-  try {
-    // セキュリティ: 本番環境でのアクセス制限
-    const isDev = process.env.NODE_ENV !== 'production'
-    const hasDebugFlag = request.nextUrl.searchParams.get('debug') === 'true'
-    
-    if (!isDev && !hasDebugFlag) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
+export async function GET() {
+  if (process.env.NODE_ENV !== 'development') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
+  try {
     const envStatus = {
       NODE_ENV: process.env.NODE_ENV,
       DATABASE_URL: process.env.DATABASE_URL ? '✅ 設定済み' : '❌ 未設定',
-      DATABASE_URL_LENGTH: process.env.DATABASE_URL?.length || 0,
-      DATABASE_URL_PREFIX: process.env.DATABASE_URL?.substring(0, 20) + '...',
       JWT_SECRET: process.env.JWT_SECRET ? '✅ 設定済み' : '❌ 未設定',
-      JWT_SECRET_LENGTH: process.env.JWT_SECRET?.length || 0,
       ADMIN_EMAIL: process.env.ADMIN_EMAIL ? '✅ 設定済み' : '❌ 未設定',
       ADMIN_PASSWORD: process.env.ADMIN_PASSWORD ? '✅ 設定済み' : '❌ 未設定',
       ADMIN_ALLOWED_EMAILS: process.env.ADMIN_ALLOWED_EMAILS ? '✅ 設定済み' : '❌ 未設定',
@@ -40,8 +33,8 @@ export async function GET(request: NextRequest) {
         await prisma.$connect()
         await prisma.$disconnect()
         dbConnection = '✅ 接続成功'
-      } catch (error) {
-        dbConnection = `❌ 接続エラー: ${error instanceof Error ? error.message : 'Unknown error'}`
+      } catch {
+        dbConnection = '❌ 接続エラー'
       }
     }
 
@@ -56,12 +49,10 @@ export async function GET(request: NextRequest) {
       }
     })
 
-  } catch (error) {
-    console.error('Environment check error:', error)
+  } catch {
     return NextResponse.json(
       { 
-        error: 'Environment check failed',
-        message: error instanceof Error ? error.message : 'Unknown error'
+        error: 'Environment check failed'
       },
       { status: 500 }
     )

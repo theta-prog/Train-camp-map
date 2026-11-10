@@ -1,5 +1,5 @@
-import { generateToken } from '@/lib/auth'
-import { hashPassword, isEmailAllowed } from '@/lib/auth-server'
+import { generateToken, getJwtKey } from '@/lib/auth'
+import { hasAdminSetupKey, hashPassword, isEmailAllowed } from '@/lib/auth-server'
 import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -17,7 +17,12 @@ const registerSchema = z.object({
  * 完全にサーバーサイドで処理され、フロントエンドからDBへの直接アクセスは不可能
  */
 export async function POST(request: NextRequest) {
+  if (!hasAdminSetupKey(request.headers.get('authorization'))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
   try {
+    getJwtKey()
     const body = await request.json()
     const { email, password } = registerSchema.parse(body)
 
