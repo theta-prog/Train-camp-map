@@ -4,17 +4,9 @@ const withNextIntl = require('next-intl/plugin')('./src/i18n/request.ts')
 const nextConfig = {
   typedRoutes: true,
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**', // 開発環境では任意のホストを許可
-      },
-      {
-        protocol: 'http',
-        hostname: '**', // 開発環境では任意のホストを許可
-      }
-    ],
-    dangerouslyAllowSVG: true,
+    // Load campsite image URLs in the browser without a server-side image proxy.
+    unoptimized: true,
+    dangerouslyAllowSVG: false,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   }
