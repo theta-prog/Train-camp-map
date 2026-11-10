@@ -1,6 +1,18 @@
 import bcrypt from 'bcryptjs'
+import { timingSafeEqual } from 'node:crypto'
 
 const SALT_ROUNDS = 12
+
+export function hasAdminSetupKey(authorization: string | null): boolean {
+  const key = process.env.ADMIN_SETUP_KEY
+  if (!key || key === 'setup-key' || !authorization) {
+    return false
+  }
+
+  const expected = Buffer.from(`Bearer ${key}`)
+  const received = Buffer.from(authorization)
+  return expected.length === received.length && timingSafeEqual(expected, received)
+}
 
 /**
  * パスワードをハッシュ化する（サーバーサイド専用）

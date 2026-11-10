@@ -1,3 +1,4 @@
+import { hasAdminSetupKey } from '@/lib/auth-server'
 import prisma from '@/lib/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -11,10 +12,7 @@ export const dynamic = 'force-dynamic'
 export async function POST(request: NextRequest) {
   try {
     // セキュリティ: 管理者のみ実行可能
-    const authHeader = request.headers.get('authorization')
-    const adminKey = process.env.ADMIN_SETUP_KEY || 'setup-key'
-    
-    if (authHeader !== `Bearer ${adminKey}`) {
+    if (!hasAdminSetupKey(request.headers.get('authorization'))) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

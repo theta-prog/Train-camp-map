@@ -54,15 +54,11 @@ export default async function middleware(request: NextRequest) {
     response.headers.set('X-XSS-Protection', '1; mode=block')
     
     if (!pathname.startsWith('/admin/login')) {
-      console.log('=== Admin認証チェック ===', pathname);
       const auth = await getAuthFromRequest(request)
-      console.log('認証結果:', auth);
       
       if (!auth || auth.role !== 'ADMIN') {
-        console.log('認証失敗 - ログインページにリダイレクト');
         return NextResponse.redirect(new URL('/admin/login', request.url))
       }
-      console.log('認証成功 - アクセス許可');
     }
     return response
   }
